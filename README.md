@@ -14,4 +14,6 @@
 ``` shell
 /src/test
 ```
-
+``` shell
+test
+```
