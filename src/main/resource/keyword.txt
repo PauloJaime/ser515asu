@@ -2,6 +2,43 @@ Class 1(Head file):
 package
 import
 
+Class 2(Variable type):
+int
+long
+short 
+float
+boolean
+double
+byte
+char
+String
+
+Class 3(Modifier)
+default
+private
+public
+protected
+static
+final
+abstract
+synchronized
+transient
+volatile
+
+Class 4(Operator):
+
+Class 5(Loop)
+
+Class 6(Conditional statement)
+
+Class 7(Object-oriented)
+entends
+implements
+super
+this
+final
+interface
+package
 
 
 
