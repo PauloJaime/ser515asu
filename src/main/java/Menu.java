@@ -1,4 +1,4 @@
-package meue;
+
 
 import java.awt.EventQueue;
 
@@ -6,11 +6,13 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.awt.event.ActionEvent;
 
-public class menu {
+public class Menu {
 
 	private JFrame frame;
 	private JMenuBar menuBar = new JMenuBar();
@@ -27,7 +29,7 @@ public class menu {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					menu window = new menu();
+					Menu window = new Menu();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,12 +37,19 @@ public class menu {
 			}
 		});
 	}
-
+	
+	
+	
 	/**
 	 * Create the application.
 	 */
-	public menu() {
+	public Menu() {
 		initialize();
+		
+		mntmSave.addActionListener(new MenuSaveAgent(this, "saveAs"));
+		
+		//chooser.showOpenDialog(null);
+		
 	}
 
 	/**
@@ -56,7 +65,7 @@ public class menu {
 		
 		//JMenu mnMenu = new JMenu("Menu");
 		menuBar.add(mnMenu);
-	
+		
 		mnMenu.add(mntmOpen);
 		
 		/*
