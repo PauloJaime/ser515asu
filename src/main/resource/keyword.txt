@@ -24,12 +24,58 @@ abstract
 synchronized
 transient
 volatile
+void
 
 Class 4(Operator):
+(do we need to highlight the operator?)
++
+-
+%
+*
+/
+++
+--
+!
+=
++=
+-=
+*=
+/=
+%=
+==
+!=
+<
+>
+<=
+>=
+&&
+||
+?
+&
+|
+^
+~
+<<
+>>
+>>>
+instanceof
 
 Class 5(Loop)
+for
+while
+break
+continue
 
 Class 6(Conditional statement)
+if
+if else
+else
+true
+false
+null
+
+
+
 
 Class 7(Object-oriented)
 entends
@@ -38,7 +84,16 @@ super
 this
 final
 interface
-package
+class
+
+Class 8(Library funtion):
+out
+length
+in
+return
+new
+delete
+next
 
 
 
