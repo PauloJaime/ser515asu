@@ -39,19 +39,26 @@ public class MenuSaveAgent implements ActionListener {
 	
 	
 	public void saveAs() {
-		JFrame saveAsFrame = new JFrame();
-		 
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Save as");   
-		 
-		int Selector = fileChooser.showSaveDialog(saveAsFrame);
-		 
-		if (Selector == JFileChooser.APPROVE_OPTION) {
-		    File fileToSave = fileChooser.getSelectedFile();
-		    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
-		}
+	    String sb = "TEST CONTENT";
+	    JFileChooser chooser = new JFileChooser();
+	    chooser.setCurrentDirectory(new File("/Users/zelinbao"));
+	    
+	    JFrame saveAsFrame = new JFrame();
+	    //int retrival = chooser.showSaveDialog(null);
+	    int retrival = chooser.showSaveDialog(saveAsFrame);
+	    
+	    if (retrival == JFileChooser.APPROVE_OPTION) {
+	        try {
+	        	System.out.println("write");
+	        	FileWriter fw = new FileWriter(chooser.getSelectedFile()+".txt");
+	            fw.write(sb.toString());
+	            fw.flush();
+	            fw.close();
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	        }
+	    }
 	}
-	
 	
 	public void save() {
 	    

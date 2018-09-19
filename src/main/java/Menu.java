@@ -46,8 +46,8 @@ public class Menu {
 	public Menu() {
 		initialize();
 		
-		mntmSave.addActionListener(new MenuSaveAgent(this, "saveAs"));
-		
+		mntmSaveAs.addActionListener(new MenuSaveAgent(this, "saveAs"));
+		mntmSave.addActionListener(new MenuSaveAgent(this, "save"));
 		//chooser.showOpenDialog(null);
 		
 	}
