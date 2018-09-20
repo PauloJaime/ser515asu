@@ -54,9 +54,6 @@ class
 
 
 Class 7(Library funtion):
-out
-length
-in
 return
 new
 delete
