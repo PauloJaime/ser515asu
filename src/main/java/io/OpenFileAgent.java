@@ -1,26 +1,25 @@
 package io;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class OpenFileAgent implements ActionListener {
-    private JTabbedPane tabManager;
+public class OpenFileAgent{
 
-    public OpenFileAgent(JTabbedPane tabMgr) {
-        tabManager = tabMgr;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public String[] read() {
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         jFileChooser.showOpenDialog(null);
         File file = jFileChooser.getSelectedFile();
+        String path = file.getPath();
+        if (PathDB.containsPath(path)) {
+            return null;
+        } else {
+            PathDB.addPath(path);
+        }
+
         StringBuilder sb = new StringBuilder();
         try {
             FileReader fileReader = new FileReader(file);
@@ -36,6 +35,7 @@ public class OpenFileAgent implements ActionListener {
             ex.printStackTrace();
         }
 
+        return new String[] {file.getName(), sb.toString()};
     }
 
 }

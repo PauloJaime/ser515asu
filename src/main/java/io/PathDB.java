@@ -16,8 +16,12 @@ class PathDB {
 
     private PathDB() { }
 
-    String getPath(int idx) {
+    static String getPath(int idx) {
         return paths.get(idx);
+    }
+
+    static boolean containsPath(String path) {
+        return pathSet.contains(path);
     }
 
     static boolean addPath(String str) {
