@@ -1,3 +1,5 @@
+package io;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,18 +9,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class OpenFileAgent implements ActionListener {
-    private String path;
+    private JTabbedPane tabManager;
 
-    private JTextArea textArea;
-
-    public OpenFileAgent(JTextArea text) {
-        textArea = text;
+    public OpenFileAgent(JTabbedPane tabMgr) {
+        tabManager = tabMgr;
     }
-
-    public String getPath() {
-        return path;
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -41,8 +36,6 @@ public class OpenFileAgent implements ActionListener {
             ex.printStackTrace();
         }
 
-        textArea.append(sb.toString());
-        path = file.getPath();
     }
 
 }
