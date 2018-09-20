@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-=======
 
-
->>>>>>> b06ae31098d60b6d5f72eccb1ba2fb6ce7ee2630
 import io.MenuSaveAgent;
 import io.OpenFileAgent;
 
@@ -11,10 +7,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
-<<<<<<< HEAD
+
 import javax.swing.JMenuItem;
-=======
->>>>>>> b06ae31098d60b6d5f72eccb1ba2fb6ce7ee2630
 
 public class Menu {
 
@@ -47,9 +41,6 @@ public class Menu {
 	 */
 	public Menu() {
 		initialize();
-		
-		mntmSaveAs.addActionListener(new MenuSaveAgent(this, "saveAs"));
-		mntmSave.addActionListener(new MenuSaveAgent(this, "save"));
 		//chooser.showOpenDialog(null);
 		
 	}
@@ -65,20 +56,11 @@ public class Menu {
 		//JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 		
-<<<<<<< HEAD
 		//JMenu fileMenu = new JMenu("Menu");
 		menuBar.add(fileMenu);
-	
+
 		fileMenu.add(openFile);
 
-		openFile.addActionListener(new OpenFileAgent());
-=======
-		//JMenu mnMenu = new JMenu("Menu");
-		menuBar.add(mnMenu);
-		
-		mnMenu.add(mntmOpen);
->>>>>>> b06ae31098d60b6d5f72eccb1ba2fb6ce7ee2630
-		
 		/*
 		 * save action
 		 */
