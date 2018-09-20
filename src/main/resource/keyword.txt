@@ -25,48 +25,17 @@ synchronized
 transient
 volatile
 void
-
-Class 4(Operator):
-(do we need to highlight the operator?)
-+
--
-%
-*
-/
-++
---
-!
-=
-+=
--=
-*=
-/=
-%=
-==
-!=
-<
->
-<=
->=
-&&
-||
-?
-&
-|
-^
-~
-<<
->>
->>>
 instanceof
 
-Class 5(Loop)
+Class 4(Loop)
 for
 while
 break
 continue
+switch
+do
 
-Class 6(Conditional statement)
+Class 5(Conditional statement)
 if
 if else
 else
@@ -74,11 +43,8 @@ true
 false
 null
 
-
-
-
-Class 7(Object-oriented)
-entends
+Class 6(Object-oriented)
+extends
 implements
 super
 this
@@ -86,7 +52,8 @@ final
 interface
 class
 
-Class 8(Library funtion):
+
+Class 7(Library funtion):
 out
 length
 in
@@ -95,5 +62,19 @@ new
 delete
 next
 
-
+other:
+try
+catch
+thread
+goto
+case
+enum
+assert
+strictfp
+synchronized
+finally
+throw
+const
+native
+throws
 
