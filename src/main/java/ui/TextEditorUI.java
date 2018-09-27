@@ -7,10 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class TextEditorUI extends JFrame {
     private JMenuBar menuBar;
@@ -36,27 +39,38 @@ public class TextEditorUI extends JFrame {
 
 
     public static void main(String[] args) {
-        TextEditorUI test = new TextEditorUI();
+        TextEditorUI t = new TextEditorUI();
     }
 
 
     private Map<String, ImageIcon> readIconRes() {
         Map<String, ImageIcon> resource = new HashMap<>();
-        resource.put("paste", new ImageIcon("src/main/java/ui/icons/paste.png"));
-        resource.put("cut", new ImageIcon("src/main/java/ui/icons/cut.png"));
-        resource.put("copy", new ImageIcon("src/main/java/ui/icons/copy.png"));
-        resource.put("exit", new ImageIcon("src/main/java/ui/icons/exit.png"));
 
-        resource.put("langEng", new ImageIcon("src/main/java/ui/icons/England.png"));
-        resource.put("langFrn", new ImageIcon("src/main/java/ui/icons/France.png"));
-        resource.put("langSpa", new ImageIcon("src/main/java/ui/icons/Spain.png"));
-        resource.put("langPor", new ImageIcon("src/main/java/ui/icons/Portugal.png"));
-        resource.put("langChn", new ImageIcon("src/main/java/ui/icons/China.png"));
+        Properties prop = new Properties();
+        InputStream input;
 
-        resource.put("new", new ImageIcon("src/main/java/ui/icons/new.png"));
-        resource.put("open", new ImageIcon("src/main/java/ui/icons/open.png"));
-        resource.put("save", new ImageIcon("src/main/java/ui/icons/save.png"));
-        resource.put("closeTab", new ImageIcon("src/main/java/ui/icons/closetab.png"));
+        try {
+            input = Thread.currentThread().getContextClassLoader().getResourceAsStream("resPath.properties");
+            prop.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        resource.put("paste", new ImageIcon(prop.getProperty("PasteIcon")));
+        resource.put("cut", new ImageIcon(prop.getProperty("CutIcon")));
+        resource.put("copy", new ImageIcon(prop.getProperty("CopyIcon")));
+        resource.put("exit", new ImageIcon(prop.getProperty("ExitIcon")));
+
+        resource.put("langEng", new ImageIcon(prop.getProperty("LangEngIcon")));
+        resource.put("langFrn", new ImageIcon(prop.getProperty("LangFrnIcon")));
+        resource.put("langSpa", new ImageIcon(prop.getProperty("LangSpaIcon")));
+        resource.put("langPor", new ImageIcon(prop.getProperty("LangPorIcon")));
+        resource.put("langChn", new ImageIcon(prop.getProperty("LangChnIcon")));
+
+        resource.put("new", new ImageIcon(prop.getProperty("NewIcon")));
+        resource.put("open", new ImageIcon(prop.getProperty("OpenIcon")));
+        resource.put("save", new ImageIcon(prop.getProperty("SaveIcon")));
+        resource.put("closeTab", new ImageIcon(prop.getProperty("CloseTab")));
 
         return resource;
     }
