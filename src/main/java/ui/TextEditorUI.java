@@ -1,229 +1,210 @@
 package ui;
 
 
+import io.IOAgent;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TextEditorUI extends JFrame {
+    private JMenuBar menuBar;
+    private JMenu fileMenu;
+    private JMenu editMenu;
+    private JMenu formatMenu;
+    private JMenu viewMenu;
+    private JMenu windowMenu;
+    private JMenu langMenu;
+    private JMenu settingsMenu;
+    private JMenu helpMenu;
+    private JTabbedPane tabbedPane;
+    private IOAgent ioAgent;
 
-    private JFileChooser fileChooser=new JFileChooser();
-    JTabbedPane tabbedPane=new JTabbedPane();
     public TextEditorUI(){
-        setSize(new Dimension(600, 400));
+        initUI();
+        initAgent();
+        initActions();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+
+    }
+
+
+    public static void main(String[] args) {
+        TextEditorUI test = new TextEditorUI();
+    }
+
+
+    private Map<String, ImageIcon> readIconRes() {
+        Map<String, ImageIcon> resource = new HashMap<>();
+        resource.put("paste", new ImageIcon("src/main/java/ui/icons/paste.png"));
+        resource.put("cut", new ImageIcon("src/main/java/ui/icons/cut.png"));
+        resource.put("copy", new ImageIcon("src/main/java/ui/icons/copy.png"));
+        resource.put("exit", new ImageIcon("src/main/java/ui/icons/exit.png"));
+
+        resource.put("langEng", new ImageIcon("src/main/java/ui/icons/England.png"));
+        resource.put("langFrn", new ImageIcon("src/main/java/ui/icons/France.png"));
+        resource.put("langSpa", new ImageIcon("src/main/java/ui/icons/Spain.png"));
+        resource.put("langPor", new ImageIcon("src/main/java/ui/icons/Portugal.png"));
+        resource.put("langChn", new ImageIcon("src/main/java/ui/icons/China.png"));
+
+        resource.put("new", new ImageIcon("src/main/java/ui/icons/new.png"));
+        resource.put("open", new ImageIcon("src/main/java/ui/icons/open.png"));
+        resource.put("save", new ImageIcon("src/main/java/ui/icons/save.png"));
+        resource.put("closeTab", new ImageIcon("src/main/java/ui/icons/closetab.png"));
+
+        return resource;
+    }
+
+    private void initUI() {
+        menuBar = new JMenuBar();
+        fileMenu = new JMenu("File");
+        editMenu = new JMenu("Edit");
+        formatMenu = new JMenu("Format");
+        viewMenu = new JMenu("View");
+        windowMenu = new JMenu("Window");
+        langMenu = new JMenu("Language");
+        settingsMenu = new JMenu("Settings");
+        helpMenu = new JMenu("Help");
+        tabbedPane = new JTabbedPane();
         add(tabbedPane);
-
-        //add menu bar
-        JMenuBar menuBar=new JMenuBar();
         setJMenuBar(menuBar);
-        JMenu file=new JMenu("File");
-        menuBar.add(file);
-        JMenu edit=new JMenu("Edit");
-        menuBar.add(edit);
-        JMenu format=new JMenu("Format");
-        menuBar.add(format);
-        JMenu view =new JMenu("View");
-        menuBar.add(view);
-        JMenu windows=new JMenu("Windows");
-        menuBar.add(windows);
-        JMenu language=new JMenu("Language");
-        menuBar.add(language);
-        JMenu setting=new JMenu("Settings");
-        menuBar.add(setting);
-        JMenu help=new JMenu("Help");
-        menuBar.add(help);
+        setSize(new Dimension(600, 400));
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(formatMenu);
+        menuBar.add(viewMenu);
+        menuBar.add(windowMenu);
+        menuBar.add(langMenu);
+        menuBar.add(settingsMenu);
+        menuBar.add(helpMenu);
+    }
 
-        //Icons for edit
-        ImageIcon iconPaste = new ImageIcon("src/main/java/ui/icons/paste.png");
-        ImageIcon iconCut = new ImageIcon("src/main/java/ui/icons/cut.png");
-        ImageIcon iconCopy = new ImageIcon("src/main/java/ui/icons/copy.png");
-        ImageIcon iconExit = new ImageIcon("src/main/java/ui/icons/exit.png");
-        //Icons for Languages
-        ImageIcon iconEnglish = new ImageIcon("src/main/java/ui/icons/England.png");
-        ImageIcon iconFrench = new ImageIcon("src/main/java/ui/icons/France.png");
-        ImageIcon iconSpanish = new ImageIcon("src/main/java/ui/icons/Spain.png");
-        ImageIcon iconPortuguese = new ImageIcon("src/main/java/ui/icons/Portugal.png");
-        ImageIcon iconChinese = new ImageIcon("src/main/java/ui/icons/China.png");
-        //icons for file
-        ImageIcon iconNew= new ImageIcon("src/main/java/ui/icons/new.png");
-        ImageIcon iconOpen = new ImageIcon("src/main/java/ui/icons/open.png");
-        ImageIcon iconSave = new ImageIcon("src/main/java/ui/icons/save.png");
-        ImageIcon iconCloseTab = new ImageIcon("src/main/java/ui/icons/closetab.png");
+    private void initAgent() {
+        ioAgent = new IOAgent(tabbedPane);
+    }
 
-		
-        //define actions
-        Action New=new AbstractAction("New", iconNew) {
+    private void initActions() {
+        Map<String, ImageIcon> iconMap = readIconRes();
+        fileMenu.add(new AbstractAction("New", iconMap.get("new")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel jPanel=new JPanel();
+                JPanel jPanel = new JPanel();
                 jPanel.setLayout(new BorderLayout());
                 tabbedPane.addTab("new", jPanel);
-                JTextArea textArea=new JTextArea();
-                JScrollPane scrollPane=new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                JTextArea textArea = new JTextArea();
+                JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
                 jPanel.add(scrollPane, BorderLayout.CENTER);
             }
-        };
-		
-        Action Open=new AbstractAction("Open", iconOpen) {
+
+        });
+
+        fileMenu.add(new AbstractAction("Open", iconMap.get("open")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(fileChooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
-                    String inputPath=fileChooser.getSelectedFile().getAbsolutePath();
-                    String filename=fileChooser.getSelectedFile().getName();
-                    JPanel jPanel=new JPanel();
-                    jPanel.setLayout(new BorderLayout());
-                    tabbedPane.addTab(filename, jPanel);
-                    JTextArea textArea=new JTextArea();
-                    String content=getContent(inputPath);
-                    textArea.setText(content);
-                    JScrollPane scrollPane=new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                    jPanel.add(scrollPane, BorderLayout.CENTER);
-                    //saveFile();
-
-                }
+                Map<String, String> titleAndContent = ioAgent.read();
+                JPanel jPanel=new JPanel();
+                jPanel.setLayout(new BorderLayout());
+                tabbedPane.addTab(titleAndContent.get("name"), jPanel);
+                JTextArea textArea = new JTextArea();
+                textArea.setText(titleAndContent.get("content"));
+                JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                jPanel.add(scrollPane, BorderLayout.CENTER);
             }
-        };
 
-        Action Save=new AbstractAction("Save file", iconSave) {
+        });
+
+        fileMenu.add(new AbstractAction("Save file", iconMap.get("save")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(fileChooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
-                    saveFile();
-                }
+                ioAgent.save();
             }
-        };
 
-        Action CloseCTab=new AbstractAction("Close current tab", iconCloseTab) {
+        });
+
+        fileMenu.add(new AbstractAction("Close current tab", iconMap.get("closeTab")) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //close current active tab
                 Component selected = tabbedPane.getSelectedComponent();
                 if (selected != null) {
+                    ioAgent.delete();
                     tabbedPane.remove(selected);
                 }
             }
-        };
 
-        Action Exit=new AbstractAction("Exit", iconExit) {
+        });
+
+        fileMenu.add(new AbstractAction("Exit", iconMap.get("exit")) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
-        };
 
-        Action Copy =  new AbstractAction("Copy", iconCopy) {
+        });
+
+        editMenu.add(new AbstractAction("Copy", iconMap.get("copy")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                throw new UnsupportedOperationException();
             }
-        };
 
-        Action Paste =  new AbstractAction("Paste", iconPaste) {
+        });
+
+        editMenu.add(new AbstractAction("Paste", iconMap.get("paste")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                throw new UnsupportedOperationException();
             }
-        };
+        });
 
-        Action Cut =  new AbstractAction("Cut", iconCut) {
+        editMenu.add(new AbstractAction("Cut", iconMap.get("cut")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                throw new UnsupportedOperationException();
             }
-        };
+        });
 
-        Action English =  new AbstractAction("English", iconEnglish) {
+        langMenu.add(new AbstractAction("English", iconMap.get("langEng")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                throw new UnsupportedOperationException();
             }
-        };
+        });
 
-        Action French =  new AbstractAction("French", iconFrench) {
+        langMenu.add(new AbstractAction("French", iconMap.get("langFrn")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                throw new UnsupportedOperationException();
             }
-        };
+        });
 
-        Action Spanish =  new AbstractAction("Spanish", iconSpanish) {
+        langMenu.add(new AbstractAction("Spanish", iconMap.get("langSpa")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                throw new UnsupportedOperationException();
             }
-        };
+        });
 
-        Action Portuguese =  new AbstractAction("Portuguese", iconPortuguese) {
+        langMenu.add(new AbstractAction("Portuguese", iconMap.get("langPor")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                throw new UnsupportedOperationException();
             }
-        };
+        });
 
-        Action Chinese =  new AbstractAction("Chinese", iconChinese) {
+        langMenu.add(new AbstractAction("Chinese", iconMap.get("langChn")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                throw new UnsupportedOperationException();
             }
-        };
 
-        //add actions in the menubar
-        file.add(New);
-        file.add(Open);
-        file.add(Save);
-        file.add(CloseCTab);
-        file.add(Exit);
-
-        edit.add(Copy);
-        edit.add(Cut);
-        edit.add(Paste);
-
-        language.add(Portuguese);
-        language.add(Chinese);
-        language.add(English);
-        language.add(Spanish);
-        language.add(French);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-
-    }
-	
-	//file I/O methods
-    public void openFile(String fileName){
-        FileReader fr=null;
-        try{
-            fr=new FileReader(fileName);
-            //textArea.read(fr,null);//print data in textarea
-            fr.close();;
-            setTitle(fileName);
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-    public void saveFile(){
-        if(fileChooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
-            FileWriter fw=null;
-            try{
-                fw=new FileWriter(fileChooser.getSelectedFile().getAbsolutePath());
-                //textArea.write(fw);/read data from textarea
-                fw.close();
-            }catch(IOException e){
-                e.getStackTrace();
-            }
-        }
-    }
-    public String getContent(String filename){
-        return "haha";//sample return value
-    };
-
-    public static void main(String[] args) {
-        TextEditorUI test=new TextEditorUI();
-
+        });
     }
 
 }
