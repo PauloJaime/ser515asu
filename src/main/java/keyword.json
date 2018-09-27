@@ -1,0 +1,14 @@
+{
+	"Red":
+	{
+		"obj1":"void",
+		"obj2":"int"
+	},
+	
+	"blue":
+	{
+		"obj1":"char",
+		"obj2":"long"
+	}
+	
+}
