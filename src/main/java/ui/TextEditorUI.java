@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class TextEditorUI extends JFrame {
     private JMenuBar menuBar;
@@ -42,13 +45,18 @@ public class TextEditorUI extends JFrame {
     private JMenu helpMenu;
     private JTabbedPane tabbedPane;
     private IOAgent ioAgent;
+    private JMenuItem mntmIntro;
+    private JMenuItem mntmCoop;
+    private JMenuItem mntmMini;
+    private JMenuItem mntmZoom;
+   
 
     private static enum LANG {
         ENG, FRA, SPA, POR, CHN
     }
 
 
-    public TextEditorUI(){
+    public TextEditorUI() {
         initUI();
         initAgent();
         initActions();
@@ -60,6 +68,7 @@ public class TextEditorUI extends JFrame {
 
     public static void main(String[] args) {
         TextEditorUI t = new TextEditorUI();
+
     }
 
 
@@ -151,11 +160,21 @@ public class TextEditorUI extends JFrame {
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
         tabbedPane = new JTabbedPane();
+        mntmIntro = new JMenuItem("Introduction");
+        mntmCoop = new JMenuItem("Cooperators");
+        mntmMini = new JMenuItem("Minimize");
+        mntmZoom = new JMenuItem("Zoom");
+
+        helpMenu.add(mntmIntro);
+        helpMenu.add(mntmCoop);
+        windowMenu.add(mntmMini);
+        windowMenu.add(mntmZoom);
     }
 
     private void initAgent() {
-        ioAgent = new IOAgent(tabbedPane);
+        ioAgent = new IOAgent(tabbedPane); 
     }
+    
 
     private void initActions() {
         newFileAction.addActionListener(e -> {
@@ -223,6 +242,24 @@ public class TextEditorUI extends JFrame {
         porLangAction.addActionListener(e -> changeUIText(LANG.POR));
 
         chnLangAction.addActionListener(e -> changeUIText(LANG.CHN));
+
+        mntmZoom.addActionListener(e -> setExtendedState(JFrame.MAXIMIZED_BOTH));
+
+        mntmMini.addActionListener(e -> setExtendedState(JFrame.ICONIFIED));
+
+        mntmIntro.addActionListener(e -> {
+            IntroFrame t = new IntroFrame();
+            t.setVisible(true);
+        });
+
+        mntmCoop.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "Weizi Tong\n"
+                    + "Binbin Yan\n"
+                    + "Yiru Hu\n"
+                    + "Hongfei Ju\n"
+                    + "Paulo Jaime", "Cooperators",JOptionPane.INFORMATION_MESSAGE);
+        });
+
     }
 
     private void changeUIText(LANG lang) {
@@ -278,8 +315,9 @@ public class TextEditorUI extends JFrame {
         return (JTextArea) viewport.getComponent(0);
     }
 
+
     private String getSelectedTextFromTextArea() {
         return getCurrentTextArea().getSelectedText();
     }
-
+	
 }
