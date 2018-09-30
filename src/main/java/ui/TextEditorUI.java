@@ -14,6 +14,9 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class TextEditorUI extends JFrame {
     private JMenuBar menuBar;
@@ -27,6 +30,11 @@ public class TextEditorUI extends JFrame {
     private JMenu helpMenu;
     private JTabbedPane tabbedPane;
     private IOAgent ioAgent;
+    private JMenuItem mntmIntro;
+    private JMenuItem mntmCoop;
+    private JMenuItem mntmMini;
+    private JMenuItem mntmZoom;
+   
 
     public TextEditorUI(){
         initUI();
@@ -40,6 +48,7 @@ public class TextEditorUI extends JFrame {
 
     public static void main(String[] args) {
         TextEditorUI t = new TextEditorUI();
+
     }
 
 
@@ -86,7 +95,7 @@ public class TextEditorUI extends JFrame {
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
         tabbedPane = new JTabbedPane();
-        add(tabbedPane);
+        getContentPane().add(tabbedPane);
         setJMenuBar(menuBar);
         setSize(new Dimension(600, 400));
         menuBar.add(fileMenu);
@@ -97,11 +106,24 @@ public class TextEditorUI extends JFrame {
         menuBar.add(langMenu);
         menuBar.add(settingsMenu);
         menuBar.add(helpMenu);
+        
+        mntmIntro = new JMenuItem("Introduction");
+        mntmCoop = new JMenuItem("Cooperators");
+        mntmMini = new JMenuItem("Minimize");
+        mntmZoom = new JMenuItem("Zoom");
+        
+        helpMenu.add(mntmIntro);
+        helpMenu.add(mntmCoop);
+        windowMenu.add(mntmMini);
+        windowMenu.add(mntmZoom);
+        
+   
     }
 
     private void initAgent() {
-        ioAgent = new IOAgent(tabbedPane);
+        ioAgent = new IOAgent(tabbedPane); 
     }
+    
 
     private void initActions() {
         Map<String, ImageIcon> iconMap = readIconRes();
@@ -219,6 +241,41 @@ public class TextEditorUI extends JFrame {
             }
 
         });
+        
+        mntmZoom.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		setExtendedState(JFrame.MAXIMIZED_BOTH);
+        	}
+        });
+        
+        mntmMini.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		setExtendedState(JFrame.ICONIFIED);
+        	}
+        });
+        
+        mntmIntro.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		IntroFrame t = new IntroFrame();
+        		t.setVisible(true);
+        		
+        	}
+        });
+        
+        mntmCoop.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		JOptionPane.showMessageDialog(null, "Weizi Tong\n" 
+        				+ "Binbin Yan\n"
+        				+ "Yiru Hu\n"
+        				+ "Hongfei Ju\n"
+        				+ "Paulo Jaime", "Cooperators",JOptionPane.INFORMATION_MESSAGE);
+        	}
+        });
     }
 
+
+
+
+
+	
 }
