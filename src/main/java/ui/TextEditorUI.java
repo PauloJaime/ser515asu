@@ -253,11 +253,12 @@ public class TextEditorUI extends JFrame {
         });
 
         mntmCoop.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Weizi Tong\n"
+            JOptionPane.showMessageDialog(null, "Zitong Wei\n"
                     + "Binbin Yan\n"
+                    + "Paulo Jaime\n"
                     + "Yiru Hu\n"
                     + "Hongfei Ju\n"
-                    + "Paulo Jaime", "Cooperators",JOptionPane.INFORMATION_MESSAGE);
+                    + "Zelin Bao", "Cooperators",JOptionPane.INFORMATION_MESSAGE);
         });
 
     }
