@@ -7,15 +7,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import javax.swing.JTextPane;
+
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 public class TextEditorUI extends JFrame {
     private JMenuBar menuBar;
@@ -51,12 +57,12 @@ public class TextEditorUI extends JFrame {
     private JMenuItem mntmZoom;
    
 
-    private static enum LANG {
+    private enum LANG {
         ENG, FRA, SPA, POR, CHN
     }
 
 
-    public TextEditorUI() {
+    private TextEditorUI() {
         initUI();
         initAgent();
         initActions();
@@ -181,8 +187,16 @@ public class TextEditorUI extends JFrame {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab("new", jPanel);
-            JTextArea textArea = new JTextArea();
-            JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            //JTextArea textArea = new JTextArea();
+            JTextPane textPane = new JTextPane();
+            EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
+            textPane.setBorder(eb);
+
+            Runnable runnable = new DynamicHighlight(textPane);
+            Thread thread = new Thread(runnable);
+            thread.start();
+
+            JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
@@ -191,9 +205,11 @@ public class TextEditorUI extends JFrame {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab(titleAndContent.get("name"), jPanel);
-            JTextArea textArea = new JTextArea();
-            textArea.setText(titleAndContent.get("content"));
-            JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            //JTextArea textArea = new JTextArea();
+            //textArea.setText(titleAndContent.get("content"));
+            JTextPane textPane = new JTextPane();
+            textPane.setText(titleAndContent.get("content"));
+            JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
@@ -315,7 +331,6 @@ public class TextEditorUI extends JFrame {
         JViewport viewport = (JViewport) scrollPane.getComponent(0);
         return (JTextArea) viewport.getComponent(0);
     }
-
 
     private String getSelectedTextFromTextArea() {
         return getCurrentTextArea().getSelectedText();
