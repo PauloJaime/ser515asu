@@ -13,9 +13,6 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class TextEditorUI extends JFrame {
     private JMenuBar menuBar;
@@ -45,10 +42,10 @@ public class TextEditorUI extends JFrame {
     private JMenu helpMenu;
     private JTabbedPane tabbedPane;
     private IOAgent ioAgent;
-    private JMenuItem mntmIntro;
-    private JMenuItem mntmCoop;
-    private JMenuItem mntmMini;
-    private JMenuItem mntmZoom;
+    private JMenuItem openIntroductionAction;
+    private JMenuItem openCooperationAction;
+    private JMenuItem minimizeAction;
+    private JMenuItem zoomAction;
    
 
     private static enum LANG {
@@ -67,7 +64,7 @@ public class TextEditorUI extends JFrame {
 
 
     public static void main(String[] args) {
-        TextEditorUI t = new TextEditorUI();
+        new TextEditorUI();
 
     }
 
@@ -160,15 +157,15 @@ public class TextEditorUI extends JFrame {
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
         tabbedPane = new JTabbedPane();
-        mntmIntro = new JMenuItem("Introduction");
-        mntmCoop = new JMenuItem("Cooperators");
-        mntmMini = new JMenuItem("Minimize");
-        mntmZoom = new JMenuItem("Zoom");
+        openIntroductionAction = new JMenuItem("Introduction");
+        openCooperationAction = new JMenuItem("Cooperators");
+        minimizeAction = new JMenuItem("Minimize");
+        zoomAction = new JMenuItem("Zoom");
 
-        helpMenu.add(mntmIntro);
-        helpMenu.add(mntmCoop);
-        windowMenu.add(mntmMini);
-        windowMenu.add(mntmZoom);
+        helpMenu.add(openIntroductionAction);
+        helpMenu.add(openCooperationAction);
+        windowMenu.add(minimizeAction);
+        windowMenu.add(zoomAction);
     }
 
     private void initAgent() {
@@ -243,16 +240,16 @@ public class TextEditorUI extends JFrame {
 
         chnLangAction.addActionListener(e -> changeUIText(LANG.CHN));
 
-        mntmZoom.addActionListener(e -> setExtendedState(JFrame.MAXIMIZED_BOTH));
+        zoomAction.addActionListener(e -> setExtendedState(JFrame.MAXIMIZED_BOTH));
 
-        mntmMini.addActionListener(e -> setExtendedState(JFrame.ICONIFIED));
+        minimizeAction.addActionListener(e -> setExtendedState(JFrame.ICONIFIED));
 
-        mntmIntro.addActionListener(e -> {
+        openIntroductionAction.addActionListener(e -> {
             IntroFrame t = new IntroFrame();
             t.setVisible(true);
         });
 
-        mntmCoop.addActionListener(e -> {
+        openCooperationAction.addActionListener(e -> {
             JOptionPane.showMessageDialog(null, "Weizi Tong\n"
                     + "Binbin Yan\n"
                     + "Yiru Hu\n"
