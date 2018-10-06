@@ -14,3 +14,14 @@
 ``` shell
 /src/test
 ```
+
+## How to install
+
+1. Download the code
+2. run the following command
+```shell
+# Make sure you have gradle on your computer
+gradle build
+gradle jar
+```
+3. Go the build/libs folder and run the jar file by double click
