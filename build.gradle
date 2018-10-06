@@ -9,6 +9,22 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    baseName = 'Notepad'
+    from('src/main/resource') {
+        include '*.txt'
+        include '*.properties'
+        include 'icons/*.png'
+    }
+
+    manifest {
+        attributes 'Implementation-Title': 'Notepad',
+                   'Implementation-Version': version,
+                   'Main-Class': 'ui.TextEditorUI'
+    }
+
+}
+
 sourceSets {
     main {
         java {
