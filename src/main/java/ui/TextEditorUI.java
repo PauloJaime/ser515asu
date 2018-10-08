@@ -1,14 +1,11 @@
 package ui;
 
-
 import io.IOAgent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,10 +15,7 @@ import java.util.Properties;
 import javax.swing.JTextPane;
 
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
+
 
 public class TextEditorUI extends JFrame {
     private JMenuBar menuBar;
