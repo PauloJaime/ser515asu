@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 
-public class interfaceDefine {
+public class InterfaceDefine {
     //public static void main(String args[]) throws IOException {
 	  public String matchColor(String keyWord) throws IOException {
     	String color = "";
