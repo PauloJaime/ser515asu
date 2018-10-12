@@ -4,6 +4,9 @@
 # Log files
 *.log
 
+# Visual Studio Code files
+/*
+
 # Package files
 *.jar
 *.war
