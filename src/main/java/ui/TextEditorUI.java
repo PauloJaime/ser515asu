@@ -233,6 +233,8 @@ public class TextEditorUI extends JFrame {
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab(titleAndContent.get("name"), jPanel);
             JTextPane textPane = createJTextPane();
+            //JTextArea textArea = new JTextArea();
+            //textArea.setText(titleAndContent.get("content"));
             textPane.setText(titleAndContent.get("content"));
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
@@ -388,7 +390,6 @@ public class TextEditorUI extends JFrame {
         JViewport viewport = (JViewport) scrollPane.getComponent(0);
         return (JTextPane) viewport.getComponent(0);
     }
-
 
     private String getSelectedTextFromTextArea() {
         return getCurrentTextArea().getSelectedText();
