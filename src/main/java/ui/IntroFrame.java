@@ -1,19 +1,20 @@
 package ui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
-import java.awt.TextArea;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.Font;
 
+/**
+ * The class used to show the introduction panel
+ *
+ * @author Zelin Bao
+ * @version 1.0
+ */
 public class IntroFrame extends JFrame {
 
 	private JPanel contentPane;

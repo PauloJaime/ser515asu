@@ -2,6 +2,12 @@ package io;
 
 import java.util.*;
 
+/**
+ * Path "Database". Manage path create and delete
+ *
+ * @author Zitong Wei
+ * @version 1.0
+ */
 class PathDB {
     private static Map<String, String> paths;
 

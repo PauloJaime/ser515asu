@@ -6,6 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.font.TextHitInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,12 +20,14 @@ import java.util.Properties;
 import javax.swing.JTextPane;
 
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 
 /**
  * Main class for launching the application
  *
- * @author Hongfei Ju, Paulo Jaime, Zitong Wei
+ * @author Major: Hongfei Ju, Paulo Jaime, Trivial: Zitong Wei, Zelin Bao
  * @version 2.0
  */
 
@@ -255,14 +262,8 @@ public class TextEditorUI extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             DataFlavor flavor = DataFlavor.stringFlavor;
             if (clipboard.isDataFlavorAvailable(flavor)) {
-                try {
-                    JTextArea textArea = getCurrentTextArea();
-                    textArea.insert((String) clipboard.getData(flavor), textArea.getCaretPosition());
-                } catch (UnsupportedFlavorException ufe) {
-                    System.out.println(ufe);
-                } catch (IOException ioe) {
-                    System.out.println(ioe);
-                }
+                JTextPane textPane = getCurrentTextArea();
+                textPane.paste();
             }
 
         });
@@ -323,6 +324,7 @@ public class TextEditorUI extends JFrame {
         int length = textPane.getDocument().getLength();
         textPane.getStyledDocument().setParagraphAttributes(0, length, attributes, false);
 
+
         return textPane;
     }
 
@@ -380,11 +382,11 @@ public class TextEditorUI extends JFrame {
      * Read Current text from TextEditor
      * @return
      */
-    private JTextArea getCurrentTextArea() {
+    private JTextPane getCurrentTextArea() {
         Component component = tabbedPane.getSelectedComponent();
         JScrollPane scrollPane = (JScrollPane) ((JPanel) component).getComponents()[0];
         JViewport viewport = (JViewport) scrollPane.getComponent(0);
-        return (JTextArea) viewport.getComponent(0);
+        return (JTextPane) viewport.getComponent(0);
     }
 
 

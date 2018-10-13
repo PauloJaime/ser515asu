@@ -14,7 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-
+/**
+ * Temporarily used to do highlighting
+ *
+ * @author Hongfei Ju
+ * @version 2.0
+ */
 public class DynamicHighlight implements Runnable {
     JTextPane textPane;
     public DynamicHighlight(JTextPane textPane){

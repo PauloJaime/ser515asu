@@ -6,6 +6,12 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The class is used to manipulating the I/O operations
+ *
+ * @author Zitong Wei, Zelin Bao
+ * @version 1.0
+ */
 public class IOAgent {
     private JTabbedPane tabManager;
 
