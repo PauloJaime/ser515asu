@@ -325,7 +325,48 @@ public class TextEditorUI extends JFrame {
         StyleConstants.setTabSet(attributes, tabSet);
         int length = textPane.getDocument().getLength();
         textPane.getStyledDocument().setParagraphAttributes(0, length, attributes, false);
+        textPane.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                System.out.println("Insert update");
+                System.out.println(e.getOffset());
+                Document doc = e.getDocument();
+                int startPos = findStartPos(doc, e.getOffset());
+                int endPos = findEndPos(doc, e.getOffset());
+                try {
+                    String word = doc.getText(startPos, endPos - startPos + 1);
+                } catch (BadLocationException be) {
+                    // Bad location exception should be thrown
+                    throw new RuntimeException(be.getMessage());
+                }
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                System.out.println("Remove update");
+                System.out.println(e.getOffset());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                System.out.println("Change update");
+                System.out.println(e.getOffset());
+            }
+
+            private String extractWord(Document doc, int initOffset) {
+                StringBuilder sb = new StringBuilder();
+                return "extracted word";
+            }
+
+            private int findStartPos(Document doc, int initOffset) {
+                return 0;
+            }
+
+            private int findEndPos(Document doc, int initOffset) {
+                return -1;
+            }
+
+        });
 
         return textPane;
     }
