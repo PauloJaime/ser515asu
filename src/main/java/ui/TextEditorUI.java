@@ -219,9 +219,9 @@ public class TextEditorUI extends JFrame {
             EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
             textPane.setBorder(eb);
 
-//            Runnable runnable = new DynamicHighlight(textPane);
-//            Thread thread = new Thread(runnable);
-//            thread.start();
+            Runnable runnable = new DynamicHighlight(textPane);
+            Thread thread = new Thread(runnable);
+            thread.start();
 
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
