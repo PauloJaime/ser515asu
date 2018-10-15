@@ -215,13 +215,13 @@ public class TextEditorUI extends JFrame {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab("new", jPanel);
-            JTextPane textPane = createJTextPane();
+            JTextPane textPane = new JTextPane(SyntaxAwareDocumentFactory.createDocument());
             EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
             textPane.setBorder(eb);
 
-            Runnable runnable = new DynamicHighlight(textPane);
-            Thread thread = new Thread(runnable);
-            thread.start();
+//            Runnable runnable = new DynamicHighlight(textPane);
+//            Thread thread = new Thread(runnable);
+//            thread.start();
 
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
@@ -232,7 +232,7 @@ public class TextEditorUI extends JFrame {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab(titleAndContent.get("name"), jPanel);
-            JTextPane textPane = createJTextPane();
+            JTextPane textPane = new JTextPane();
             //JTextArea textArea = new JTextArea();
             //textArea.setText(titleAndContent.get("content"));
             textPane.setText(titleAndContent.get("content"));
@@ -300,76 +300,80 @@ public class TextEditorUI extends JFrame {
 
     }
 
+    private DefaultStyledDocument createSyntaxSensitiveDocument() {
+
+        return new DefaultStyledDocument() {
+
+            public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+
+            }
+
+        };
+
+    }
+
     /**
      * Generate a JTextPane with specific Font and tab size
      * @return textPane
      */
-    private JTextPane createJTextPane() {
-        JTextPane textPane = new JTextPane();
-        Font font = new Font("Courier", Font.BOLD, 12);
-        textPane.setFont(font);
-
-        FontMetrics fm = textPane.getFontMetrics(font);
-        int charWidth = fm.charWidth(' ');
-        int tabWidth = charWidth * 4;
-
-        TabStop[] tabs = new TabStop[5];
-
-        for (int j = 0; j < tabs.length; j++) {
-            int tab = j + 1;
-            tabs[j] = new TabStop(tab * tabWidth);
-        }
-
-        TabSet tabSet = new TabSet(tabs);
-        SimpleAttributeSet attributes = new SimpleAttributeSet();
-        StyleConstants.setTabSet(attributes, tabSet);
-        int length = textPane.getDocument().getLength();
-        textPane.getStyledDocument().setParagraphAttributes(0, length, attributes, false);
-        textPane.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                System.out.println("Insert update");
-                System.out.println(e.getOffset());
-                Document doc = e.getDocument();
-                int startPos = findStartPos(doc, e.getOffset());
-                int endPos = findEndPos(doc, e.getOffset());
-                try {
-                    String word = doc.getText(startPos, endPos - startPos + 1);
-                } catch (BadLocationException be) {
-                    // Bad location exception should be thrown
-                    throw new RuntimeException(be.getMessage());
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                System.out.println("Remove update");
-                System.out.println(e.getOffset());
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                System.out.println("Change update");
-                System.out.println(e.getOffset());
-            }
-
-            private String extractWord(Document doc, int initOffset) {
-                StringBuilder sb = new StringBuilder();
-                return "extracted word";
-            }
-
-            private int findStartPos(Document doc, int initOffset) {
-                return 0;
-            }
-
-            private int findEndPos(Document doc, int initOffset) {
-                return -1;
-            }
-
-        });
-
-        return textPane;
-    }
+//    private JTextPane createJTextPane() {
+//        JTextPane textPane = new JTextPane();
+//        Font font = new Font("Courier", Font.BOLD, 12);
+//        textPane.setFont(font);
+//
+//        FontMetrics fm = textPane.getFontMetrics(font);
+//        int charWidth = fm.charWidth(' ');
+//        int tabWidth = charWidth * 4;
+//
+//        TabStop[] tabs = new TabStop[5];
+//
+//        for (int j = 0; j < tabs.length; j++) {
+//            int tab = j + 1;
+//            tabs[j] = new TabStop(tab * tabWidth);
+//        }
+//
+//        TabSet tabSet = new TabSet(tabs);
+//        SimpleAttributeSet attributes = new SimpleAttributeSet();
+//        StyleConstants.setTabSet(attributes, tabSet);
+//        int length = textPane.getDocument().getLength();
+//        textPane.getStyledDocument().setParagraphAttributes(0, length, attributes, false);
+//        textPane.getDocument().addDocumentListener(new DocumentListener() {
+//            @Override
+//            public void insertUpdate(DocumentEvent e) {
+//                reHighlight(e.getDocument(), e.getOffset());
+//            }
+//
+//            @Override
+//            public void removeUpdate(DocumentEvent e) {
+//                reHighlight(e.getDocument(), e.getOffset());
+//            }
+//
+//            @Override
+//            public void changedUpdate(DocumentEvent e) {
+//                System.out.println("Change update");
+//                System.out.println(e.getOffset());
+//            }
+//
+//            private void reHighlight(Document doc, int initPos) {
+//                try {
+//                    if (Character.isAlphabetic(doc.getText(initPos, 1).charAt(0))) {
+//                        int startIdx = findStartPos(doc, initPos);
+//                        int endIdx = findEndPos(doc, initPos);
+//                        System.out.println(doc.getText(startIdx, endIdx - startIdx + 1));
+//                    }
+//
+//                } catch (BadLocationException be) {
+//                    throw new RuntimeException(be.getMessage());
+//                }
+//
+//            }
+//
+//
+//
+//        });
+//
+//        return textPane;
+//    }
 
     /**
      * Change the UI label displaying language
