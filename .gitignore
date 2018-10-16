@@ -16,6 +16,12 @@
 /.idea/*
 /.settings/*
 
+# Windows Gradle Cache fils
+/caches/*
+/daemon/*
+/native/*
+/wrapper/*
+
 # Gradle local cache
 /.gradle/*
 
