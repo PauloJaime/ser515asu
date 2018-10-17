@@ -224,6 +224,9 @@ public class TextEditorUI extends JFrame {
             thread.start();
 
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+            TextLineNumber tln = new TextLineNumber(textPane);
+            scrollPane.setRowHeaderView( tln );
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
