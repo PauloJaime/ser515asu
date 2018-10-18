@@ -1,16 +1,13 @@
 package keyword;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
-
-import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 
 /**
  * The class used to read color information
@@ -20,9 +17,10 @@ import java.util.Properties;
  */
 public class InterfaceDefine {
     //public static void main(String args[]) throws IOException {
-	  public String matchColor(String keyWord) throws IOException {
-    	  String color = "";
+	  public Color matchColor(String keyWord) throws IOException {
+    	  String colorName = "";
     	  String input = "";
+    	  Color color = Color.black;
 
 		  try {
 			  input = Thread.currentThread().getContextClassLoader().getResource("keyword.json").getPath();
@@ -53,12 +51,19 @@ public class InterfaceDefine {
 
               for(Entry<String,String> entry2 : map.entrySet()){
               	if(entry2.getKey().equals(keyWord)){
-              		color = entry2.getValue();
+              		colorName = entry2.getValue();
 				}
 			  }
 
         	  innerMap = new HashMap<>();
           }
+          if(colorName.equals("Yellow")){
+          	color = Color.yellow;
+		  }else if(colorName.equals("Blue")){
+          	color = Color.blue;
+		  }else if(colorName.equals("Green")){
+          	color = Color.green;
+		  }
           return color;
       }
 }
