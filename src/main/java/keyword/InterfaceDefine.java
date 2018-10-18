@@ -34,6 +34,7 @@ public class InterfaceDefine {
           JSONObject Outer=new JSONObject(content);
     	  Map<String, Object> outerMap = new HashMap<>();
     	  Map<String, Object> innerMap = new HashMap<>();
+    	  Map<String,String> map = new HashMap<>();
           for(Object k : Outer.keySet() ){
         	  Object v = Outer.get(k.toString());
         	  outerMap.put(k.toString(), v);
@@ -47,10 +48,14 @@ public class InterfaceDefine {
             	  innerMap.put(k.toString(), v);
               }
               for (Entry<String, Object> entry1 : innerMap.entrySet()){
-            	  if(entry1.getValue().toString().equals(keyWord) ){
-            		  color = entry.getKey();
-            	  }
+              	map.put(entry1.getValue().toString(), entry.getKey());
               }
+
+              for(Entry<String,String> entry2 : map.entrySet()){
+              	if(entry2.getKey().equals(keyWord)){
+              		color = entry2.getValue();
+				}
+			  }
 
         	  innerMap = new HashMap<>();
           }
