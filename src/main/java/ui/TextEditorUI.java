@@ -236,10 +236,18 @@ public class TextEditorUI extends JFrame {
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab(titleAndContent.get("name"), jPanel);
             JTextPane textPane = createJTextPane();
+            EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
+            textPane.setBorder(eb);
+            Runnable runnable = new DynamicHighlight(textPane);
+            Thread thread = new Thread(runnable);
+            thread.start();
             //JTextArea textArea = new JTextArea();
             //textArea.setText(titleAndContent.get("content"));
             textPane.setText(titleAndContent.get("content"));
-            JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+                    JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            TextLineNumber tln = new TextLineNumber(textPane);
+            scrollPane.setRowHeaderView( tln );
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
