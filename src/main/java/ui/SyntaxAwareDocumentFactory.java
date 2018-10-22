@@ -1,6 +1,6 @@
 package ui;
 
-import keyword.InterfaceDefine;
+import keyword.KeywordDB;
 
 import javax.swing.text.*;
 import java.awt.*;
@@ -12,10 +12,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SyntaxAwareDocumentFactory {
-    private static InterfaceDefine keywordDB;
+    private static KeywordDB keywordDB;
 
     static {
-        keywordDB = new InterfaceDefine();
+        keywordDB = new KeywordDB();
     }
 
     private SyntaxAwareDocumentFactory() {

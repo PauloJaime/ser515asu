@@ -15,29 +15,26 @@ import java.io.IOException;
  * @author Yiru Hu
  * @version 1.0
  */
-public class InterfaceDefine {
+public class KeywordDB {
 	//public static void main(String args[]) throws IOException {
 	private Map<String,String> map;
-	private String currentSyntax;
 
-	public InterfaceDefine() {
+	public KeywordDB() {
 	    this("Plain text");
     }
 
-	public InterfaceDefine(String syntax) {
-        currentSyntax = syntax;
+	public KeywordDB(String syntax) {
         map = new HashMap<>();
-        readKeywordInfoByGrammar();
+        readKeywordInfoBySyntax("Java");
     }
 
-	private void readKeywordInfoByGrammar() {
+	private void readKeywordInfoBySyntax(String syntax) {
 	    // Temporarily hard code to read Java keyword
-
 		String input = "";
 		try {
-			input = Thread.currentThread().getContextClassLoader().getResource("keyword.json").getPath();
-		} catch (Exception e) {
-			e.printStackTrace();
+			input = Thread.currentThread().getContextClassLoader().getResource(syntax + "Keyword.json").getPath();
+		} catch (NullPointerException e) {
+			return;
 		}
 
         String content= null;
