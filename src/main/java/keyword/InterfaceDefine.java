@@ -17,46 +17,42 @@ import java.io.IOException;
  */
 public class InterfaceDefine {
     //public static void main(String args[]) throws IOException {
-	  public Color matchColor(String keyWord) throws IOException {
-    	  String colorName = "";
-    	  String input = "";
-    	  Color color = Color.black;
-
+	  Map<String,String> map = new HashMap<>();
+	  public Map getMap() throws IOException{
+		  String input = "";
 		  try {
 			  input = Thread.currentThread().getContextClassLoader().getResource("keyword.json").getPath();
 		  } catch (Exception e) {
 			  e.printStackTrace();
 		  }
-
-          String content= FileUtils.readFileToString(new File(input),"UTF-8");
-          JSONObject Outer=new JSONObject(content);
-    	  Map<String, Object> outerMap = new HashMap<>();
-    	  Map<String, Object> innerMap = new HashMap<>();
-    	  Map<String,String> map = new HashMap<>();
-          for(Object k : Outer.keySet() ){
-        	  Object v = Outer.get(k.toString());
-        	  outerMap.put(k.toString(), v);
-          }
-    	
-          for (Entry<String, Object> entry : outerMap.entrySet()) {
-        	  String str1 = entry.getValue().toString();
-        	  JSONObject inner=new JSONObject(str1);
-              for(Object k : inner.keySet() ){
-            	  Object v = inner.get(k.toString());
-            	  innerMap.put(k.toString(), v);
-              }
-              for (Entry<String, Object> entry1 : innerMap.entrySet()){
-              	map.put(entry1.getValue().toString(), entry.getKey());
-              }
-
-              for(Entry<String,String> entry2 : map.entrySet()){
-              	if(entry2.getKey().equals(keyWord)){
-              		colorName = entry2.getValue();
-				}
+		  String content= FileUtils.readFileToString(new File(input),"UTF-8");
+		  JSONObject Outer=new JSONObject(content);
+		  Map<String, Object> outerMap = new HashMap<>();
+		  Map<String, Object> innerMap = new HashMap<>();
+		  for(Object k : Outer.keySet() ){
+			  Object v = Outer.get(k.toString());
+			  outerMap.put(k.toString(), v);
+		  }
+		  for (Entry<String, Object> entry : outerMap.entrySet()) {
+			  String str1 = entry.getValue().toString();
+			  JSONObject inner=new JSONObject(str1);
+			  for(Object k : inner.keySet() ){
+				  Object v = inner.get(k.toString());
+				  innerMap.put(k.toString(), v);
+			  }
+			  for (Entry<String, Object> entry1 : innerMap.entrySet()){
+				  map.put(entry1.getValue().toString(), entry.getKey());
 			  }
 
-        	  innerMap = new HashMap<>();
-          }
+		  }
+		  return map;
+	  }
+	  public Color matchColor(String keyWord) {
+    	  //String colorName = "";
+    	  Object key = ""+keyWord;
+		  String colorName = map.getOrDefault(key, "Black");
+
+    	  Color color = Color.black;
           if(colorName.equals("Yellow")){
           	color = Color.yellow;
 		  }else if(colorName.equals("Blue")){
