@@ -6,11 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.font.TextHitInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,8 +15,6 @@ import java.util.Properties;
 import javax.swing.JTextPane;
 
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 
 /**
@@ -63,7 +56,7 @@ public class TextEditorUI extends JFrame {
     private JMenuItem openCooperationAction;
     private JMenuItem minimizeAction;
     private JMenuItem zoomAction;
-   
+
 
     private enum LANG {
         ENG, FRA, SPA, POR, CHN
@@ -204,7 +197,25 @@ public class TextEditorUI extends JFrame {
      * Init Agent
      */
     private void initAgent() {
-        ioAgent = new IOAgent(tabbedPane); 
+        ioAgent = new IOAgent(tabbedPane);
+    }
+
+    private void setTabs(JTextPane textPane) {
+        FontMetrics fm = textPane.getFontMetrics( textPane.getFont() );
+        int charWidth = fm.charWidth( ' ' );
+        int tabWidth = charWidth * 4;
+        TabStop[] tabs = new TabStop[5];
+
+        for (int j = 0; j < tabs.length; j++) {
+            int tab = j + 1;
+            tabs[j] = new TabStop( tab * tabWidth );
+        }
+
+        TabSet tabSet = new TabSet(tabs);
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        StyleConstants.setTabSet(attributes, tabSet);
+        int length = textPane.getDocument().getLength();
+        textPane.getStyledDocument().setParagraphAttributes(0, length, attributes, false);
     }
 
     /**
@@ -216,12 +227,10 @@ public class TextEditorUI extends JFrame {
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab("new", jPanel);
             JTextPane textPane = new JTextPane(SyntaxAwareDocumentFactory.createDocument());
+            setTabs(textPane);
             EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
             textPane.setBorder(eb);
 
-//            Runnable runnable = new DynamicHighlight(textPane);
-//            Thread thread = new Thread(runnable);
-//            thread.start();
 
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
