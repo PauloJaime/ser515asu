@@ -16,7 +16,6 @@ import java.io.IOException;
  * @version 1.0
  */
 public class InterfaceDefine {
-	  //SAVE I/O 
 	  Map<String,String> map = new HashMap<>();
 	  public Map getMap() throws IOException{
 		  String input = "";
