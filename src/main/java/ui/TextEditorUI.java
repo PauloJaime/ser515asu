@@ -240,6 +240,7 @@ public class TextEditorUI extends JFrame {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             JTextPane textPane = new JTextPane(SyntaxAwareDocumentFactory.createDocument());
+            setTabs(textPane);
             Map<String, String> titleAndContent = ioAgent.read();
             tabbedPane.addTab(titleAndContent.get("name"), jPanel);
             EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
