@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public class InterfaceDefine {
 	//public static void main(String args[]) throws IOException {
-	Map<String,String> map;
+	private Map<String,String> map;
 	private String currentSyntax;
 
 	public InterfaceDefine() {
