@@ -237,14 +237,15 @@ public class TextEditorUI extends JFrame {
         });
 
         openFileAction.addActionListener(e -> {
-            Map<String, String> titleAndContent = ioAgent.read();
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
+            JTextPane textPane = new JTextPane(SyntaxAwareDocumentFactory.createDocument());
+            Map<String, String> titleAndContent = ioAgent.read();
             tabbedPane.addTab(titleAndContent.get("name"), jPanel);
-            JTextPane textPane = new JTextPane();
-            //JTextArea textArea = new JTextArea();
-            //textArea.setText(titleAndContent.get("content"));
+            EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
+            textPane.setBorder(eb);
             textPane.setText(titleAndContent.get("content"));
+
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
