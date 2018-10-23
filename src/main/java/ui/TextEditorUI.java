@@ -248,7 +248,6 @@ public class TextEditorUI extends JFrame {
         openFileAction.addActionListener(e -> {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
-            JTextPane textPane;
             Map<String, String> titleAndContent = ioAgent.read();
 
             if (titleAndContent == null) {
@@ -261,6 +260,7 @@ public class TextEditorUI extends JFrame {
                 int pos = name.lastIndexOf('.');
                 String syntax = pos == -1 ? "Plain text" : name.substring(pos + 1);
                 textPane = new JTextPane(new SyntaxAwareDocument(syntax));
+                setTabs(textPane);
                 EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
                 textPane.setBorder(eb);
                 textPane.setText(titleAndContent.get("content"));
