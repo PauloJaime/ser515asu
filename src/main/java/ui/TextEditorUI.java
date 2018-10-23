@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -59,6 +61,7 @@ public class TextEditorUI extends JFrame {
     private JMenuItem openCooperationAction;
     private JMenuItem minimizeAction;
     private JMenuItem zoomAction;
+    private JMenuItem fontAction;
 
     private static final Logger log = Logger.getLogger("Log");
 
@@ -202,6 +205,20 @@ public class TextEditorUI extends JFrame {
         helpMenu.add(openCooperationAction);
         windowMenu.add(minimizeAction);
         windowMenu.add(zoomAction);
+
+
+
+        fontAction = new JMenuItem("Font");
+        fontAction.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                FontFrame fontFrame = new FontFrame(getCurrentTextPane());
+                fontFrame.setVisible(true);
+
+            }
+        });
+
+        settingsMenu.add(fontAction);
+
     }
 
     /**
@@ -411,11 +428,11 @@ public class TextEditorUI extends JFrame {
             log.info("No tab found");
             return null;
         }
-        
+
     }
 
     private String getSelectedTextFromTextPane() {
         return getCurrentTextPane().getSelectedText();
     }
-	
+
 }
