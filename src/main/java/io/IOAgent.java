@@ -5,9 +5,18 @@ import java.awt.*;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
+/**
+ * The class is used to manipulating the I/O operations
+ *
+ * @author Zitong Wei, Zelin Bao
+ * @version 1.1
+ */
 public class IOAgent {
     private JTabbedPane tabManager;
+    private static final Logger log = Logger.getLogger("Log");
+
 
     public IOAgent(JTabbedPane tabMgr) {
         tabManager = tabMgr;
@@ -21,10 +30,18 @@ public class IOAgent {
     public Map<String, String> read() {
         Map<String, String> result = new HashMap<>();
         JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        jFileChooser.showOpenDialog(null);
-        File file = jFileChooser.getSelectedFile();
-        String path = file.getPath();
+        File file;
+        String path;
+        try {
+            jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            jFileChooser.showOpenDialog(null);
+            file = jFileChooser.getSelectedFile();
+            path = file.getPath();
+        } catch (NullPointerException npe) {
+            log.info("Read file failed");
+            return null;
+        }
+
         if (PathDB.containsPath(path)) {
             return result;
         }
@@ -42,7 +59,9 @@ public class IOAgent {
             br.close();
             fileReader.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.warning("Read file failed");
+            log.warning("May caused by illegal path");
+            return null;
         }
 
         result.put("name", file.getName());
