@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 import javax.swing.JTextPane;
 
 import javax.swing.border.EmptyBorder;
@@ -20,8 +21,8 @@ import javax.swing.text.*;
 /**
  * Main class for launching the application
  *
- * @author Major: Hongfei Ju, Paulo Jaime, Trivial: Zitong Wei, Zelin Bao
- * @version 2.0
+ * @author Major: Hongfei Ju, Paulo Jaime, Zitong Wei, Zelin Bao
+ * @version 2.2
  */
 
 public class TextEditorUI extends JFrame {
@@ -38,6 +39,8 @@ public class TextEditorUI extends JFrame {
     private JMenuItem pasteAction;
 
     private JMenu syntaxMenu;
+    private JMenuItem javaAction;
+    private JMenuItem plainTextAction;
 
     private JMenu windowMenu;
 
@@ -57,6 +60,7 @@ public class TextEditorUI extends JFrame {
     private JMenuItem minimizeAction;
     private JMenuItem zoomAction;
 
+    private static final Logger log = Logger.getLogger("Log");
 
     private enum LANG {
         ENG, FRA, SPA, POR, CHN
@@ -136,6 +140,9 @@ public class TextEditorUI extends JFrame {
         editMenu.add(copyAction);
         editMenu.add(pasteAction);
 
+        syntaxMenu.add(javaAction);
+        syntaxMenu.add(plainTextAction);
+
         langMenu.add(engLangAction);
         langMenu.add(frnLangAction);
         langMenu.add(spaLangAction);
@@ -171,7 +178,11 @@ public class TextEditorUI extends JFrame {
         pasteAction = new JMenuItem("Paste", iconMap.get("paste"));
 
         syntaxMenu = new JMenu("Syntax");
+        javaAction = new JMenuItem("Java");
+        plainTextAction = new JMenuItem("Plain text");
+
         windowMenu = new JMenu("Window");
+
         langMenu = new JMenu("Language");
         engLangAction = new JMenuItem("English", iconMap.get("langEng"));
         frnLangAction = new JMenuItem("Français", iconMap.get("langFrn"));
@@ -201,14 +212,14 @@ public class TextEditorUI extends JFrame {
     }
 
     private void setTabs(JTextPane textPane) {
-        FontMetrics fm = textPane.getFontMetrics( textPane.getFont() );
-        int charWidth = fm.charWidth( ' ' );
+        FontMetrics fm = textPane.getFontMetrics(textPane.getFont());
+        int charWidth = fm.charWidth(' ');
         int tabWidth = charWidth * 4;
         TabStop[] tabs = new TabStop[5];
 
         for (int j = 0; j < tabs.length; j++) {
             int tab = j + 1;
-            tabs[j] = new TabStop( tab * tabWidth );
+            tabs[j] = new TabStop(tab * tabWidth);
         }
 
         TabSet tabSet = new TabSet(tabs);
@@ -226,12 +237,10 @@ public class TextEditorUI extends JFrame {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab("new", jPanel);
-            JTextPane textPane = new JTextPane(SyntaxAwareDocumentFactory.createDocument());
+            JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Java"));
             setTabs(textPane);
             EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
             textPane.setBorder(eb);
-
-
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
@@ -239,16 +248,27 @@ public class TextEditorUI extends JFrame {
         openFileAction.addActionListener(e -> {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
-            JTextPane textPane = new JTextPane(SyntaxAwareDocumentFactory.createDocument());
-            setTabs(textPane);
             Map<String, String> titleAndContent = ioAgent.read();
-            tabbedPane.addTab(titleAndContent.get("name"), jPanel);
-            EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
-            textPane.setBorder(eb);
-            textPane.setText(titleAndContent.get("content"));
 
-            JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-            jPanel.add(scrollPane, BorderLayout.CENTER);
+            if (titleAndContent == null) {
+                jPanel = null;
+                textPane = null;
+                titleAndContent = null;
+            } else {
+                String name = titleAndContent.get("name");
+                tabbedPane.addTab(name, jPanel);
+                int pos = name.lastIndexOf('.');
+                String syntax = pos == -1 ? "Plain text" : name.substring(pos + 1);
+                textPane = new JTextPane(new SyntaxAwareDocument(syntax));
+                setTabs(textPane);
+                EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
+                textPane.setBorder(eb);
+                textPane.setText(titleAndContent.get("content"));
+
+                JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                jPanel.add(scrollPane, BorderLayout.CENTER);
+            }
+
         });
 
         saveFileAction.addActionListener(e -> ioAgent.save());
@@ -264,7 +284,7 @@ public class TextEditorUI extends JFrame {
         exitAction.addActionListener(e -> System.exit(0));
 
         copyAction.addActionListener(e -> {
-            String str = getSelectedTextFromTextArea();
+            String str = getSelectedTextFromTextPane();
             StringSelection stringSelection = new StringSelection (str);
             Clipboard clipboard = Toolkit.getDefaultToolkit ().getSystemClipboard ();
             clipboard.setContents (stringSelection, null);
@@ -275,9 +295,24 @@ public class TextEditorUI extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             DataFlavor flavor = DataFlavor.stringFlavor;
             if (clipboard.isDataFlavorAvailable(flavor)) {
-                JTextPane textPane = getCurrentTextArea();
+                JTextPane textPane = getCurrentTextPane();
                 textPane.paste();
             }
+
+        });
+
+        javaAction.addActionListener(e -> {
+            JTextPane pane = getCurrentTextPane();
+            assert pane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+            doc.switchSyntax("Java");
+        });
+
+        plainTextAction.addActionListener(e -> {
+            JTextPane pane = getCurrentTextPane();
+            assert pane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+            doc.switchSyntax("Plain text");
 
         });
 
@@ -310,81 +345,6 @@ public class TextEditorUI extends JFrame {
         });
 
     }
-
-    private DefaultStyledDocument createSyntaxSensitiveDocument() {
-
-        return new DefaultStyledDocument() {
-
-            public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
-
-            }
-
-        };
-
-    }
-
-    /**
-     * Generate a JTextPane with specific Font and tab size
-     * @return textPane
-     */
-//    private JTextPane createJTextPane() {
-//        JTextPane textPane = new JTextPane();
-//        Font font = new Font("Courier", Font.BOLD, 12);
-//        textPane.setFont(font);
-//
-//        FontMetrics fm = textPane.getFontMetrics(font);
-//        int charWidth = fm.charWidth(' ');
-//        int tabWidth = charWidth * 4;
-//
-//        TabStop[] tabs = new TabStop[5];
-//
-//        for (int j = 0; j < tabs.length; j++) {
-//            int tab = j + 1;
-//            tabs[j] = new TabStop(tab * tabWidth);
-//        }
-//
-//        TabSet tabSet = new TabSet(tabs);
-//        SimpleAttributeSet attributes = new SimpleAttributeSet();
-//        StyleConstants.setTabSet(attributes, tabSet);
-//        int length = textPane.getDocument().getLength();
-//        textPane.getStyledDocument().setParagraphAttributes(0, length, attributes, false);
-//        textPane.getDocument().addDocumentListener(new DocumentListener() {
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//                reHighlight(e.getDocument(), e.getOffset());
-//            }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//                reHighlight(e.getDocument(), e.getOffset());
-//            }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {
-//                System.out.println("Change update");
-//                System.out.println(e.getOffset());
-//            }
-//
-//            private void reHighlight(Document doc, int initPos) {
-//                try {
-//                    if (Character.isAlphabetic(doc.getText(initPos, 1).charAt(0))) {
-//                        int startIdx = findStartPos(doc, initPos);
-//                        int endIdx = findEndPos(doc, initPos);
-//                        System.out.println(doc.getText(startIdx, endIdx - startIdx + 1));
-//                    }
-//
-//                } catch (BadLocationException be) {
-//                    throw new RuntimeException(be.getMessage());
-//                }
-//
-//            }
-//
-//
-//
-//        });
-//
-//        return textPane;
-//    }
 
     /**
      * Change the UI label displaying language
@@ -440,15 +400,15 @@ public class TextEditorUI extends JFrame {
      * Read Current text from TextEditor
      * @return
      */
-    private JTextPane getCurrentTextArea() {
+    private JTextPane getCurrentTextPane() {
         Component component = tabbedPane.getSelectedComponent();
         JScrollPane scrollPane = (JScrollPane) ((JPanel) component).getComponents()[0];
         JViewport viewport = (JViewport) scrollPane.getComponent(0);
         return (JTextPane) viewport.getComponent(0);
     }
 
-    private String getSelectedTextFromTextArea() {
-        return getCurrentTextArea().getSelectedText();
+    private String getSelectedTextFromTextPane() {
+        return getCurrentTextPane().getSelectedText();
     }
 	
 }
