@@ -249,6 +249,7 @@ public class TextEditorUI extends JFrame {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             Map<String, String> titleAndContent = ioAgent.read();
+            JTextPane textPane;
 
             if (titleAndContent == null) {
                 jPanel = null;
