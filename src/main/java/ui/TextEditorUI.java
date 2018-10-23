@@ -1,6 +1,5 @@
 package ui;
 
-
 import io.IOAgent;
 
 import javax.swing.*;
@@ -13,6 +12,18 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
+import javax.swing.JTextPane;
+
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.*;
+
+/**
+ * Main class for launching the application
+ *
+ * @author Major: Hongfei Ju, Paulo Jaime, Zitong Wei, Zelin Bao
+ * @version 2.2
+ */
 
 public class TextEditorUI extends JFrame {
     private JMenuBar menuBar;
@@ -28,6 +39,8 @@ public class TextEditorUI extends JFrame {
     private JMenuItem pasteAction;
 
     private JMenu syntaxMenu;
+    private JMenuItem javaAction;
+    private JMenuItem plainTextAction;
 
     private JMenu windowMenu;
 
@@ -46,14 +59,21 @@ public class TextEditorUI extends JFrame {
     private JMenuItem openCooperationAction;
     private JMenuItem minimizeAction;
     private JMenuItem zoomAction;
-   
 
-    private static enum LANG {
+    private static final Logger log = Logger.getLogger("Log");
+
+    private enum LANG {
         ENG, FRA, SPA, POR, CHN
     }
 
-
-    public TextEditorUI() {
+    /**
+     * Constructor init steps:
+     * 1. Init UI -- All UI components
+     * 2. Init Agent -- The I/O Agent to manipulate underlying I/O operations
+     * 3. Init Actions -- Action Listeners
+     * 4. Assemble All UI components -- Add UI components into UI containers
+     */
+    private TextEditorUI() {
         initUI();
         initAgent();
         initActions();
@@ -68,7 +88,10 @@ public class TextEditorUI extends JFrame {
 
     }
 
-
+    /**
+     * Read icon resources from properties file
+     * @return return a Map contains icon resources
+     */
     private Map<String, ImageIcon> readIconRes() {
         Map<String, ImageIcon> resource = new HashMap<>();
         Properties prop = new Properties();
@@ -101,6 +124,9 @@ public class TextEditorUI extends JFrame {
         return resource;
     }
 
+    /**
+     * Assemble UI components into containers
+     */
     private void assembleUIComponents() {
         add(tabbedPane);
         setJMenuBar(menuBar);
@@ -113,6 +139,9 @@ public class TextEditorUI extends JFrame {
 
         editMenu.add(copyAction);
         editMenu.add(pasteAction);
+
+        syntaxMenu.add(javaAction);
+        syntaxMenu.add(plainTextAction);
 
         langMenu.add(engLangAction);
         langMenu.add(frnLangAction);
@@ -129,6 +158,9 @@ public class TextEditorUI extends JFrame {
         menuBar.add(helpMenu);
     }
 
+    /**
+     * Init all UI components
+     */
     private void initUI() {
         setSize(new Dimension(600, 400));
 
@@ -146,7 +178,11 @@ public class TextEditorUI extends JFrame {
         pasteAction = new JMenuItem("Paste", iconMap.get("paste"));
 
         syntaxMenu = new JMenu("Syntax");
+        javaAction = new JMenuItem("Java");
+        plainTextAction = new JMenuItem("Plain text");
+
         windowMenu = new JMenu("Window");
+
         langMenu = new JMenu("Language");
         engLangAction = new JMenuItem("English", iconMap.get("langEng"));
         frnLangAction = new JMenuItem("Français", iconMap.get("langFrn"));
@@ -168,30 +204,72 @@ public class TextEditorUI extends JFrame {
         windowMenu.add(zoomAction);
     }
 
+    /**
+     * Init Agent
+     */
     private void initAgent() {
-        ioAgent = new IOAgent(tabbedPane); 
+        ioAgent = new IOAgent(tabbedPane);
     }
-    
 
+    private void setTabs(JTextPane textPane) {
+        FontMetrics fm = textPane.getFontMetrics(textPane.getFont());
+        int charWidth = fm.charWidth(' ');
+        int tabWidth = charWidth * 4;
+        TabStop[] tabs = new TabStop[5];
+
+        for (int j = 0; j < tabs.length; j++) {
+            int tab = j + 1;
+            tabs[j] = new TabStop(tab * tabWidth);
+        }
+
+        TabSet tabSet = new TabSet(tabs);
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        StyleConstants.setTabSet(attributes, tabSet);
+        int length = textPane.getDocument().getLength();
+        textPane.getStyledDocument().setParagraphAttributes(0, length, attributes, false);
+    }
+
+    /**
+     * Init ActionListeners
+     */
     private void initActions() {
         newFileAction.addActionListener(e -> {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab("new", jPanel);
-            JTextArea textArea = new JTextArea();
-            JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Java"));
+            setTabs(textPane);
+            EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
+            textPane.setBorder(eb);
+            JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
         openFileAction.addActionListener(e -> {
-            Map<String, String> titleAndContent = ioAgent.read();
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
-            tabbedPane.addTab(titleAndContent.get("name"), jPanel);
-            JTextArea textArea = new JTextArea();
-            textArea.setText(titleAndContent.get("content"));
-            JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-            jPanel.add(scrollPane, BorderLayout.CENTER);
+            Map<String, String> titleAndContent = ioAgent.read();
+            JTextPane textPane;
+
+            if (titleAndContent == null) {
+                jPanel = null;
+                textPane = null;
+                titleAndContent = null;
+            } else {
+                String name = titleAndContent.get("name");
+                tabbedPane.addTab(name, jPanel);
+                int pos = name.lastIndexOf('.');
+                String syntax = pos == -1 ? "Plain text" : name.substring(pos + 1);
+                textPane = new JTextPane(new SyntaxAwareDocument(syntax));
+                setTabs(textPane);
+                EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
+                textPane.setBorder(eb);
+                textPane.setText(titleAndContent.get("content"));
+
+                JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                jPanel.add(scrollPane, BorderLayout.CENTER);
+            }
+
         });
 
         saveFileAction.addActionListener(e -> ioAgent.save());
@@ -207,7 +285,7 @@ public class TextEditorUI extends JFrame {
         exitAction.addActionListener(e -> System.exit(0));
 
         copyAction.addActionListener(e -> {
-            String str = getSelectedTextFromTextArea();
+            String str = getSelectedTextFromTextPane();
             StringSelection stringSelection = new StringSelection (str);
             Clipboard clipboard = Toolkit.getDefaultToolkit ().getSystemClipboard ();
             clipboard.setContents (stringSelection, null);
@@ -218,15 +296,24 @@ public class TextEditorUI extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             DataFlavor flavor = DataFlavor.stringFlavor;
             if (clipboard.isDataFlavorAvailable(flavor)) {
-                try {
-                    JTextArea textArea = getCurrentTextArea();
-                    textArea.insert((String) clipboard.getData(flavor), textArea.getCaretPosition());
-                } catch (UnsupportedFlavorException ufe) {
-                    System.out.println(ufe);
-                } catch (IOException ioe) {
-                    System.out.println(ioe);
-                }
+                JTextPane textPane = getCurrentTextPane();
+                textPane.paste();
             }
+
+        });
+
+        javaAction.addActionListener(e -> {
+            JTextPane pane = getCurrentTextPane();
+            assert pane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+            doc.switchSyntax("Java");
+        });
+
+        plainTextAction.addActionListener(e -> {
+            JTextPane pane = getCurrentTextPane();
+            assert pane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+            doc.switchSyntax("Plain text");
 
         });
 
@@ -260,6 +347,10 @@ public class TextEditorUI extends JFrame {
 
     }
 
+    /**
+     * Change the UI label displaying language
+     * @param lang use LANG Enum to specify which lang
+     */
     private void changeUIText(LANG lang) {
         String language;
 
@@ -287,7 +378,7 @@ public class TextEditorUI extends JFrame {
         try {
             prop.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("langProp.properties"), "UTF-8" ));
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            throw new RuntimeException(ioe.getMessage());
         }
 
         fileMenu.setText(prop.getProperty("File" + language));
@@ -306,16 +397,19 @@ public class TextEditorUI extends JFrame {
         helpMenu.setText(prop.getProperty("Help" + language));
     }
 
-    private JTextArea getCurrentTextArea() {
+    /**
+     * Read Current text from TextEditor
+     * @return
+     */
+    private JTextPane getCurrentTextPane() {
         Component component = tabbedPane.getSelectedComponent();
         JScrollPane scrollPane = (JScrollPane) ((JPanel) component).getComponents()[0];
         JViewport viewport = (JViewport) scrollPane.getComponent(0);
-        return (JTextArea) viewport.getComponent(0);
+        return (JTextPane) viewport.getComponent(0);
     }
 
-
-    private String getSelectedTextFromTextArea() {
-        return getCurrentTextArea().getSelectedText();
+    private String getSelectedTextFromTextPane() {
+        return getCurrentTextPane().getSelectedText();
     }
 	
 }

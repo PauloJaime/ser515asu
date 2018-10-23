@@ -15,6 +15,7 @@ jar {
         include '*.txt'
         include '*.properties'
         include 'icons/*.png'
+        include '*.json'
     }
 
     manifest {
@@ -34,7 +35,20 @@ sourceSets {
         resources {
             srcDirs = ['src/main/resource']
         }
+
     }
+
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+
+        resources {
+            srcDirs = ['src/test/resource']
+        }
+
+    }
+
 }
 
 dependencies {

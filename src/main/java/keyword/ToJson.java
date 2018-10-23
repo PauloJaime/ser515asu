@@ -1,3 +1,5 @@
+package keyword;
+
 import org.json.JSONObject;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -6,8 +8,13 @@ import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 
-
-public class toJson {
+/**
+ * The class used to convert plain text -> Json
+ *
+ * @author Binbin Yan
+ * @version 1.0
+ */
+public class ToJson {
 
     public static void main(String[] args){
         try{
@@ -55,7 +62,7 @@ public class toJson {
                 }
             }
             String keyword = "{" + "\"Yellow\":" + color1 + "," + "\"Blue\":" + color2 + "," + "\"Green\":" + color3 + "}";
-            File jsonfile = new File(".\\src\\keyword.json");
+            File jsonfile = new File(".\\src\\JavaKeyword.json");
             jsonfile.createNewFile();
             BufferedWriter output = new BufferedWriter(new FileWriter(jsonfile));
             output.write(keyword);
