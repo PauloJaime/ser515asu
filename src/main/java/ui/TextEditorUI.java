@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -59,6 +61,7 @@ public class TextEditorUI extends JFrame {
     private JMenuItem openCooperationAction;
     private JMenuItem minimizeAction;
     private JMenuItem zoomAction;
+    private JMenuItem fontAction;
 
     private static final Logger log = Logger.getLogger("Log");
 
@@ -189,6 +192,7 @@ public class TextEditorUI extends JFrame {
         spaLangAction = new JMenuItem("Español", iconMap.get("langSpa"));
         porLangAction = new JMenuItem("Português", iconMap.get("langPor"));
         chnLangAction = new JMenuItem("中文", iconMap.get("langChn"));
+        fontAction = new JMenuItem("Font");
 
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
@@ -202,6 +206,9 @@ public class TextEditorUI extends JFrame {
         helpMenu.add(openCooperationAction);
         windowMenu.add(minimizeAction);
         windowMenu.add(zoomAction);
+        settingsMenu.add(fontAction);
+
+
     }
 
     /**
@@ -331,6 +338,7 @@ public class TextEditorUI extends JFrame {
 
         minimizeAction.addActionListener(e -> setExtendedState(JFrame.ICONIFIED));
 
+
         openIntroductionAction.addActionListener(e -> {
             IntroFrame t = new IntroFrame();
             t.setVisible(true);
@@ -343,6 +351,12 @@ public class TextEditorUI extends JFrame {
                     + "Yiru Hu\n"
                     + "Hongfei Ju\n"
                     + "Zelin Bao", "Cooperators",JOptionPane.INFORMATION_MESSAGE);
+        });
+
+
+        fontAction.addActionListener(e -> {
+                FontFrame fontFrame = new FontFrame(getCurrentTextPane());
+                fontFrame.setVisible(true);
         });
 
     }
@@ -411,11 +425,11 @@ public class TextEditorUI extends JFrame {
             log.info("No tab found");
             return null;
         }
-        
+
     }
 
     private String getSelectedTextFromTextPane() {
         return getCurrentTextPane().getSelectedText();
     }
-	
+
 }
