@@ -402,10 +402,16 @@ public class TextEditorUI extends JFrame {
      * @return
      */
     private JTextPane getCurrentTextPane() {
-        Component component = tabbedPane.getSelectedComponent();
-        JScrollPane scrollPane = (JScrollPane) ((JPanel) component).getComponents()[0];
-        JViewport viewport = (JViewport) scrollPane.getComponent(0);
-        return (JTextPane) viewport.getComponent(0);
+        try {
+            Component component = tabbedPane.getSelectedComponent();
+            JScrollPane scrollPane = (JScrollPane) ((JPanel) component).getComponents()[0];
+            JViewport viewport = (JViewport) scrollPane.getComponent(0);
+            return (JTextPane) viewport.getComponent(0);
+        } catch (NullPointerException npe) {
+            log.info("No tab found");
+            return null;
+        }
+        
     }
 
     private String getSelectedTextFromTextPane() {
