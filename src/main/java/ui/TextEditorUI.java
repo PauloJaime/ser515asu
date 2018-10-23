@@ -192,6 +192,7 @@ public class TextEditorUI extends JFrame {
         spaLangAction = new JMenuItem("Español", iconMap.get("langSpa"));
         porLangAction = new JMenuItem("Português", iconMap.get("langPor"));
         chnLangAction = new JMenuItem("中文", iconMap.get("langChn"));
+        fontAction = new JMenuItem("Font");
 
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
@@ -205,19 +206,8 @@ public class TextEditorUI extends JFrame {
         helpMenu.add(openCooperationAction);
         windowMenu.add(minimizeAction);
         windowMenu.add(zoomAction);
-
-
-
-        fontAction = new JMenuItem("Font");
-        fontAction.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                FontFrame fontFrame = new FontFrame(getCurrentTextPane());
-                fontFrame.setVisible(true);
-
-            }
-        });
-
         settingsMenu.add(fontAction);
+
 
     }
 
@@ -348,6 +338,7 @@ public class TextEditorUI extends JFrame {
 
         minimizeAction.addActionListener(e -> setExtendedState(JFrame.ICONIFIED));
 
+
         openIntroductionAction.addActionListener(e -> {
             IntroFrame t = new IntroFrame();
             t.setVisible(true);
@@ -360,6 +351,12 @@ public class TextEditorUI extends JFrame {
                     + "Yiru Hu\n"
                     + "Hongfei Ju\n"
                     + "Zelin Bao", "Cooperators",JOptionPane.INFORMATION_MESSAGE);
+        });
+
+
+        fontAction.addActionListener(e -> {
+                FontFrame fontFrame = new FontFrame(getCurrentTextPane());
+                fontFrame.setVisible(true);
         });
 
     }
