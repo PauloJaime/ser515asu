@@ -64,7 +64,6 @@ public class DynamicHighlight implements Runnable {
                 color(0);
             }
         });
-            public void color(int i) {
     }
     private void appendToPane(JTextPane pane, String text, Color color) {
 
