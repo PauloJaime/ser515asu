@@ -61,3 +61,8 @@ throw
 const
 native
 throws
+
+//string and comment color
+gray
+//
+/*..*/
