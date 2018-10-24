@@ -36,12 +36,12 @@ public class KeywordDB {
         String colorName = map.getOrDefault(key, "Black");
 
         Color color = Color.black;
-        if(colorName.equals("Yellow")){
-            color = Color.yellow;
+        if(colorName.equals("Red")){
+            color = Color.red;
         }else if(colorName.equals("Blue")){
             color = Color.blue;
-        }else if(colorName.equals("Green")){
-            color = Color.green;
+        }else if(colorName.equals("Purple")){
+            color = Color.magenta;
         }
         return color;
     }
