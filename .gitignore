@@ -39,3 +39,4 @@
 # Eclipse Configuration files
 .classpath
 .project
+/bin/
