@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.util.logging.Logger;
 
 /**
  * The class used to convert plain text -> Json
@@ -18,11 +19,18 @@ public class ToJson {
 
     public static void main(String[] args){
         try{
+            Logger log = Logger.getLogger("Log");
             JSONObject color1 = new JSONObject();
             JSONObject color2 = new JSONObject();
             JSONObject color3= new JSONObject();
             int key = 1;
-            String path = ".\\src\\main\\resource\\C_Keyword.txt";
+            String path = "";
+            try {
+                path = Thread.currentThread().getContextClassLoader().getResource("CKeyword.txt").getPath();
+            } catch (NullPointerException e) {
+                log.info("Cannot find this file");
+                return;
+            }
             File filename = new File(path);
             InputStreamReader read = new InputStreamReader(new FileInputStream(filename));
             BufferedReader temp = new BufferedReader(read);
@@ -61,7 +69,7 @@ public class ToJson {
                 }
             }
             String keyword = "{" + "\"Red\":" + color1 + "," + "\"Blue\":" + color2 + "," + "\"Purple\":" + color3 + "}";
-            File jsonfile = new File(".\\src\\main\\resource\\C_Keyword.json");
+            File jsonfile = new File(".\\src\\main\\resource\\CKeyword.json");
             jsonfile.createNewFile();
             BufferedWriter output = new BufferedWriter(new FileWriter(jsonfile));
             output.write(keyword);

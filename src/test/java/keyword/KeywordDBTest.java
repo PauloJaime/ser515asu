@@ -38,7 +38,7 @@ public class KeywordDBTest {
         Color blue = Color.blue;
         Color purple = Color.magenta;
 
-        KeywordDB test = new KeywordDB("C_");
+        KeywordDB test = new KeywordDB("C");
 
         Color output1 = test.matchColor("#include");
         Color output2 = test.matchColor("void");
