@@ -22,7 +22,7 @@ public class ToJson {
             JSONObject color2 = new JSONObject();
             JSONObject color3= new JSONObject();
             int key = 1;
-            String path = ".\\src\\main\\resource\\JavaKeyword.txt";
+            String path = ".\\src\\main\\resource\\C_Keyword.txt";
             File filename = new File(path);
             InputStreamReader read = new InputStreamReader(new FileInputStream(filename));
             BufferedReader temp = new BufferedReader(read);
@@ -61,7 +61,7 @@ public class ToJson {
                 }
             }
             String keyword = "{" + "\"Red\":" + color1 + "," + "\"Blue\":" + color2 + "," + "\"Purple\":" + color3 + "}";
-            File jsonfile = new File(".\\src\\main\\resource\\JavaKeyword.json");
+            File jsonfile = new File(".\\src\\main\\resource\\C_Keyword.json");
             jsonfile.createNewFile();
             BufferedWriter output = new BufferedWriter(new FileWriter(jsonfile));
             output.write(keyword);
