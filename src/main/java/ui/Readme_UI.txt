@@ -1,1 +1,0 @@
-TextLineNumber resource: https://tips4java.wordpress.com/2009/05/23/text-component-line-number/

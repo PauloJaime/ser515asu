@@ -1,20 +1,7 @@
-Class 1(Head file):
+Red
 package
 import
-
-Class 2(Variable type):
-int
-long
-short 
-float
-boolean
-double
-byte
-char
-String
-
-Class 3(Modifier)
-default
+Blue
 private
 public
 protected
@@ -25,41 +12,41 @@ synchronized
 transient
 volatile
 void
+default
+extends
+interface
+super
+implements
+Purple
+int
+long
+short 
+float
+boolean
+double
+byte
+char
+String
 instanceof
-
-Class 4(Loop)
 for
 while
 break
 continue
 switch
 do
-
-Class 5(Conditional statement)
 if
 if else
 else
 true
 false
 null
-
-Class 6(Object-oriented)
-extends
-implements
-super
 this
 final
-interface
 class
-
-
-Class 7(Library funtion):
 return
 new
 delete
 next
-
-other:
 try
 catch
 thread
@@ -75,3 +62,7 @@ const
 native
 throws
 
+//string and comment color
+gray
+//
+/*..*/
