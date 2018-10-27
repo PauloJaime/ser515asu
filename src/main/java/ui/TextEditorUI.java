@@ -63,6 +63,11 @@ public class TextEditorUI extends JFrame {
     private JMenuItem zoomAction;
     private JMenuItem fontAction;
 
+    private JMenu modeMenu;
+    private JMenuItem nightModeAction;
+    private JMenuItem dayModeAction;
+
+
     private static final Logger log = Logger.getLogger("Log");
 
     private enum LANG {
@@ -140,6 +145,8 @@ public class TextEditorUI extends JFrame {
         fileMenu.add(saveFileAction);
         fileMenu.add(closeCurTabAction);
         fileMenu.add(exitAction);
+        //modeMenu.add(nightModeAction);
+        //modeMenu.add(dayModeAction);
 
         editMenu.add(copyAction);
         editMenu.add(pasteAction);
@@ -152,6 +159,8 @@ public class TextEditorUI extends JFrame {
         langMenu.add(spaLangAction);
         langMenu.add(porLangAction);
         langMenu.add(chnLangAction);
+        //modeMenu.add(nightModeAction);
+        //modeMenu.add(dayModeAction);
 
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
@@ -160,6 +169,9 @@ public class TextEditorUI extends JFrame {
         menuBar.add(langMenu);
         menuBar.add(settingsMenu);
         menuBar.add(helpMenu);
+        menuBar.add(modeMenu);
+
+
     }
 
     /**
@@ -203,12 +215,28 @@ public class TextEditorUI extends JFrame {
         minimizeAction = new JMenuItem("Minimize          Ctrl+M");
         zoomAction = new JMenuItem("Zoom                Ctrl+M");
 
+        modeMenu = new JMenu("Mode");
+        //nightModeAction = new JMenuItem("Night");
+        //dayModeAction = new JMenuItem("Day");
+
+
+
         helpMenu.add(openIntroductionAction);
         helpMenu.add(openCooperationAction);
         windowMenu.add(minimizeAction);
         windowMenu.add(zoomAction);
         settingsMenu.add(fontAction);
+        //modeMenu.add(nightModeAction);
+        //modeMenu.add(dayModeAction);
 
+        ButtonGroup myGroup = new ButtonGroup();
+        JRadioButtonMenuItem myItem = new JRadioButtonMenuItem("Night");
+        myItem.setSelected(true);
+        myGroup.add(myItem);
+        modeMenu.add(myItem);
+        myItem = new JRadioButtonMenuItem("Day");
+        myGroup.add(myItem);
+        modeMenu.add(myItem);
 
     }
 
@@ -324,6 +352,10 @@ public class TextEditorUI extends JFrame {
             doc.switchSyntax("Plain text");
 
         });
+
+        //nightModeAction.addActionListener(e -> {});
+
+        //dayModeAction.addActionListener(e -> {});
 
         engLangAction.addActionListener(e -> changeUIText(LANG.ENG));
 
