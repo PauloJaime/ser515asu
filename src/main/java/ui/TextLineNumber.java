@@ -33,13 +33,11 @@ public class TextLineNumber extends JPanel
 
     private HashMap<String, FontMetrics> fonts;
 
-    public TextLineNumber(JTextComponent component)
-    {
+    public TextLineNumber(JTextComponent component){
         this(component, 3);
     }
 
-    public TextLineNumber(JTextComponent component, int minimumDisplayDigits)
-    {
+    public TextLineNumber(JTextComponent component, int minimumDisplayDigits){
         this.component = component;
 
         setFont( component.getFont() );
@@ -54,8 +52,7 @@ public class TextLineNumber extends JPanel
         component.addPropertyChangeListener("font", this);
     }
 
-    public void setBorderGap(int borderGap)
-    {
+    public void setBorderGap(int borderGap){
         this.borderGap = borderGap;
         Border inner = new EmptyBorder(0, borderGap, 0, borderGap);
         setBorder( new CompoundBorder(OUTER, inner) );
@@ -63,30 +60,25 @@ public class TextLineNumber extends JPanel
         setPreferredWidth();
     }
 
-    public Color getCurrentLineForeground()
-    {
+    public Color getCurrentLineForeground(){
         return currentLineForeground == null ? getForeground() : currentLineForeground;
     }
 
-    public void setCurrentLineForeground(Color currentLineForeground)
-    {
+    public void setCurrentLineForeground(Color currentLineForeground){
         this.currentLineForeground = currentLineForeground;
     }
 
-    public void setDigitAlignment(float digitAlignment)
-    {
+    public void setDigitAlignment(float digitAlignment){
         this.digitAlignment =
                 digitAlignment > 1.0f ? 1.0f : digitAlignment < 0.0f ? -1.0f : digitAlignment;
     }
 
-    public void setMinimumDisplayDigits(int minimumDisplayDigits)
-    {
+    public void setMinimumDisplayDigits(int minimumDisplayDigits){
         this.minimumDisplayDigits = minimumDisplayDigits;
         setPreferredWidth();
     }
 
-    private void setPreferredWidth()
-    {
+    private void setPreferredWidth(){
         Element root = component.getDocument().getDefaultRootElement();
         int lines = root.getElementCount();
         int digits = Math.max(String.valueOf(lines).length(), minimumDisplayDigits);
@@ -107,8 +99,7 @@ public class TextLineNumber extends JPanel
     }
 
     @Override
-    public void paintComponent(Graphics g)
-    {
+    public void paintComponent(Graphics g){
         super.paintComponent(g);
 
         FontMetrics fontMetrics = component.getFontMetrics( component.getFont() );
@@ -136,12 +127,13 @@ public class TextLineNumber extends JPanel
 
                 rowStartOffset = Utilities.getRowEnd(component, rowStartOffset) + 1;
             }
-            catch(Exception e) {break;}
+            catch(Exception e){
+                break;
+            }
         }
     }
 
-    private boolean isCurrentLine(int rowStartOffset)
-    {
+    private boolean isCurrentLine(int rowStartOffset){
         int caretPosition = component.getCaretPosition();
         Element root = component.getDocument().getDefaultRootElement();
 
@@ -151,8 +143,7 @@ public class TextLineNumber extends JPanel
             return false;
     }
 
-    protected String getTextLineNumber(int rowStartOffset)
-    {
+    protected String getTextLineNumber(int rowStartOffset){
         Element root = component.getDocument().getDefaultRootElement();
         int index = root.getElementIndex( rowStartOffset );
         Element line = root.getElement( index );
@@ -163,25 +154,19 @@ public class TextLineNumber extends JPanel
             return "";
     }
 
-    private int getOffsetX(int availableWidth, int stringWidth)
-    {
+    private int getOffsetX(int availableWidth, int stringWidth){
         return (int)((availableWidth - stringWidth) * digitAlignment);
     }
 
-    private int getOffsetY(int rowStartOffset, FontMetrics fontMetrics)
-            throws BadLocationException
-    {
+    private int getOffsetY(int rowStartOffset, FontMetrics fontMetrics) throws BadLocationException{
         Rectangle r = component.modelToView( rowStartOffset );
         int lineHeight = fontMetrics.getHeight();
         int y = r.y + r.height;
         int descent = 0;
 
-        if (r.height == lineHeight)  // default font is being used
-        {
+        if (r.height == lineHeight){
             descent = fontMetrics.getDescent();
-        }
-        else  // We need to check all the attributes for font changes
-        {
+        }else{
             if (fonts == null)
                 fonts = new HashMap<String, FontMetrics>();
 
@@ -189,8 +174,7 @@ public class TextLineNumber extends JPanel
             int index = root.getElementIndex( rowStartOffset );
             Element line = root.getElement( index );
 
-            for (int i = 0; i < line.getElementCount(); i++)
-            {
+            for (int i = 0; i < line.getElementCount(); i++){
                 Element child = line.getElement(i);
                 AttributeSet as = child.getAttributes();
                 String fontFamily = (String)as.getAttribute(StyleConstants.FontFamily);
@@ -199,8 +183,7 @@ public class TextLineNumber extends JPanel
 
                 FontMetrics fm = fonts.get( key );
 
-                if (fm == null)
-                {
+                if (fm == null){
                     Font font = new Font(fontFamily, Font.PLAIN, fontSize);
                     fm = component.getFontMetrics( font );
                     fonts.put(key, fm);
@@ -214,77 +197,62 @@ public class TextLineNumber extends JPanel
     }
 
     @Override
-    public void caretUpdate(CaretEvent e)
-    {
+    public void caretUpdate(CaretEvent e){
 
         int caretPosition = component.getCaretPosition();
         Element root = component.getDocument().getDefaultRootElement();
         int currentLine = root.getElementIndex( caretPosition );
 
-        if (lastLine != currentLine)
-        {
+        if (lastLine != currentLine){
             repaint();
             lastLine = currentLine;
         }
     }
 
     @Override
-    public void changedUpdate(DocumentEvent e)
-    {
+    public void changedUpdate(DocumentEvent e){
         documentChanged();
     }
 
     @Override
-    public void insertUpdate(DocumentEvent e)
-    {
+    public void insertUpdate(DocumentEvent e){
         documentChanged();
     }
 
     @Override
-    public void removeUpdate(DocumentEvent e)
-    {
+    public void removeUpdate(DocumentEvent e){
         documentChanged();
     }
 
-    private void documentChanged()
-    {
+    private void documentChanged(){
 
-        SwingUtilities.invokeLater(new Runnable()
-        {
+        SwingUtilities.invokeLater(new Runnable(){
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run(){
+                try{
                     int endPos = component.getDocument().getLength();
                     Rectangle rect = component.modelToView(endPos);
 
-                    if (rect != null && rect.y != lastHeight)
-                    {
+                    if (rect != null && rect.y != lastHeight){
                         setPreferredWidth();
                         repaint();
                         lastHeight = rect.y;
                     }
                 }
-                catch (BadLocationException ex) { /* nothing to do */ }
+                catch (BadLocationException ex) { log.info("monitering document change fails"); }
             }
         });
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt)
-    {
-        if (evt.getNewValue() instanceof Font)
-        {
-            if (updateFont)
-            {
+    public void propertyChange(PropertyChangeEvent evt){
+        if (evt.getNewValue() instanceof Font){
+            if (updateFont){
                 Font newFont = (Font) evt.getNewValue();
                 setFont(newFont);
                 lastDigits = 0;
                 setPreferredWidth();
-            }
-            else
-            {
+            }else{
                 repaint();
             }
         }
