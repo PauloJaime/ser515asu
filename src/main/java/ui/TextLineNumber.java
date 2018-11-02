@@ -3,6 +3,7 @@ import java.awt.*;
 import java.beans.*;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -16,6 +17,7 @@ public class TextLineNumber extends JPanel
     public final static float LEFT = 0.0f;
     public final static float CENTER = 0.5f;
     public final static float RIGHT = 1.0f;
+    private static final Logger log = Logger.getLogger("Log");
 
     private final static Border OUTER = new MatteBorder(0, 0, 0, 2, Color.GRAY);
 
@@ -242,6 +244,7 @@ public class TextLineNumber extends JPanel
                     }
                 }
                 catch (BadLocationException ex) {
+
                     log.warning("SyntaxAwareDocument.java line: 43");
                     throw new RuntimeException(ex.getCause());
                 }
