@@ -1,11 +1,9 @@
-package ui;
+package highlight;
 
 import keyword.KeywordDB;
 import javax.swing.text.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -17,7 +15,7 @@ import java.util.regex.Pattern;
  * Add syntax aware property
  *
  * @author Zitong Wei
- * @version 1.0
+ * @version 2.0
  */
 
 public class SyntaxAwareDocument extends DefaultStyledDocument {
@@ -25,11 +23,15 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     private final StyleContext context;
     private Map<Color, AttributeSet> attrMap;
     private KeywordDB keywordDB;
+    private String commentTag;
+    private String[] mCommentPair;
 
     public SyntaxAwareDocument(String syntax) {
         keywordDB = new KeywordDB(syntax);
         context = StyleContext.getDefaultStyleContext();
         attrMap = new HashMap<>();
+        commentTag = keywordDB.getCommentTag();
+        mCommentPair = keywordDB.getMCommentTags();
     }
 
 
@@ -45,13 +47,14 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
             remove(0, getLength());
             insertString(0, previousText, null);
         } catch (BadLocationException e) {
-            log.warning("Something terrible here...");
+            log.warning("Something wrong here...");
             log.warning("SyntaxAwareDocument.java line: 43");
             throw new RuntimeException(e.getCause());
         }
 
     }
 
+    @Override
     public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
         String text = getText(0, getLength());
@@ -61,7 +64,6 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         String fullSentence = text.substring(startIdx, endIdx);
         Pattern pattern = Pattern.compile("(\\w)");
         Matcher matcher = pattern.matcher(fullSentence);
-        List<int[]> allPos = new ArrayList<>();
         while (matcher.find()) {
             int sIdx = matcher.start();
             int eIdx = sIdx;
@@ -72,7 +74,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
                 eIdx++;
             }
 
-            allPos.add(new int[] {sIdx, eIdx});
+            highlightSentence(new int[] {sIdx, eIdx}, fullSentence, startIdx, endIdx);
             if (eIdx >= fullSentence.length()) {
                 break;
             }
@@ -80,14 +82,9 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
             matcher = matcher.region(eIdx, fullSentence.length());
         }
 
-        for (int[] interval : allPos) {
-            String word = fullSentence.substring(interval[0], interval[1]);
-            Color color = keywordDB.matchColor(word);
-            setCharacterAttributes(interval[0] + startIdx, interval[1] - interval[0], getAttributeSet(color), false);
-        }
-
     }
 
+    @Override
     public void remove(int offs, int len) throws BadLocationException {
         super.remove(offs, len);
         String text = getText(0, getLength());
@@ -126,6 +123,27 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         return Math.max(0, startIdx);
     }
 
+//    Reserved for later updating
+//    String word = fullSentence.substring(interval[0], interval[1]);
+//    Color color = keywordDB.matchColor(word);
+//    setCharacterAttributes(interval[0] + startIdx, interval[1] - interval[0], getAttributeSet(color), false);
+//    System.out.println("from " + interval[0] + " to " + interval[1]);
+//    Element element = getCharacterElement(interval[0]);
+//    AttributeSet attr = element.getAttributes();
+//    System.out.println(((Color) attr.getAttribute(StyleConstants.Foreground)).getBlue());
+    private void highlightSentence(int[] interval, String fullSentence, int startIdx, int endIdx) {
+
+    }
+
+    private Color getPrevTextColor(int[] interval, int startIdx, int endIdx) {
+        throw new UnsupportedOperationException();
+    }
+
+    private boolean isPairCommentTag(int[] interval, int startIdx, int endIdx) {
+        return false;
+    }
+
+
     private int findEndPos(String text, int initOffset, String insertText) {
         int endIdx = initOffset + insertText.length();
         for (; endIdx >= 0 && endIdx < text.length(); endIdx++) {
@@ -136,6 +154,15 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         }
 
         return endIdx;
+    }
+
+    private Color rgb2Color(String rgbString) {
+        String[] strs = rgbString.split("-");
+        return new Color(Integer.parseInt(strs[0]), Integer.parseInt(strs[1]), Integer.parseInt(strs[2]));
+    }
+
+    private String color2rgb(Color color) {
+        return "" + color.getRed() + "-" + color.getGreen() + "-" + color.getBlue();
     }
 
 }

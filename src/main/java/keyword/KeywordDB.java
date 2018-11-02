@@ -2,8 +2,8 @@ package keyword;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.awt.*;
 import java.io.File;
@@ -14,12 +14,14 @@ import java.util.logging.Logger;
  * The class used to read color information
  *
  * @author Yiru Hu
- * @version 1.2
+ * @version 1.3
  */
 public class KeywordDB {
-	//public static void main(String args[]) throws IOException {
-	private Map<String,String> map;
+	private Map<String, String> map;
 	private static final Logger log = Logger.getLogger("Log");
+
+	private String commentTag;
+	private String[] mCommentPair;
 
 	public KeywordDB() {
 	    this("Plain text");
@@ -28,28 +30,36 @@ public class KeywordDB {
 	public KeywordDB(String syntax) {
         map = new HashMap<>();
         switchSyntax(syntax);
+        commentTag = null;
+        mCommentPair = null;
+    }
+
+    public String getCommentTag() {
+        return commentTag;
+    }
+
+    public String[] getMCommentTags() {
+        return mCommentPair;
     }
 
     public Color matchColor(String keyWord) {
-        //String colorName = "";
-        Object key = ""+keyWord;
-        String colorName = map.getOrDefault(key, "Black");
-
-        Color color = Color.black;
-        if(colorName.equals("Red")){
-            color = Color.red;
-        }else if(colorName.equals("Blue")){
-            color = Color.blue;
-        }else if(colorName.equals("Purple")){
-            color = Color.magenta;
+        String colorName = map.getOrDefault(keyWord, "Black");
+        switch (colorName) {
+            case "Red":
+                return Color.red;
+            case "Blue":
+                return Color.blue;
+            case "Purple":
+                return Color.magenta;
+            default:
+                return Color.black;
         }
-        return color;
+
     }
 
     public void switchSyntax(String syntax) {
-	    // Temporarily hard code to read Java keyword
         map.clear();
-		String input = "";
+		String input;
 		try {
 			input = Thread.currentThread().getContextClassLoader().getResource(syntax + "Keyword.json").getPath();
 		} catch (NullPointerException e) {
@@ -67,21 +77,20 @@ public class KeywordDB {
         }
 
         JSONObject jsonObject = new JSONObject(content);
-		Map<String, Object> outerMap = new HashMap<>();
-		for(Object k : jsonObject.keySet() ){
-			Object v = jsonObject.get(k.toString());
-			outerMap.put(k.toString(), v);
-		}
+        for (String k : jsonObject.keySet()) {
+            JSONArray arr = (JSONArray) jsonObject.get(k);
+            if (k.equals("comment")) {
+                commentTag = (String) arr.get(0);
+            } else if (k.equals("multi-comment")) {
+                mCommentPair = new String[] {(String) arr.get(0), (String) arr.get(1)};
+            } else {
+                for (Object anArr : arr) {
+                    map.put(anArr.toString(), k);
+                }
 
-		for (Entry<String, Object> entry : outerMap.entrySet()) {
-			String str1 = entry.getValue().toString();
-			JSONObject inner = new JSONObject(str1);
-			for(Object k : inner.keySet() ){
-				Object v = inner.get(k.toString());
-                map.put(v.toString(), entry.getKey());
-			}
+            }
 
-		}
+        }
 
 	}
 
