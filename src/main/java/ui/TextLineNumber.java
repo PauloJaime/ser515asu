@@ -1,11 +1,13 @@
 package ui;
 import java.awt.*;
 import java.beans.*;
+
 import java.util.HashMap;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
+
 
 
 public class TextLineNumber extends JPanel
@@ -239,7 +241,10 @@ public class TextLineNumber extends JPanel
                         lastHeight = rect.y;
                     }
                 }
-                catch (BadLocationException ex) { log.info("monitering document change fails"); }
+                catch (BadLocationException ex) {
+                    log.warning("SyntaxAwareDocument.java line: 43");
+                    throw new RuntimeException(ex.getCause());
+                }
             }
         });
     }
