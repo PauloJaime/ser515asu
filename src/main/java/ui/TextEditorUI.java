@@ -63,6 +63,10 @@ public class TextEditorUI extends JFrame {
     private JMenuItem zoomAction;
     private JMenuItem fontAction;
 
+    private JMenu modeMenu;
+    private JMenuItem nightModeAction;
+    private JMenuItem dayModeAction;
+
     private static final Logger log = Logger.getLogger("Log");
 
     private enum LANG {
@@ -159,6 +163,7 @@ public class TextEditorUI extends JFrame {
         menuBar.add(langMenu);
         menuBar.add(settingsMenu);
         menuBar.add(helpMenu);
+        menuBar.add(modeMenu);
     }
 
     /**
@@ -170,19 +175,19 @@ public class TextEditorUI extends JFrame {
         Map<String, ImageIcon> iconMap = readIconRes();
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
-        newFileAction = new JMenuItem("New", iconMap.get("new"));
-        openFileAction = new JMenuItem("Open", iconMap.get("open"));
-        saveFileAction = new JMenuItem("Save", iconMap.get("save"));
-        closeCurTabAction = new JMenuItem("Close Current Tab", iconMap.get("closeTab"));
-        exitAction = new JMenuItem("Exit", iconMap.get("exit"));
+        newFileAction = new JMenuItem("New                            Ctrl+N", iconMap.get("new"));
+        openFileAction = new JMenuItem("Open                          Ctrl+O", iconMap.get("open"));
+        saveFileAction = new JMenuItem("Save                           Ctrl+S", iconMap.get("save"));
+        closeCurTabAction = new JMenuItem("Close Current Tab    Ctrl+T", iconMap.get("closeTab"));
+        exitAction = new JMenuItem("Exit                           Ctrl+E", iconMap.get("exit"));
 
         editMenu = new JMenu("Edit");
-        copyAction = new JMenuItem("Copy", iconMap.get("copy"));
-        pasteAction = new JMenuItem("Paste", iconMap.get("paste"));
+        copyAction = new JMenuItem("Copy    Ctrl+C", iconMap.get("copy"));
+        pasteAction = new JMenuItem("Paste    Ctrl+V", iconMap.get("paste"));
 
         syntaxMenu = new JMenu("Syntax");
-        javaAction = new JMenuItem("Java");
-        plainTextAction = new JMenuItem("Plain text");
+        javaAction = new JMenuItem("Java                    Ctrl+J");
+        plainTextAction = new JMenuItem("Plain text           Ctrl+P");
 
         windowMenu = new JMenu("Window");
 
@@ -192,15 +197,15 @@ public class TextEditorUI extends JFrame {
         spaLangAction = new JMenuItem("Español", iconMap.get("langSpa"));
         porLangAction = new JMenuItem("Português", iconMap.get("langPor"));
         chnLangAction = new JMenuItem("中文", iconMap.get("langChn"));
-        fontAction = new JMenuItem("Font");
+        fontAction = new JMenuItem("Font        Ctrl+F");
 
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
         tabbedPane = new JTabbedPane();
-        openIntroductionAction = new JMenuItem("Introduction");
-        openCooperationAction = new JMenuItem("Cooperators");
-        minimizeAction = new JMenuItem("Minimize");
-        zoomAction = new JMenuItem("Zoom");
+        openIntroductionAction = new JMenuItem("Introduction        Ctrl+I");
+        openCooperationAction = new JMenuItem("Cooperators        Ctrl+R");
+        minimizeAction = new JMenuItem("Minimize          Ctrl+M");
+        zoomAction = new JMenuItem("Zoom                Ctrl+M");
 
         helpMenu.add(openIntroductionAction);
         helpMenu.add(openCooperationAction);
@@ -208,7 +213,15 @@ public class TextEditorUI extends JFrame {
         windowMenu.add(zoomAction);
         settingsMenu.add(fontAction);
 
-
+        modeMenu = new JMenu("Mode");
+        ButtonGroup myGroup = new ButtonGroup();
+        JRadioButtonMenuItem myItem = new JRadioButtonMenuItem("Night");
+        myItem.setSelected(true);
+        myGroup.add(myItem);
+        modeMenu.add(myItem);
+        myItem = new JRadioButtonMenuItem("Day");
+        myGroup.add(myItem);
+        modeMenu.add(myItem);
     }
 
     /**
@@ -249,6 +262,8 @@ public class TextEditorUI extends JFrame {
             EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
             textPane.setBorder(eb);
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            TextLineNumber tln = new TextLineNumber(textPane);
+            scrollPane.setRowHeaderView( tln );
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
@@ -274,6 +289,8 @@ public class TextEditorUI extends JFrame {
                 textPane.setText(titleAndContent.get("content"));
 
                 JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                TextLineNumber tln = new TextLineNumber(textPane);
+                scrollPane.setRowHeaderView( tln );
                 jPanel.add(scrollPane, BorderLayout.CENTER);
             }
 
