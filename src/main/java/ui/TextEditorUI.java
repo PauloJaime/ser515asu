@@ -1,5 +1,6 @@
 package ui;
 
+import highlight.SyntaxAwareDocument;
 import io.IOAgent;
 
 import javax.swing.*;
