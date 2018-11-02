@@ -135,8 +135,43 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
     }
 
-    private Color getPrevTextColor(int[] interval, int startIdx, int endIdx) {
-        throw new UnsupportedOperationException();
+    private Color getPrevTextColor(int startIdx) {
+        String text;
+        try {
+            text = getText(0, getLength());
+        } catch (BadLocationException e) {
+            log.severe(e.getMessage());
+            throw new RuntimeException(e.getCause());
+        }
+
+        if (startIdx != 0) {
+            int pos = startIdx - 1;
+            while (pos >= 0 && !isWordLetter(text.charAt(pos))) {
+                pos--;
+            }
+
+            while (pos >= 0 && isWordLetter(text.charAt(pos))) {
+                pos--;
+            }
+
+            pos = pos + 1;
+            if (isWordLetter(text.charAt(pos))) {
+                Object obj = getCharacterElement(pos).getAttributes().getAttribute(StyleConstants.Foreground);
+                if (obj instanceof Color) {
+                    return (Color) obj;
+                } else {
+                    return Color.black;
+                }
+
+            }
+
+        }
+
+        return Color.black;
+    }
+
+    private boolean isWordLetter(char c) {
+        return c == '_' || Character.isDigit(c) || Character.isAlphabetic(c);
     }
 
     private boolean isPairCommentTag(int[] interval, int startIdx, int endIdx) {
