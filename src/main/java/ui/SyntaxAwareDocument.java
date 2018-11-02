@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,7 +56,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         super.insertString(offset, str, a);
         String text = getText(0, getLength());
 
-        int startIdx = findStartPos(text, offset);
+        int startIdx = findStartPos(text, Math.max(0, offset - 1), c -> !isVarValidChar(c));
         int endIdx = findEndPos(text, offset, str);
         String fullSentence = text.substring(startIdx, endIdx);
         Pattern pattern = Pattern.compile("(\\w)");
@@ -95,19 +96,23 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
             return;
         }
 
-        int startIdx = findStartPos(text, Math.max(0, offs - 1));
+        int startIdx = findStartPos(text, Math.max(0, offs - 1), c -> !isVarValidChar(c));
         int endIdx = findEndPos(text, offs, "");
         String word = text.substring(startIdx, endIdx);
         Color color = keywordDB.matchColor(word);
         setCharacterAttributes(startIdx, endIdx - startIdx, getAttributeSet(color), false);
     }
 
-    private int findStartPos(String text, int initOffset) {
+    private boolean isVarValidChar(char c) {
+        return Character.isAlphabetic(c) || Character.isDigit(c) || c == '_';
+    }
+
+    private int findStartPos(String text, int initOffset, Function<Character, Boolean> isValidChar) {
         int startIdx = initOffset;
 
         boolean isFind = false;
         for (; startIdx >= 0 && startIdx < text.length(); startIdx--) {
-            if (!Character.isAlphabetic(text.charAt(startIdx))) {
+            if (isValidChar.apply(text.charAt(startIdx))) {
                 isFind = true;
                 break;
             }
