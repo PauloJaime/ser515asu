@@ -8,7 +8,6 @@ import java.awt.datatransfer.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -141,8 +140,6 @@ public class TextEditorUI extends JFrame {
         add(tabbedPane);
         setJMenuBar(menuBar);
 
-        plainTextAction.setMnemonic(KeyEvent.VK_N);
-
         fileMenu.add(newFileAction);
         fileMenu.add(openFileAction);
         fileMenu.add(saveFileAction);
@@ -187,25 +184,14 @@ public class TextEditorUI extends JFrame {
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         newFileAction = new JMenuItem("New                            Ctrl+N", iconMap.get("new"));
-
-        newFileAction.setMnemonic(KeyEvent.VK_N);
-
         openFileAction = new JMenuItem("Open                          Ctrl+O", iconMap.get("open"));
         saveFileAction = new JMenuItem("Save                           Ctrl+S", iconMap.get("save"));
         closeCurTabAction = new JMenuItem("Close Current Tab    Ctrl+T", iconMap.get("closeTab"));
         exitAction = new JMenuItem("Exit                           Ctrl+E", iconMap.get("exit"));
 
         editMenu = new JMenu("Edit ");
-        copyAction = new JMenuItem("Copy", iconMap.get("copy"));
-        copyAction.setMnemonic(KeyEvent.VK_C);
-        KeyStroke kcopy = KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK);
-        copyAction.setAccelerator(kcopy);
-
-
-        pasteAction = new JMenuItem("Paste", iconMap.get("paste"));
-        pasteAction.setMnemonic(KeyEvent.VK_V);
-        KeyStroke kpaste = KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK);
-        pasteAction.setAccelerator(kpaste);
+        copyAction = new JMenuItem("Copy    Ctrl+C", iconMap.get("copy"));
+        pasteAction = new JMenuItem("Paste    Ctrl+V", iconMap.get("paste"));
 
         syntaxMenu = new JMenu("Syntax");
         javaAction = new JMenuItem("Java                    Ctrl+J", iconMap.get("java"));
@@ -323,7 +309,6 @@ public class TextEditorUI extends JFrame {
         });
 
         saveFileAction.addActionListener(e -> ioAgent.save());
-        saveFileAction.setMnemonic(KeyEvent.VK_S);
 
         closeCurTabAction.addActionListener(e -> {
             Component selected = tabbedPane.getSelectedComponent();
