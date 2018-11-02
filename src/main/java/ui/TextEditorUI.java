@@ -278,6 +278,8 @@ public class TextEditorUI extends JFrame {
             EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
             textPane.setBorder(eb);
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            TextLineNumber tln = new TextLineNumber(textPane);
+            scrollPane.setRowHeaderView( tln );
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
@@ -303,6 +305,8 @@ public class TextEditorUI extends JFrame {
                 textPane.setText(titleAndContent.get("content"));
 
                 JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                TextLineNumber tln = new TextLineNumber(textPane);
+                scrollPane.setRowHeaderView( tln );
                 jPanel.add(scrollPane, BorderLayout.CENTER);
             }
 
