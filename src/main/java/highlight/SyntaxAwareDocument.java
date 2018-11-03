@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 public class SyntaxAwareDocument extends DefaultStyledDocument {
     private static final Logger log = Logger.getLogger("Log");
     private static final Color COMMENT_COLOR = Color.green;
+    private static final Color STRING_COLOR = Color.orange;
 
     private final StyleContext context;
     private Map<Color, AttributeSet> attrMap;
@@ -124,12 +125,44 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         setCharacterAttributes(begin, end - begin, getAttributeSet(color), false);
     }
 
+    private void keywordsHighlight(int startIdx, int endIdx, String fullText) {
+        String fullSentence = fullText.substring(startIdx, endIdx);
+        Pattern pattern = Pattern.compile("(\\w)");
+        Matcher matcher = pattern.matcher(fullSentence);
+        while (matcher.find()) {
+            int sIdx = matcher.start();
+            int eIdx = sIdx;
+            while (eIdx < fullSentence.length()
+                    && (Character.isAlphabetic(fullSentence.charAt(eIdx))
+                    || Character.isDigit(fullSentence.charAt(eIdx))
+                    || fullSentence.charAt(eIdx) == '_')) {
+                eIdx++;
+            }
+
+            doHighlight(sIdx + startIdx, eIdx + startIdx, fullText);
+            if (eIdx >= fullSentence.length()) {
+                break;
+            }
+
+            matcher = matcher.region(eIdx, fullSentence.length());
+        }
+
+    }
+
     /**
      * Do comment & string detection pre-process.
+     * The interval is [startIdx, endIdx)
      * @param startIdx
+     * @param endIdx
      * @param fullText
      */
-    private void highlight(int startIdx, int endIdx, String insertString, String fullText) {
+    private void highlight(int startIdx, int endIdx, String fullText) {
+        if (startIdx > endIdx) {
+            return;
+        }
+
+        String insertString = fullText.substring(startIdx, endIdx);
+
         int startCommentPos = findStartPos(fullText, startIdx - 1, i -> {
             Color color = getPrevTextColor(i, fullText, c -> (c == ' ' || c == '\t'));
             return !color.equals(Color.green);
@@ -137,7 +170,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
         int startStringPos = findStartPos(fullText, startIdx - 1, i -> {
             Color color = getPrevTextColor(i, fullText, c -> (c == ' ' || c == '\t'));
-            return !color.equals(Color.orange);
+            return !color.equals(STRING_COLOR);
         });
 
         if (startCommentPos < startIdx && startStringPos < startIdx) {
@@ -152,7 +185,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
                 int lineEndPos = findEndPos(fullText, startCommentPos, i -> (fullText.charAt(i) == '\n'));
                 doHighlight(startCommentPos, lineEndPos, fullText);
                 if (lineEndPos < endIdx) {
-                    highlight(lineEndPos + 1, endIdx, insertString.substring(lineEndPos - startIdx + 1), fullText);
+                    highlight(lineEndPos + 1, endIdx, fullText);
                 }
 
             } else if (mCommentStartPos == startCommentPos) {
@@ -190,16 +223,27 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
             switch (getSpecialCondition(commentTagPos, mCommentPairStartPos, stringDelimiter)) {
                 case 1:
-                    // code to process one line comment
+                    int lineEndPos = fullText.indexOf('\n', commentTagPos);
+                    if (lineEndPos == -1) {
+                        doHighlight(commentTagPos, getLength(), fullText, COMMENT_COLOR);
+                    } else {
+                        doHighlight(commentTagPos, lineEndPos, fullText, COMMENT_COLOR);
+                        highlight(lineEndPos + 1, endIdx, fullText);
+                    }
+
                     break;
                 case 2:
-                    // code to process multi-line comments
+                    int rightPairPos = fullText.indexOf(mCommentPair[1], mCommentPairStartPos);
+                    rightPairPos = rightPairPos == -1 ? getLength() : rightPairPos;
+                    doHighlight(mCommentPairStartPos, rightPairPos + mCommentPair[1].length(), fullText, COMMENT_COLOR);
+                    highlight(rightPairPos + mCommentPair[1].length(), endIdx, fullText);
                     break;
                 case 3:
+                    /* You can implement the following method or just write code below */
                     highlightString(stringDelimiter, endIdx, insertString.substring(stringDelimiter), fullText);
                     break;
                 default:
-                    // do normal highlight
+                    keywordsHighlight(startIdx, endIdx, fullText);
             }
 
         }
@@ -254,7 +298,6 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
         return Color.black;
     }
-
 
     private boolean isPairCommentTag(int[] interval, int startIdx, int endIdx) {
         return false;
