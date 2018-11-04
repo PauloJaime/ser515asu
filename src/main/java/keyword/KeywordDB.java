@@ -25,13 +25,13 @@ public class KeywordDB {
 
 	public KeywordDB() {
 	    this("Plain text");
+        commentTag = null;
+        mCommentPair = null;
     }
 
 	public KeywordDB(String syntax) {
         map = new HashMap<>();
         switchSyntax(syntax);
-        commentTag = null;
-        mCommentPair = null;
     }
 
     public String getCommentTag() {

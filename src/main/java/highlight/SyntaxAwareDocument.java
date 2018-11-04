@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
 
 public class SyntaxAwareDocument extends DefaultStyledDocument {
     private static final Logger log = Logger.getLogger("Log");
-    private static final Color COMMENT_COLOR = Color.green;
-    private static final Color STRING_COLOR = Color.orange;
+    private static final Color COMMENT_COLOR = Color.green.darker();
+    private static final Color STRING_COLOR = Color.orange.darker();
 
     private final StyleContext context;
     private Map<Color, AttributeSet> attrMap;
@@ -61,61 +61,27 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     @Override
     public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
-        String text = getText(0, getLength());
+        String fullText = getText(0, getLength());
 
-        int startIdx = findStartPos(text, Math.max(0, offset - 1), i -> !isVarValidChar(text.charAt(i)));
-        int endIdx = findEndPos(text, offset + str.length(), i -> !isVarValidChar(text.charAt(i)));
-        String fullSentence = text.substring(startIdx, endIdx);
-        Pattern pattern = Pattern.compile("(\\w)");
-        Matcher matcher = pattern.matcher(fullSentence);
-        while (matcher.find()) {
-            int sIdx = matcher.start();
-            int eIdx = sIdx;
-            while (eIdx < fullSentence.length()
-                    && (Character.isAlphabetic(fullSentence.charAt(eIdx))
-                        || Character.isDigit(fullSentence.charAt(eIdx))
-                        || fullSentence.charAt(eIdx) == '_')) {
-                eIdx++;
-            }
-
-            doHighlight(sIdx + startIdx, eIdx + startIdx, text);
-            if (eIdx >= fullSentence.length()) {
-                break;
-            }
-
-            matcher = matcher.region(eIdx, fullSentence.length());
-        }
-
+        int startIdx = findStartPos(fullText, Math.max(0, offset - 1), i -> !(fullText.charAt(i) != ' ' && fullText.charAt(i) != '\t' && fullText.charAt(i) != '\n'));
+        int endIdx = findEndPos(fullText, offset + str.length(), i -> !(fullText.charAt(i) != ' ' && fullText.charAt(i) != '\t' && fullText.charAt(i) != '\n'));
+        highlight(startIdx, endIdx, fullText);
     }
 
     @Override
     public void remove(int offs, int len) throws BadLocationException {
         super.remove(offs, len);
-        String text = getText(0, getLength());
+        String fullText = getText(0, getLength());
 
-        if (text.isEmpty()) {
+        if (fullText.isEmpty()) {
             return;
         }
 
-        int startIdx = findStartPos(text, Math.max(0, offs - 1), i -> !isVarValidChar(text.charAt(i)));
-        int endIdx = findEndPos(text, offs, i -> !isVarValidChar(text.charAt(i)));
-        String word = text.substring(startIdx, endIdx);
-        Color color = keywordDB.matchColor(word);
-        setCharacterAttributes(startIdx, endIdx - startIdx, getAttributeSet(color), false);
+        int startIdx = findStartPos(fullText, Math.max(0, offs - 1), i -> !(fullText.charAt(i) != ' ' && fullText.charAt(i) != '\t' && fullText.charAt(i) != '\n'));
+        int endIdx = findEndPos(fullText, offs, i -> !(fullText.charAt(i) != ' ' && fullText.charAt(i) != '\t' && fullText.charAt(i) != '\n'));
+        highlight(startIdx, endIdx, fullText);
     }
 
-    private boolean isVarValidChar(char c) {
-        return Character.isAlphabetic(c) || Character.isDigit(c) || c == '_';
-    }
-
-//    Reserved for later updating
-//    String word = fullSentence.substring(interval[0], interval[1]);
-//    Color color = keywordDB.matchColor(word);
-//    setCharacterAttributes(interval[0] + startIdx, interval[1] - interval[0], getAttributeSet(color), false);
-//    System.out.println("from " + interval[0] + " to " + interval[1]);
-//    Element element = getCharacterElement(interval[0]);
-//    AttributeSet attr = element.getAttributes();
-//    System.out.println(((Color) attr.getAttribute(StyleConstants.Foreground)).getBlue());
     private void doHighlight(int begin, int end, String fullText) {
         Color color = keywordDB.matchColor(fullText.substring(begin, end));
         doHighlight(begin, end, fullText, color);
@@ -129,6 +95,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         String fullSentence = fullText.substring(startIdx, endIdx);
         Pattern pattern = Pattern.compile("(\\w)");
         Matcher matcher = pattern.matcher(fullSentence);
+        int ptr = startIdx;
         while (matcher.find()) {
             int sIdx = matcher.start();
             int eIdx = sIdx;
@@ -139,6 +106,11 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
                 eIdx++;
             }
 
+            if (ptr < sIdx + startIdx) {
+                doHighlight(ptr, sIdx + startIdx, fullText);
+            }
+
+            ptr = eIdx + startIdx;
             doHighlight(sIdx + startIdx, eIdx + startIdx, fullText);
             if (eIdx >= fullSentence.length()) {
                 break;
@@ -147,176 +119,100 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
             matcher = matcher.region(eIdx, fullSentence.length());
         }
 
+        doHighlight(ptr, endIdx, fullText);
     }
 
     /**
      * Do comment & string detection pre-process.
      * The interval is [startIdx, endIdx)
+     * Steps:
+     *  1. Normal highlight
+     *  2. Left part text detection
+     *  3. Right part text detection
      * @param startIdx
      * @param endIdx
      * @param fullText
      */
     private void highlight(int startIdx, int endIdx, String fullText) {
-        if (startIdx > endIdx) {
+        if (startIdx >= endIdx) {
             return;
         }
 
-        String insertString = fullText.substring(startIdx, endIdx);
-
-        int startCommentPos = findStartPos(fullText, startIdx - 1, i -> {
-            Color color = getPrevTextColor(i, fullText, c -> (c == ' ' || c == '\t'));
-            return !color.equals(Color.green);
-        });
-
-        int startStringPos = findStartPos(fullText, startIdx - 1, i -> {
-            Color color = getPrevTextColor(i, fullText, c -> (c == ' ' || c == '\t'));
-            return !color.equals(STRING_COLOR);
-        });
-
-        if (startCommentPos < startIdx && startStringPos < startIdx) {
-            log.severe("SyntaxAwareDocument.java has attrSet acquire exception");
-            throw new RuntimeException("AttrSet retrieve exception");
-        }
-
-        if (startCommentPos < startIdx) {
-            int commentTagPos = commentTag == null ? -1 : fullText.indexOf(commentTag, startCommentPos);
-            int mCommentStartPos = mCommentPair == null ? -1 : fullText.indexOf(mCommentPair[0], startCommentPos);
-            if (commentTagPos == startCommentPos) {
-                int lineEndPos = findEndPos(fullText, startCommentPos, i -> (fullText.charAt(i) == '\n'));
-                doHighlight(startCommentPos, lineEndPos, fullText);
-                if (lineEndPos < endIdx) {
-                    highlight(lineEndPos + 1, endIdx, fullText);
-                }
-
-            } else if (mCommentStartPos == startCommentPos) {
-                if (insertString.contains(mCommentPair[1])) {
-                    int rightPairPos = insertString.indexOf(mCommentPair[1]) + startIdx;
-                    doHighlight(startIdx, rightPairPos + 1, fullText, COMMENT_COLOR);
-                    String restStr = fullText.substring(rightPairPos + 1);
-                    try {
-                        remove(rightPairPos + 1, getLength() - rightPairPos - 1);
-                        insertString(getLength(), restStr, null);
-                    } catch (BadLocationException e) {
-                        log.severe("Offset error in comment highlight");
-                        throw new RuntimeException(e.getCause());
-                    }
-
-                } else {
-                    doHighlight(startIdx, endIdx + 1, fullText, COMMENT_COLOR);
-                }
-
-            } else {
-                log.severe("SyntaxAwareDocument.java comment highlight error");
-                throw new RuntimeException("Comment highlight error");
-            }
-
-        } else if (startStringPos < startIdx) {
-            /* Write your string processing code here */
-
-            /* Return a List<int[]>, int[] is pair of indexes ---- [start, end], which means that
-              the substring from start to end is not highlighted and need to be parse later */
-        } else {
-            int commentTagPos = commentTag == null ? Integer.MAX_VALUE : insertString.indexOf(commentTag) + startIdx;
-            int mCommentPairStartPos = mCommentPair == null ? Integer.MAX_VALUE: insertString.indexOf(mCommentPair[0]) + startIdx;
-            /* Change to your statement */
-            int stringDelimiter = Integer.MAX_VALUE;
-
-            switch (getSpecialCondition(commentTagPos, mCommentPairStartPos, stringDelimiter)) {
-                case 1:
-                    int lineEndPos = fullText.indexOf('\n', commentTagPos);
-                    if (lineEndPos == -1) {
-                        doHighlight(commentTagPos, getLength(), fullText, COMMENT_COLOR);
-                    } else {
-                        doHighlight(commentTagPos, lineEndPos, fullText, COMMENT_COLOR);
-                        highlight(lineEndPos + 1, endIdx, fullText);
-                    }
-
-                    break;
-                case 2:
-                    int rightPairPos = fullText.indexOf(mCommentPair[1], mCommentPairStartPos);
-                    rightPairPos = rightPairPos == -1 ? getLength() : rightPairPos;
-                    doHighlight(mCommentPairStartPos, rightPairPos + mCommentPair[1].length(), fullText, COMMENT_COLOR);
-                    highlight(rightPairPos + mCommentPair[1].length(), endIdx, fullText);
-                    break;
-                case 3:
-                    /* You can implement the following method or just write code below */
-                    highlightString(stringDelimiter, endIdx, insertString.substring(stringDelimiter), fullText);
-                    break;
-                default:
-                    keywordsHighlight(startIdx, endIdx, fullText);
-            }
-
-        }
-
+        keywordsHighlight(startIdx, endIdx, fullText);
+        processMultiComments(startIdx, endIdx, fullText);
+        int newEndIdx = processSingleComment(startIdx, endIdx, fullText);
+        newEndIdx = newEndIdx == -1 ? endIdx : newEndIdx;
+        recoverNormalHighlight(newEndIdx, fullText);
     }
 
-    private void highlightString(int startIdx, int endIdx, String insertString, String fullText) {
-        /* Write your code here */
+    private void processMultiComments(int startIdx, int endIdx, String fullText) {
+        String beforeString = fullText.substring(0, endIdx);
+        int lastMCommentStartPos = mCommentPair == null ? -1 : beforeString.lastIndexOf(mCommentPair[0]);
+        int firstMCommentEndPos = mCommentPair == null || lastMCommentStartPos == -1 ? -1 : fullText.indexOf(mCommentPair[1], lastMCommentStartPos);
 
-    }
-
-
-    private int getSpecialCondition(int comment, int mComment, int stringDelimiter) {
-        if (comment < mComment && comment < stringDelimiter) {
-            return 1;
-        } else if (mComment < comment && mComment < stringDelimiter) {
-            return 2;
-        } else if (stringDelimiter < comment && stringDelimiter < mComment) {
-            return 3;
-        } else {
-            return 0;
-        }
-
-    }
-
-    /**
-     * Get the previous word's color style.
-     * E.g. If it is comment, it will return Color.green
-     * @param startIdx
-     * @param text
-     * @return the text color
-     */
-    private Color getPrevTextColor(int startIdx, String text, Function<Character, Boolean> charFilter) {
-        if (startIdx != 0) {
-            int pos = startIdx;
-            while (pos >= 0 && charFilter.apply(text.charAt(pos))) {
-                pos--;
-            }
-
-            pos = Math.max(0, pos);
-            if (isVarValidChar(text.charAt(pos))) {
-                Object obj = getCharacterElement(pos).getAttributes().getAttribute(StyleConstants.Foreground);
-                if (obj instanceof Color) {
-                    return (Color) obj;
-                } else {
-                    return Color.black;
-                }
-
-            }
-
-        }
-
-        return Color.black;
-    }
-
-    private boolean isPairCommentTag(int[] interval, int startIdx, int endIdx) {
-        return false;
-    }
-
-    private int findStartPos(String text, int initOffset, Function<Integer, Boolean> isValidChar) {
-        int startIdx = initOffset;
-
-        boolean isFind = false;
-        for (; startIdx >= 0 && startIdx < text.length(); startIdx--) {
-            if (isValidChar.apply(startIdx)) {
-                isFind = true;
+        while (lastMCommentStartPos != -1) {
+            firstMCommentEndPos = firstMCommentEndPos == -1 ? getLength() : firstMCommentEndPos;
+            doHighlight(lastMCommentStartPos, firstMCommentEndPos + mCommentPair[1].length(), fullText, COMMENT_COLOR);
+            if (firstMCommentEndPos > endIdx || firstMCommentEndPos == getLength()) {
                 break;
             }
 
+            lastMCommentStartPos = fullText.indexOf(mCommentPair[0], firstMCommentEndPos);
+            firstMCommentEndPos = lastMCommentStartPos == -1 ? getLength() : fullText.indexOf(mCommentPair[1], lastMCommentStartPos);
         }
 
-        if (isFind) {
-            startIdx++;
+    }
+
+    private int processSingleComment(int startIdx, int endIdx, String fullText) {
+        if (commentTag == null) {
+            return -1;
+        }
+
+        if (startIdx != 0) {
+            String beforeString = fullText.substring(0, startIdx);
+            int lineChangePos = beforeString.lastIndexOf('\n');
+            startIdx = lineChangePos == -1 ? startIdx : lineChangePos;
+        }
+
+        if (endIdx != getLength()) {
+            int lineChangePos = fullText.indexOf('\n', endIdx);
+            endIdx = lineChangePos == -1 ? endIdx : lineChangePos;
+        }
+
+        String strBlock = fullText.substring(startIdx, endIdx);
+        String[] lines = strBlock.split("\n");
+        int offset = startIdx;
+        for (String line : lines) {
+            int commentPos = line.indexOf(commentTag);
+            if (commentPos != -1) {
+                doHighlight(offset + commentPos, offset + line.length(), fullText, COMMENT_COLOR);
+            }
+
+            offset += line.length();
+        }
+
+        return endIdx;
+    }
+
+    private void recoverNormalHighlight(int startIdx, String fullText) {
+        int mCommentPos = mCommentPair == null ? -1 : fullText.indexOf(mCommentPair[0], startIdx);
+        int commentPos = commentTag == null ? -1 : fullText.indexOf(commentTag, startIdx);
+        if (commentPos != -1 && mCommentPos != -1) {
+            highlight(startIdx, Math.min(commentPos, mCommentPos), fullText);
+        } else if (mCommentPos != -1) {
+            highlight(startIdx, mCommentPos, fullText);
+        } else if (commentPos != -1) {
+            highlight(startIdx, commentPos, fullText);
+        }
+
+    }
+
+    private int findStartPos(String text, int startIdx, Function<Integer, Boolean> isValidChar) {
+        for (; startIdx >= 0 && startIdx < text.length(); startIdx--) {
+            if (isValidChar.apply(startIdx)) {
+                break;
+            }
+
         }
 
         return Math.max(0, startIdx);
