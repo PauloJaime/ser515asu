@@ -108,7 +108,7 @@ public class TextEditorUI extends JFrame {
             prop.load(input);
             input.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warning("Read icons failed");
         }
 
         resource.put("paste", new ImageIcon(prop.getProperty("PasteIcon")));
@@ -408,6 +408,7 @@ public class TextEditorUI extends JFrame {
         try {
             prop.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("langProp.properties"), "UTF-8" ));
         } catch (IOException ioe) {
+            log.warning("Read language properties failed");
             throw new RuntimeException(ioe.getMessage());
         }
 

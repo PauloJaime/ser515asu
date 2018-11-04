@@ -62,10 +62,8 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
         String fullText = getText(0, getLength());
-
-        int startIdx = findStartPos(fullText, Math.max(0, offset - 1), i -> !(fullText.charAt(i) != ' ' && fullText.charAt(i) != '\t' && fullText.charAt(i) != '\n'));
-        int endIdx = findEndPos(fullText, offset + str.length(), i -> !(fullText.charAt(i) != ' ' && fullText.charAt(i) != '\t' && fullText.charAt(i) != '\n'));
-        highlight(startIdx, endIdx, fullText);
+        keywordsHighlight(fullText);
+        processCommentAndString(fullText);
     }
 
     @Override
@@ -77,9 +75,8 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
             return;
         }
 
-        int startIdx = findStartPos(fullText, Math.max(0, offs - 1), i -> !(fullText.charAt(i) != ' ' && fullText.charAt(i) != '\t' && fullText.charAt(i) != '\n'));
-        int endIdx = findEndPos(fullText, offs, i -> !(fullText.charAt(i) != ' ' && fullText.charAt(i) != '\t' && fullText.charAt(i) != '\n'));
-        highlight(startIdx, endIdx, fullText);
+        keywordsHighlight(fullText);
+        processCommentAndString(fullText);
     }
 
     private void doHighlight(int begin, int end, String fullText) {
@@ -91,142 +88,88 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         setCharacterAttributes(begin, end - begin, getAttributeSet(color), false);
     }
 
-    private void keywordsHighlight(int startIdx, int endIdx, String fullText) {
-        String fullSentence = fullText.substring(startIdx, endIdx);
+    private void processCommentAndString(String fullText) {
+        int startIdx = 0;
+        while (startIdx < getLength()) {
+            int commentTagPos = commentTag == null ? -1 : fullText.indexOf(commentTag, startIdx);
+            int mCommentTagPos = mCommentPair == null ? -1 : fullText.indexOf(mCommentPair[0], startIdx);
+            /* Overwrite string pos acquisition here */
+            int stringTagPos = -1;
+
+            switch(findSmallestElem(commentTagPos, mCommentTagPos, stringTagPos)) {
+                case 1:
+                    int lineChangePos = fullText.indexOf('\n', commentTagPos);
+                    doHighlight(commentTagPos, lineChangePos, fullText, COMMENT_COLOR);
+                    startIdx = lineChangePos;
+                    break;
+                case 2:
+                    startIdx = processMultiComments(mCommentTagPos, fullText);
+                    break;
+                case 3:
+                    /* Write your string process code here */
+                    break;
+                default:
+                    startIdx = getLength();
+            }
+
+        }
+
+    }
+
+    private int findSmallestElem(int... options) {
+        int res = 0;
+        int min = Integer.MAX_VALUE;
+        for (int i = 0 ; i < options.length; i++) {
+            int option = options[i];
+            if (option == - 1) {
+                continue;
+            }
+
+            if (min > option) {
+                min = option;
+                res = i + 1;
+            }
+
+        }
+
+        return res;
+    }
+
+    private void keywordsHighlight(String fullText) {
         Pattern pattern = Pattern.compile("(\\w)");
-        Matcher matcher = pattern.matcher(fullSentence);
-        int ptr = startIdx;
+        Matcher matcher = pattern.matcher(fullText);
+        int ptr = 0;
         while (matcher.find()) {
             int sIdx = matcher.start();
             int eIdx = sIdx;
-            while (eIdx < fullSentence.length()
-                    && (Character.isAlphabetic(fullSentence.charAt(eIdx))
-                    || Character.isDigit(fullSentence.charAt(eIdx))
-                    || fullSentence.charAt(eIdx) == '_')) {
+            while (eIdx < fullText.length()
+                    && (Character.isAlphabetic(fullText.charAt(eIdx))
+                    || Character.isDigit(fullText.charAt(eIdx))
+                    || fullText.charAt(eIdx) == '_')) {
                 eIdx++;
             }
 
-            if (ptr < sIdx + startIdx) {
-                doHighlight(ptr, sIdx + startIdx, fullText);
+            if (ptr < sIdx) {
+                doHighlight(ptr, sIdx, fullText);
             }
 
-            ptr = eIdx + startIdx;
-            doHighlight(sIdx + startIdx, eIdx + startIdx, fullText);
-            if (eIdx >= fullSentence.length()) {
+            ptr = eIdx;
+            doHighlight(sIdx, eIdx, fullText);
+            if (eIdx >= fullText.length()) {
                 break;
             }
 
-            matcher = matcher.region(eIdx, fullSentence.length());
+            matcher = matcher.region(eIdx, fullText.length());
         }
 
-        doHighlight(ptr, endIdx, fullText);
+        doHighlight(ptr, getLength(), fullText);
     }
 
-    /**
-     * Do comment & string detection pre-process.
-     * The interval is [startIdx, endIdx)
-     * Steps:
-     *  1. Normal highlight
-     *  2. Left part text detection
-     *  3. Right part text detection
-     * @param startIdx
-     * @param endIdx
-     * @param fullText
-     */
-    private void highlight(int startIdx, int endIdx, String fullText) {
-        if (startIdx >= endIdx) {
-            return;
-        }
-
-        keywordsHighlight(startIdx, endIdx, fullText);
-        processMultiComments(startIdx, endIdx, fullText);
-        int newEndIdx = processSingleComment(startIdx, endIdx, fullText);
-        newEndIdx = newEndIdx == -1 ? endIdx : newEndIdx;
-        recoverNormalHighlight(newEndIdx, fullText);
-    }
-
-    private void processMultiComments(int startIdx, int endIdx, String fullText) {
-        String beforeString = fullText.substring(0, endIdx);
-        int lastMCommentStartPos = mCommentPair == null ? -1 : beforeString.lastIndexOf(mCommentPair[0]);
-        int firstMCommentEndPos = mCommentPair == null || lastMCommentStartPos == -1 ? -1 : fullText.indexOf(mCommentPair[1], lastMCommentStartPos);
-
-        while (lastMCommentStartPos != -1) {
-            firstMCommentEndPos = firstMCommentEndPos == -1 ? getLength() : firstMCommentEndPos;
-            doHighlight(lastMCommentStartPos, firstMCommentEndPos + mCommentPair[1].length(), fullText, COMMENT_COLOR);
-            if (firstMCommentEndPos > endIdx || firstMCommentEndPos == getLength()) {
-                break;
-            }
-
-            lastMCommentStartPos = fullText.indexOf(mCommentPair[0], firstMCommentEndPos);
-            firstMCommentEndPos = lastMCommentStartPos == -1 ? getLength() : fullText.indexOf(mCommentPair[1], lastMCommentStartPos);
-        }
-
-    }
-
-    private int processSingleComment(int startIdx, int endIdx, String fullText) {
-        if (commentTag == null) {
-            return -1;
-        }
-
-        if (startIdx != 0) {
-            String beforeString = fullText.substring(0, startIdx);
-            int lineChangePos = beforeString.lastIndexOf('\n');
-            startIdx = lineChangePos == -1 ? startIdx : lineChangePos;
-        }
-
-        if (endIdx != getLength()) {
-            int lineChangePos = fullText.indexOf('\n', endIdx);
-            endIdx = lineChangePos == -1 ? endIdx : lineChangePos;
-        }
-
-        String strBlock = fullText.substring(startIdx, endIdx);
-        String[] lines = strBlock.split("\n");
-        int offset = startIdx;
-        for (String line : lines) {
-            int commentPos = line.indexOf(commentTag);
-            if (commentPos != -1) {
-                doHighlight(offset + commentPos, offset + line.length(), fullText, COMMENT_COLOR);
-            }
-
-            offset += line.length();
-        }
-
-        return endIdx;
-    }
-
-    private void recoverNormalHighlight(int startIdx, String fullText) {
-        int mCommentPos = mCommentPair == null ? -1 : fullText.indexOf(mCommentPair[0], startIdx);
-        int commentPos = commentTag == null ? -1 : fullText.indexOf(commentTag, startIdx);
-        if (commentPos != -1 && mCommentPos != -1) {
-            highlight(startIdx, Math.min(commentPos, mCommentPos), fullText);
-        } else if (mCommentPos != -1) {
-            highlight(startIdx, mCommentPos, fullText);
-        } else if (commentPos != -1) {
-            highlight(startIdx, commentPos, fullText);
-        }
-
-    }
-
-    private int findStartPos(String text, int startIdx, Function<Integer, Boolean> isValidChar) {
-        for (; startIdx >= 0 && startIdx < text.length(); startIdx--) {
-            if (isValidChar.apply(startIdx)) {
-                break;
-            }
-
-        }
-
-        return Math.max(0, startIdx);
-    }
-
-    private int findEndPos(String text, int startIdx, Function<Integer, Boolean> isValidChar) {
-        for (; startIdx >= 0 && startIdx < text.length(); startIdx++) {
-            if (isValidChar.apply(startIdx)) {
-                break;
-            }
-
-        }
-
-        return startIdx;
+    private int processMultiComments(int startIdx, String fullText) {
+        int mCommentEndPos = fullText.indexOf(mCommentPair[1], startIdx);
+        mCommentEndPos = mCommentEndPos == -1 ? getLength() : mCommentEndPos;
+        doHighlight(startIdx, mCommentEndPos + mCommentPair[1].length(), fullText, COMMENT_COLOR);
+        return mCommentEndPos;
     }
 
 }
