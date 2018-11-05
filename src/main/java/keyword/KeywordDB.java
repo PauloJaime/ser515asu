@@ -1,13 +1,11 @@
 package keyword;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -17,7 +15,6 @@ import java.util.logging.Logger;
  * @version 1.2
  */
 public class KeywordDB {
-	//public static void main(String args[]) throws IOException {
 	private Map<String,String> map;
 	private static final Logger log = Logger.getLogger("Log");
 
@@ -47,22 +44,12 @@ public class KeywordDB {
     }
 
     public void switchSyntax(String syntax) {
-	    // Temporarily hard code to read Java keyword
         map.clear();
-		String input = "";
-		try {
-			input = Thread.currentThread().getContextClassLoader().getResource(syntax + "Keyword.json").getPath();
-		} catch (NullPointerException e) {
-		    log.info("Cannot find syntax:" + syntax);
-		    log.info("By default, we regard this as plain text file");
-			return;
-		}
-
         String content;
         try {
-            content = FileUtils.readFileToString(new File(input),"UTF-8");
+            content = readFile(syntax + "Keyword.json");
         } catch (IOException e) {
-            log.warning("Cannot find file: " + input);
+            log.warning("Cannot find file: " + e.getMessage());
             throw new RuntimeException(e.getCause());
         }
 
@@ -84,6 +71,18 @@ public class KeywordDB {
 		}
 
 	}
+
+	private String readFile(String name) throws IOException {
+        InputStream bis = (InputStream) Thread.currentThread().getContextClassLoader().getResource(name).getContent();
+        DataInputStream dis = new DataInputStream(bis);
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = dis.readLine()) != null) {
+            sb.append(line);
+        }
+
+        return sb.toString();
+    }
 
 }
 

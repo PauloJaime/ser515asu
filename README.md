@@ -21,7 +21,8 @@
 2. run the following command
 ```shell
 # Make sure you have gradle on your computer
+gradle clean
 gradle build
-gradle jar
+gradle generateJar
 ```
 3. Go the build/libs folder and run the jar file by double click

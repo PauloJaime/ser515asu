@@ -77,7 +77,7 @@ public class IOAgent {
         String path = PathDB.getPath(title);
 
         if (path == null) {
-            saveAs(content); // file no exist
+            saveAs(content);
         } else {
             try {
                 FileWriter fw = new FileWriter(path);
@@ -119,7 +119,7 @@ public class IOAgent {
         Component component = tabManager.getComponentAt(idx);
         JScrollPane scrollPane = (JScrollPane) ((JPanel) component).getComponents()[0];
         JViewport viewport = (JViewport) scrollPane.getComponent(0);
-        JTextArea textArea = (JTextArea) viewport.getComponent(0);
+        JTextPane textArea = (JTextPane) viewport.getComponent(0);
         result.put("name", tabManager.getTitleAt(idx));
         result.put("content", textArea.getText());
         return result;
