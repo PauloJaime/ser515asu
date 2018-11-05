@@ -2,6 +2,7 @@ group 'SER515'
 version '1.0'
 
 apply plugin: 'java'
+apply plugin: 'idea'
 
 sourceCompatibility = 1.8
 
@@ -9,15 +10,19 @@ repositories {
     mavenCentral()
 }
 
-jar {
-    baseName = 'Notepad'
-    from('src/main/resource') {
-        include '*.txt'
-        include '*.properties'
-        include 'icons/*.png'
-        include '*.json'
+task generateJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Notepad',
+                'Implementation-Version': version,
+                'Main-Class': 'ui.TextEditorUI'
     }
 
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+jar {
     manifest {
         attributes 'Implementation-Title': 'Notepad',
                    'Implementation-Version': version,
@@ -53,6 +58,5 @@ sourceSets {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile "commons-io:commons-io:+"
     compile 'org.json:json:20180813'
 }

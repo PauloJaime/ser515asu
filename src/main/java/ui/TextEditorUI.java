@@ -6,11 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -112,24 +111,31 @@ public class TextEditorUI extends JFrame {
             e.printStackTrace();
         }
 
-        resource.put("paste", new ImageIcon(prop.getProperty("PasteIcon")));
-        resource.put("cut", new ImageIcon(prop.getProperty("CutIcon")));
-        resource.put("copy", new ImageIcon(prop.getProperty("CopyIcon")));
-        resource.put("exit", new ImageIcon(prop.getProperty("ExitIcon")));
+        resource.put("paste", new ImageIcon(getIconPath(prop.getProperty("PasteIcon"))));
+        resource.put("cut", new ImageIcon(getIconPath(prop.getProperty("CutIcon"))));
+        resource.put("copy", new ImageIcon(getIconPath(prop.getProperty("CopyIcon"))));
+        resource.put("exit", new ImageIcon(getIconPath(prop.getProperty("ExitIcon"))));
 
-        resource.put("langEng", new ImageIcon(prop.getProperty("LangEngIcon")));
-        resource.put("langFrn", new ImageIcon(prop.getProperty("LangFrnIcon")));
-        resource.put("langSpa", new ImageIcon(prop.getProperty("LangSpaIcon")));
-        resource.put("langPor", new ImageIcon(prop.getProperty("LangPorIcon")));
-        resource.put("langChn", new ImageIcon(prop.getProperty("LangChnIcon")));
+        resource.put("langEng", new ImageIcon(getIconPath(prop.getProperty("LangEngIcon"))));
+        resource.put("langFrn", new ImageIcon(getIconPath(prop.getProperty("LangFrnIcon"))));
+        resource.put("langSpa", new ImageIcon(getIconPath(prop.getProperty("LangSpaIcon"))));
+        resource.put("langPor", new ImageIcon(getIconPath(prop.getProperty("LangPorIcon"))));
+        resource.put("langChn", new ImageIcon(getIconPath(prop.getProperty("LangChnIcon"))));
 
-        resource.put("new", new ImageIcon(prop.getProperty("NewIcon")));
-        resource.put("open", new ImageIcon(prop.getProperty("OpenIcon")));
-        resource.put("save", new ImageIcon(prop.getProperty("SaveIcon")));
-        resource.put("closeTab", new ImageIcon(prop.getProperty("CloseTab")));
+        resource.put("new", new ImageIcon(getIconPath(prop.getProperty("NewIcon"))));
+        resource.put("open", new ImageIcon(getIconPath(prop.getProperty("OpenIcon"))));
+        resource.put("save", new ImageIcon(getIconPath(prop.getProperty("SaveIcon"))));
+        resource.put("closeTab", new ImageIcon(getIconPath(prop.getProperty("CloseTab"))));
 
         return resource;
     }
+
+    private URL getIconPath(String iconProperty) {
+        URL url = Thread.currentThread().getContextClassLoader().getResource(iconProperty);
+        log.info("" + url);
+        return url;
+    }
+
 
     /**
      * Assemble UI components into containers
