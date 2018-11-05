@@ -99,6 +99,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
             switch(findSmallestElem(commentTagPos, mCommentTagPos, stringTagPos)) {
                 case 1:
                     int lineChangePos = fullText.indexOf('\n', commentTagPos);
+                    lineChangePos = lineChangePos == -1 ? getLength() : lineChangePos;
                     doHighlight(commentTagPos, lineChangePos, fullText, COMMENT_COLOR);
                     startIdx = lineChangePos;
                     break;
