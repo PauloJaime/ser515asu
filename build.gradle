@@ -22,15 +22,6 @@ task generateJar(type: Jar) {
     with jar
 }
 
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'Notepad',
-                   'Implementation-Version': version,
-                   'Main-Class': 'ui.TextEditorUI'
-    }
-
-}
-
 sourceSets {
     main {
         java {
