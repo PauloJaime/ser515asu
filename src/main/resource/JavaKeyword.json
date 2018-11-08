@@ -67,5 +67,6 @@
     "throws"
   ],
   "comment":["//"],
-  "multi-comment":["/*", "*/"]
+  "multi-comment":["/*", "*/"],
+  "string":["\"", "'"]
 }
