@@ -20,11 +20,13 @@ public class KeywordDB {
 
 	private String commentTag;
 	private String[] mCommentPair;
+	private String[] stringTag;
 
 	public KeywordDB() {
 	    this("Plain text");
         commentTag = null;
         mCommentPair = null;
+        stringTag = null;
     }
 
 	public KeywordDB(String syntax) {
@@ -32,16 +34,14 @@ public class KeywordDB {
         switchSyntax(syntax);
     }
 
-    public String getCommentTag() {
-        return commentTag;
-    }
+    public String getCommentTag() { return commentTag;}
 
-    public String[] getMCommentTags() {
-        return mCommentPair;
-    }
+    public String[] getMCommentTags() { return mCommentPair;}
+
+    public String[] getStringTag(){ return stringTag;}
 
     public Color matchColor(String keyWord) {
-        String colorName = map.getOrDefault(keyWord, "Black");
+	    String colorName = map.getOrDefault(keyWord, "Black");
         switch (colorName) {
             case "Red":
                 return Color.red;
@@ -49,6 +49,8 @@ public class KeywordDB {
                 return Color.blue;
             case "Purple":
                 return Color.magenta;
+            case "Grey":
+                return Color.gray;
             default:
                 return Color.black;
         }
@@ -81,7 +83,10 @@ public class KeywordDB {
                 commentTag = (String) arr.get(0);
             } else if (k.equals("multi-comment")) {
                 mCommentPair = new String[] {(String) arr.get(0), (String) arr.get(1)};
-            } else {
+            } else if(k.equals("string")){
+                stringTag = new String[] {(String) arr.get(0), (String) arr.get(1)};
+            }
+            else {
                 for (Object anArr : arr) {
                     map.put(anArr.toString(), k);
                 }
