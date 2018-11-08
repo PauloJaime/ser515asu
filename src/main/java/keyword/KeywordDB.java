@@ -57,6 +57,23 @@ public class KeywordDB {
 
     }
 
+    public Color matchDarkMode(String keyWord){
+        String colorName = map.getOrDefault(keyWord, "Black");
+        switch (colorName) {
+            case "Red":
+                return Color.CYAN;
+            case "Blue":
+                return Color.yellow;
+            case "Purple":
+                return Color.green;
+            case "Grey":
+                return Color.lightGray;
+            default:
+                return Color.white;
+        }
+
+    }
+
     public void switchSyntax(String syntax) {
         map.clear();
 		String input;
