@@ -101,13 +101,8 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         int startIdx = 0;
         int stringflag = -1;
         int charflag = 0;
-        System.out.println("Kaishi");
-        //System.out.println(startIdx);
-
 
         while (startIdx < getLength()) {
-
-            System.out.println(getLength());
 
             int commentTagPos = commentTag == null ? -1 : fullText.indexOf(commentTag, startIdx);
             int mCommentTagPos = mCommentPair == null ? -1 : fullText.indexOf(mCommentPair[0], startIdx);
