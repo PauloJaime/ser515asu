@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -29,6 +30,10 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     private KeywordDB keywordDB;
     private String commentTag;
     private String[] mCommentPair;
+    //
+    private String[] stringPair;
+
+
 
     public SyntaxAwareDocument(String syntax) {
         keywordDB = new KeywordDB(syntax);
@@ -36,6 +41,10 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         attrMap = new HashMap<>();
         commentTag = keywordDB.getCommentTag();
         mCommentPair = keywordDB.getMCommentTags();
+
+        //
+        stringPair = keywordDB.getStringTag();
+
     }
 
 
@@ -90,31 +99,83 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
     private void processCommentAndString(String fullText) {
         int startIdx = 0;
+        int stringflag = -1;
+        int charflag = 0;
+        System.out.println("Kaishi");
+        //System.out.println(startIdx);
+
+
         while (startIdx < getLength()) {
+
+            System.out.println(getLength());
+
             int commentTagPos = commentTag == null ? -1 : fullText.indexOf(commentTag, startIdx);
             int mCommentTagPos = mCommentPair == null ? -1 : fullText.indexOf(mCommentPair[0], startIdx);
-            /* Overwrite string pos acquisition here */
-            int stringTagPos = -1;
 
-            switch(findSmallestElem(commentTagPos, mCommentTagPos, stringTagPos)) {
+            /* Overwrite string pos acquisition here */
+
+
+            int stringTagPos = stringPair[0] == null ? -1 : fullText.indexOf(stringPair[0], startIdx);
+            int charTagPos = stringPair[1] == null ? -1 : fullText.indexOf(stringPair[1], startIdx);
+
+            if(charTagPos != -1) charflag += 1;
+
+            switch(findSmallestElem(commentTagPos, mCommentTagPos, stringTagPos, charTagPos)) {
                 case 1:
                     int lineChangePos = fullText.indexOf('\n', commentTagPos);
                     lineChangePos = lineChangePos == -1 ? getLength() : lineChangePos;
                     doHighlight(commentTagPos, lineChangePos, fullText, COMMENT_COLOR);
                     startIdx = lineChangePos;
                     break;
+
                 case 2:
                     startIdx = processMultiComments(mCommentTagPos, fullText);
                     break;
+
                 case 3:
                     /* Write your string process code here */
-                    break;
+
+                        int stringEndPos = fullText.indexOf(stringPair[0], stringTagPos + stringPair[0].length());
+
+                        if (stringEndPos != -1) stringflag = -1;
+
+                        stringEndPos = stringEndPos == -1 ? getLength() : stringEndPos;
+                        doHighlight(stringTagPos, stringEndPos + stringPair[0].length(), fullText, STRING_COLOR);
+
+                        startIdx = stringEndPos + stringPair[0].length();
+                        break;
+
+
+                case 4:
+                    if(stringflag != 1) {
+
+                        int charEndPos = fullText.indexOf(stringPair[1], charTagPos + stringPair[1].length());
+
+
+                        charEndPos = charEndPos == -1 ? getLength() : charEndPos;
+                        doHighlight(charTagPos, charEndPos + stringPair[1].length(), fullText, STRING_COLOR);
+                        startIdx = charEndPos + stringPair[1].length();
+                        //stack.pop();
+                        break;
+                    }
+                    else{
+                        
+                        startIdx = startIdx + stringPair[1].length();
+                        break;
+                    }
                 default:
                     startIdx = getLength();
             }
 
         }
 
+    }
+
+    private int processMultiComments(int startIdx, String fullText) {
+        int mCommentEndPos = fullText.indexOf(mCommentPair[1], startIdx);
+        mCommentEndPos = mCommentEndPos == -1 ? getLength() : mCommentEndPos;
+        doHighlight(startIdx, mCommentEndPos + mCommentPair[1].length(), fullText, COMMENT_COLOR);
+        return mCommentEndPos;
     }
 
     private int findSmallestElem(int... options) {
@@ -166,11 +227,6 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         doHighlight(ptr, getLength(), fullText);
     }
 
-    private int processMultiComments(int startIdx, String fullText) {
-        int mCommentEndPos = fullText.indexOf(mCommentPair[1], startIdx);
-        mCommentEndPos = mCommentEndPos == -1 ? getLength() : mCommentEndPos;
-        doHighlight(startIdx, mCommentEndPos + mCommentPair[1].length(), fullText, COMMENT_COLOR);
-        return mCommentEndPos;
-    }
+
 
 }
