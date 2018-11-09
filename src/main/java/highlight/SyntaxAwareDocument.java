@@ -159,7 +159,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
                         break;
                     }
                     else{
-                        
+
                         startIdx = startIdx + stringPair[1].length();
                         break;
                     }

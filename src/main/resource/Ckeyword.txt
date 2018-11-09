@@ -43,3 +43,10 @@ case
 enum
 throw
 const
+
+//string and comment color
+gray
+//
+/*..*/
+""
+''
