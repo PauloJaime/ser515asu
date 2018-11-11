@@ -33,10 +33,17 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     private String[] mCommentPair;
     private String[] stringPair;
 
+    /**
+     * MODE is inner enum that define current mode.
+     */
     public enum MODE {
         bright, dark
     }
 
+    /**
+     * Init the document with default mode (bright)
+     * @param syntax the syntax of the document
+     */
     public SyntaxAwareDocument(String syntax) {
         keywordDB = new KeywordDB(syntax);
         context = StyleContext.getDefaultStyleContext();
@@ -47,6 +54,11 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         mode = MODE.bright;
     }
 
+    /**
+     * Init the document with specific mode
+     * @param syntax the syntax of the document
+     * @param m the mode of the document
+     */
     public SyntaxAwareDocument(String syntax, MODE m) {
         this(syntax);
         mode = m;
@@ -57,6 +69,10 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
                 c -> context.addAttribute(context.getEmptySet(), StyleConstants.Foreground, c));
     }
 
+    /**
+     * Switch the syntax of the document
+     * @param syntax the syntax you want to change
+     */
     public void switchSyntax(String syntax) {
         keywordDB.switchSyntax(syntax);
         try {
@@ -71,6 +87,13 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
     }
 
+    /**
+     * Override parent class method
+     * @param offset The position of the string starts at
+     * @param str The insert string
+     * @param a Attribute set
+     * @throws BadLocationException This exception means that the position is invalid
+     */
     @Override
     public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
@@ -79,6 +102,12 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         processCommentAndString(fullText);
     }
 
+    /**
+     * Override parent class method
+     * @param offs The position of the string starts at
+     * @param len The length of removed string
+     * @throws BadLocationException This exception means that the position is invalid
+     */
     @Override
     public void remove(int offs, int len) throws BadLocationException {
         super.remove(offs, len);
@@ -232,7 +261,5 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
         doHighlight(ptr, getLength(), fullText);
     }
-
-
 
 }
