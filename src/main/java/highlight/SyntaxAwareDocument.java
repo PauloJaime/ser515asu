@@ -23,16 +23,19 @@ import java.util.regex.Pattern;
 public class SyntaxAwareDocument extends DefaultStyledDocument {
     private static final Logger log = Logger.getLogger("Log");
     private static final Color COMMENT_COLOR = Color.green.darker();
-    private static final Color STRING_COLOR = Color.orange.darker();
+    private static final Color STRING_COLOR = Color.orange;
 
     private final StyleContext context;
+    private MODE mode;
     private Map<Color, AttributeSet> attrMap;
     private KeywordDB keywordDB;
     private String commentTag;
     private String[] mCommentPair;
     private String[] stringPair;
 
-
+    public enum MODE {
+        bright, dark
+    }
 
     public SyntaxAwareDocument(String syntax) {
         keywordDB = new KeywordDB(syntax);
@@ -41,9 +44,13 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         commentTag = keywordDB.getCommentTag();
         mCommentPair = keywordDB.getMCommentTags();
         stringPair = keywordDB.getStringTag();
-
+        mode = MODE.bright;
     }
 
+    public SyntaxAwareDocument(String syntax, MODE m) {
+        this(syntax);
+        mode = m;
+    }
 
     private AttributeSet getAttributeSet(Color color) {
         return attrMap.computeIfAbsent(color,
@@ -86,8 +93,17 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     }
 
     private void doHighlight(int begin, int end, String fullText) {
-        Color color = keywordDB.matchColor(fullText.substring(begin, end));
+        Color color = getKeywordsColor(fullText.substring(begin, end));
         doHighlight(begin, end, fullText, color);
+    }
+
+    private Color getKeywordsColor(String word) {
+        if (mode == MODE.bright) {
+            return keywordDB.matchColor(word);
+        } else {
+            return keywordDB.matchDarkMode(word);
+        }
+
     }
 
     private void doHighlight(int begin, int end, String fullText, Color color) {
