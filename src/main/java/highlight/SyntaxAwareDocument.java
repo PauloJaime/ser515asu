@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
  * Custom Document, extends DefaultStyledDocument
  * Add syntax aware property
  *
- * @author Zitong Wei
- * @version 2.0
+ * @author Zitong Wei, Zelin Bao
+ * @version 3.0
  */
 
 public class SyntaxAwareDocument extends DefaultStyledDocument {
@@ -30,7 +30,6 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     private KeywordDB keywordDB;
     private String commentTag;
     private String[] mCommentPair;
-    //
     private String[] stringPair;
 
 
@@ -41,8 +40,6 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         attrMap = new HashMap<>();
         commentTag = keywordDB.getCommentTag();
         mCommentPair = keywordDB.getMCommentTags();
-
-        //
         stringPair = keywordDB.getStringTag();
 
     }
@@ -107,13 +104,12 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
             int commentTagPos = commentTag == null ? -1 : fullText.indexOf(commentTag, startIdx);
             int mCommentTagPos = mCommentPair == null ? -1 : fullText.indexOf(mCommentPair[0], startIdx);
 
-            /* Overwrite string pos acquisition here */
-
-
             int stringTagPos = stringPair[0] == null ? -1 : fullText.indexOf(stringPair[0], startIdx);
             int charTagPos = stringPair[1] == null ? -1 : fullText.indexOf(stringPair[1], startIdx);
 
-            if(charTagPos != -1) charflag += 1;
+            if(charTagPos != -1) {
+                charflag += 1;
+            }
 
             switch(findSmallestElem(commentTagPos, mCommentTagPos, stringTagPos, charTagPos)) {
                 case 1:
@@ -128,17 +124,15 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
                     break;
 
                 case 3:
-                    /* Write your string process code here */
+                    int stringEndPos = fullText.indexOf(stringPair[0], stringTagPos + stringPair[0].length());
 
-                        int stringEndPos = fullText.indexOf(stringPair[0], stringTagPos + stringPair[0].length());
+                    if (stringEndPos != -1) stringflag = -1;
 
-                        if (stringEndPos != -1) stringflag = -1;
+                    stringEndPos = stringEndPos == -1 ? getLength() : stringEndPos;
+                    doHighlight(stringTagPos, stringEndPos + stringPair[0].length(), fullText, STRING_COLOR);
 
-                        stringEndPos = stringEndPos == -1 ? getLength() : stringEndPos;
-                        doHighlight(stringTagPos, stringEndPos + stringPair[0].length(), fullText, STRING_COLOR);
-
-                        startIdx = stringEndPos + stringPair[0].length();
-                        break;
+                    startIdx = stringEndPos + stringPair[0].length();
+                    break;
 
 
                 case 4:
@@ -150,14 +144,15 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
                         charEndPos = charEndPos == -1 ? getLength() : charEndPos;
                         doHighlight(charTagPos, charEndPos + stringPair[1].length(), fullText, STRING_COLOR);
                         startIdx = charEndPos + stringPair[1].length();
-                        //stack.pop();
                         break;
                     }
-                    else{
+
+                    else {
 
                         startIdx = startIdx + stringPair[1].length();
                         break;
                     }
+
                 default:
                     startIdx = getLength();
             }
