@@ -3,7 +3,7 @@ package keyword;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.awt.*;
 import java.util.logging.Logger;
@@ -12,14 +12,21 @@ import java.util.logging.Logger;
  * The class used to read color information
  *
  * @author Yiru Hu
- * @version 1.2
+ * @version 1.3
  */
 public class KeywordDB {
-	private Map<String,String> map;
+	private Map<String, String> map;
 	private static final Logger log = Logger.getLogger("Log");
+
+	private String commentTag;
+	private String[] mCommentPair;
+	private String[] stringTag;
 
 	public KeywordDB() {
 	    this("Plain text");
+        commentTag = null;
+        mCommentPair = null;
+        stringTag = null;
     }
 
 	public KeywordDB(String syntax) {
@@ -27,24 +34,57 @@ public class KeywordDB {
         switchSyntax(syntax);
     }
 
-    public Color matchColor(String keyWord) {
-        //String colorName = "";
-        Object key = ""+keyWord;
-        String colorName = map.getOrDefault(key, "Black");
+    public String getCommentTag() { return commentTag;}
 
-        Color color = Color.black;
-        if(colorName.equals("Red")){
-            color = Color.red;
-        }else if(colorName.equals("Blue")){
-            color = Color.blue;
-        }else if(colorName.equals("Purple")){
-            color = Color.magenta;
+    public String[] getMCommentTags() { return mCommentPair;}
+
+    public String[] getStringTag(){ return stringTag;}
+
+    public Color matchColor(String keyWord) {
+	    String colorName = map.getOrDefault(keyWord, "Black");
+        switch (colorName) {
+            case "Red":
+                return Color.red;
+            case "Blue":
+                return Color.blue;
+            case "Purple":
+                return Color.magenta;
+            case "Grey":
+                return Color.gray;
+            default:
+                return Color.black;
         }
-        return color;
+
+    }
+
+    public Color matchDarkMode(String keyWord){
+        String colorName = map.getOrDefault(keyWord, "Black");
+        switch (colorName) {
+            case "Red":
+                return Color.CYAN;
+            case "Blue":
+                return Color.yellow;
+            case "Purple":
+                return Color.green;
+            case "Grey":
+                return Color.lightGray;
+            default:
+                return Color.white;
+        }
+
     }
 
     public void switchSyntax(String syntax) {
         map.clear();
+		String input;
+		try {
+			input = Thread.currentThread().getContextClassLoader().getResource(syntax + "Keyword.json").getPath();
+		} catch (NullPointerException e) {
+		    log.info("Cannot find syntax:" + syntax);
+		    log.info("By default, we regard this as plain text file");
+			return;
+		}
+
         String content;
         try {
             content = readFile(syntax + "Keyword.json");
@@ -54,21 +94,23 @@ public class KeywordDB {
         }
 
         JSONObject jsonObject = new JSONObject(content);
-		Map<String, Object> outerMap = new HashMap<>();
-		for(Object k : jsonObject.keySet() ){
-			Object v = jsonObject.get(k.toString());
-			outerMap.put(k.toString(), v);
-		}
+        for (String k : jsonObject.keySet()) {
+            JSONArray arr = (JSONArray) jsonObject.get(k);
+            if (k.equals("comment")) {
+                commentTag = (String) arr.get(0);
+            } else if (k.equals("multi-comment")) {
+                mCommentPair = new String[] {(String) arr.get(0), (String) arr.get(1)};
+            } else if(k.equals("string")){
+                stringTag = new String[] {(String) arr.get(0), (String) arr.get(1)};
+            }
+            else {
+                for (Object anArr : arr) {
+                    map.put(anArr.toString(), k);
+                }
 
-		for (Entry<String, Object> entry : outerMap.entrySet()) {
-			String str1 = entry.getValue().toString();
-			JSONObject inner = new JSONObject(str1);
-			for(Object k : inner.keySet() ){
-				Object v = inner.get(k.toString());
-                map.put(v.toString(), entry.getKey());
-			}
+            }
 
-		}
+        }
 
 	}
 
