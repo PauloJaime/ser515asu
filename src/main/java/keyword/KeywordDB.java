@@ -76,15 +76,6 @@ public class KeywordDB {
 
     public void switchSyntax(String syntax) {
         map.clear();
-		String input;
-		try {
-			input = Thread.currentThread().getContextClassLoader().getResource(syntax + "Keyword.json").getPath();
-		} catch (NullPointerException e) {
-		    log.info("Cannot find syntax:" + syntax);
-		    log.info("By default, we regard this as plain text file");
-			return;
-		}
-
         String content;
         try {
             content = readFile(syntax + "Keyword.json");
