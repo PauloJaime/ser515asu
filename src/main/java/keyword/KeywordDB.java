@@ -34,14 +34,31 @@ public class KeywordDB {
         switchSyntax(syntax);
     }
 
+    /**
+     * Return the comment tag of the current syntax. E.g. for java it will return '//'
+     * @return commentTag
+     */
     public String getCommentTag() { return commentTag;}
 
+    /**
+     * Return the multiple line comments tag of the current syntax.
+     * @return mCommentPair
+     */
     public String[] getMCommentTags() { return mCommentPair;}
 
+    /**
+     * Return the string tag of the current syntax.
+     * @return commentTag
+     */
     public String[] getStringTag(){ return stringTag;}
 
-    public Color matchColor(String keyWord) {
-	    String colorName = map.getOrDefault(keyWord, "Black");
+    /**
+     * Get the Color of the current keyword
+     * @param keyword the word
+     * @return java.awt.Color
+     */
+    public Color matchColor(String keyword) {
+	    String colorName = map.getOrDefault(keyword, "Black");
         switch (colorName) {
             case "Red":
                 return Color.red;
@@ -57,8 +74,13 @@ public class KeywordDB {
 
     }
 
-    public Color matchDarkMode(String keyWord){
-        String colorName = map.getOrDefault(keyWord, "Black");
+    /**
+     * Get the Color of the current keyword in dark mode
+     * @param keyword the word
+     * @return java.awt.Color
+     */
+    public Color matchDarkMode(String keyword){
+        String colorName = map.getOrDefault(keyword, "Black");
         switch (colorName) {
             case "Red":
                 return Color.CYAN;
@@ -74,17 +96,12 @@ public class KeywordDB {
 
     }
 
+    /**
+     * Switch the syntax
+     * @param syntax the syntax want to change
+     */
     public void switchSyntax(String syntax) {
         map.clear();
-		String input;
-		try {
-			input = Thread.currentThread().getContextClassLoader().getResource(syntax + "Keyword.json").getPath();
-		} catch (NullPointerException e) {
-		    log.info("Cannot find syntax:" + syntax);
-		    log.info("By default, we regard this as plain text file");
-			return;
-		}
-
         String content;
         try {
             content = readFile(syntax + "Keyword.json");

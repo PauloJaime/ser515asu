@@ -23,17 +23,27 @@ import java.util.regex.Pattern;
 public class SyntaxAwareDocument extends DefaultStyledDocument {
     private static final Logger log = Logger.getLogger("Log");
     private static final Color COMMENT_COLOR = Color.green.darker();
-    private static final Color STRING_COLOR = Color.orange.darker();
+    private static final Color STRING_COLOR = Color.orange;
 
     private final StyleContext context;
+    private MODE mode;
     private Map<Color, AttributeSet> attrMap;
     private KeywordDB keywordDB;
     private String commentTag;
     private String[] mCommentPair;
     private String[] stringPair;
 
+    /**
+     * MODE is inner enum that define current mode.
+     */
+    public enum MODE {
+        bright, dark
+    }
 
-
+    /**
+     * Init the document with default mode (bright)
+     * @param syntax the syntax of the document
+     */
     public SyntaxAwareDocument(String syntax) {
         keywordDB = new KeywordDB(syntax);
         context = StyleContext.getDefaultStyleContext();
@@ -41,15 +51,28 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         commentTag = keywordDB.getCommentTag();
         mCommentPair = keywordDB.getMCommentTags();
         stringPair = keywordDB.getStringTag();
-
+        mode = MODE.bright;
     }
 
+    /**
+     * Init the document with specific mode
+     * @param syntax the syntax of the document
+     * @param m the mode of the document
+     */
+    public SyntaxAwareDocument(String syntax, MODE m) {
+        this(syntax);
+        mode = m;
+    }
 
     private AttributeSet getAttributeSet(Color color) {
         return attrMap.computeIfAbsent(color,
                 c -> context.addAttribute(context.getEmptySet(), StyleConstants.Foreground, c));
     }
 
+    /**
+     * Switch the syntax of the document
+     * @param syntax the syntax you want to change
+     */
     public void switchSyntax(String syntax) {
         keywordDB.switchSyntax(syntax);
         try {
@@ -64,6 +87,13 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
     }
 
+    /**
+     * Override parent class method
+     * @param offset The position of the string starts at
+     * @param str The insert string
+     * @param a Attribute set
+     * @throws BadLocationException This exception means that the position is invalid
+     */
     @Override
     public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
@@ -72,6 +102,12 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         processCommentAndString(fullText);
     }
 
+    /**
+     * Override parent class method
+     * @param offs The position of the string starts at
+     * @param len The length of removed string
+     * @throws BadLocationException This exception means that the position is invalid
+     */
     @Override
     public void remove(int offs, int len) throws BadLocationException {
         super.remove(offs, len);
@@ -86,8 +122,17 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     }
 
     private void doHighlight(int begin, int end, String fullText) {
-        Color color = keywordDB.matchColor(fullText.substring(begin, end));
+        Color color = getKeywordsColor(fullText.substring(begin, end));
         doHighlight(begin, end, fullText, color);
+    }
+
+    private Color getKeywordsColor(String word) {
+        if (mode == MODE.bright) {
+            return keywordDB.matchColor(word);
+        } else {
+            return keywordDB.matchDarkMode(word);
+        }
+
     }
 
     private void doHighlight(int begin, int end, String fullText, Color color) {
@@ -216,7 +261,5 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
         doHighlight(ptr, getLength(), fullText);
     }
-
-
 
 }

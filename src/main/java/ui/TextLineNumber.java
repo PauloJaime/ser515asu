@@ -15,11 +15,14 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
-
+/**
+ * The panel used to show the line number of the text.
+ *
+ * @author Hongfei Ju
+ * @version 1.0
+ */
 public class TextLineNumber extends JPanel
-        implements CaretListener, DocumentListener, PropertyChangeListener
-{
+        implements CaretListener, DocumentListener, PropertyChangeListener {
     public final static float LEFT = 0.0f;
     public final static float CENTER = 0.5f;
     public final static float RIGHT = 1.0f;

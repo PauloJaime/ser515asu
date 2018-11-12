@@ -22,11 +22,18 @@ public class IOAgent {
         tabManager = tabMgr;
     }
 
+    /**
+     * Save file method
+     */
     public void save() {
         Map<String, String> nameAndContent = acquireTabContent(tabManager.getSelectedIndex());
         doSave(nameAndContent.get("name"), nameAndContent.get("content"));
     }
 
+    /**
+     * Read the title and content of the file
+     * @return pair: "name" - title; "content" - content
+     */
     public Map<String, String> read() {
         Map<String, String> result = new HashMap<>();
         JFileChooser jFileChooser = new JFileChooser();
@@ -69,6 +76,9 @@ public class IOAgent {
         return result;
     }
 
+    /**
+     * Close current tab file
+     */
     public void delete() {
         PathDB.delete(tabManager.getTitleAt(tabManager.getSelectedIndex()));
     }
