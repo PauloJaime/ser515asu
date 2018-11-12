@@ -36,7 +36,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     /**
      * MODE is inner enum that define current mode.
      */
-    public enum MODE {
+    private enum MODE {
         bright, dark
     }
 
@@ -62,11 +62,6 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     public SyntaxAwareDocument(String syntax, MODE m) {
         this(syntax);
         mode = m;
-    }
-
-    private AttributeSet getAttributeSet(Color color) {
-        return attrMap.computeIfAbsent(color,
-                c -> context.addAttribute(context.getEmptySet(), StyleConstants.Foreground, c));
     }
 
     /**
@@ -119,6 +114,20 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
         keywordsHighlight(fullText);
         processCommentAndString(fullText);
+    }
+
+    public void switchMode() {
+        mode = mode == MODE.bright ? MODE.dark : MODE.bright;
+
+        try {
+            String fullText = getText(0, getLength());
+            keywordsHighlight(fullText);
+            processCommentAndString(fullText);
+        } catch (BadLocationException e) {
+            log.severe("Re-highlight error");
+            throw new RuntimeException(e.getCause());
+        }
+
     }
 
     private void doHighlight(int begin, int end, String fullText) {
@@ -204,6 +213,11 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
         }
 
+    }
+
+    private AttributeSet getAttributeSet(Color color) {
+        return attrMap.computeIfAbsent(color,
+                c -> context.addAttribute(context.getEmptySet(), StyleConstants.Foreground, c));
     }
 
     private int processMultiComments(int startIdx, String fullText) {
