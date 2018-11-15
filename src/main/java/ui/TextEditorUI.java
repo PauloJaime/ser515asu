@@ -588,6 +588,9 @@ public class TextEditorUI extends JFrame {
             scrollPane.setRowHeaderView(tln);
             pane.setForeground(foreground);
             pane.setBackground(background);
+            assert pane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+            doc.switchMode();
         }
     }
 
