@@ -56,7 +56,7 @@ public class TextLineNumber extends JPanel
         setFont( component.getFont() );
 
         setBorderGap( 5 );
-        setCurrentLineForeground( Color.BLACK );
+        setCurrentLineForeground( Color.green);
         setDigitAlignment( CENTER );
         setMinimumDisplayDigits( minimumDisplayDigits );
 

@@ -5,6 +5,7 @@ import io.IOAgent;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Container;
 import java.awt.datatransfer.*;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ import javax.swing.text.*;
 /**
  * Main class for launching the application
  *
- * @author Major: Hongfei Ju, Paulo Jaime, Zitong Wei, Zelin Bao
+ * @author Major: Hongfei Ju, Paulo Jaime, Zitong Wei, Zelin Bao, Binbin Yan
  * @version 2.2
  */
 
@@ -273,10 +274,26 @@ public class TextEditorUI extends JFrame {
             tabbedPane.addTab("new", jPanel);
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Java"));
             setTabs(textPane);
+
+            if(dayModeAction.isSelected() == true){
+                textPane.setBackground(Color.white);
+            }
+            else {textPane.setBackground(Color.darkGray);}
+
             EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
             textPane.setBorder(eb);
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             TextLineNumber tln = new TextLineNumber(textPane);
+
+            if(dayModeAction.isSelected() == true){
+                tln.setBackground(Color.white);
+                tln.setForeground(Color.gray);
+            }
+            else {
+                tln.setBackground(Color.darkGray);
+                tln.setForeground(Color.white);
+            }
+
             scrollPane.setRowHeaderView( tln );
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
@@ -298,12 +315,28 @@ public class TextEditorUI extends JFrame {
                 String syntax = pos == -1 ? "Plain text" : name.substring(pos + 1);
                 textPane = new JTextPane(new SyntaxAwareDocument(syntax));
                 setTabs(textPane);
+
+                if(dayModeAction.isSelected() == true){
+                    textPane.setBackground(Color.white);
+                }
+                else {textPane.setBackground(Color.darkGray);}
+
                 EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
                 textPane.setBorder(eb);
                 textPane.setText(titleAndContent.get("content"));
 
                 JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
                 TextLineNumber tln = new TextLineNumber(textPane);
+
+                if(dayModeAction.isSelected() == true){
+                    tln.setBackground(Color.white);
+                    tln.setForeground(Color.gray);
+                }
+                else {
+                    tln.setBackground(Color.darkGray);
+                    tln.setForeground(Color.white);
+                }
+
                 scrollPane.setRowHeaderView( tln );
                 jPanel.add(scrollPane, BorderLayout.CENTER);
             }
@@ -393,13 +426,13 @@ public class TextEditorUI extends JFrame {
         dayModeAction.addActionListener(e -> {
 
             changeMenuAndBottonMode(Color.white, Color.black);
-            //changeTextArea(Color.white, Color.black);
+            changeTextArea(Color.white, Color.black);
         });
 
         nightModeAction.addActionListener(e -> {
 
             changeMenuAndBottonMode(Color.darkGray, Color.white);
-            //changeTextArea(Color.darkGray, Color.white);
+            changeTextArea(Color.darkGray, Color.white);
         });
     }
 
@@ -534,6 +567,28 @@ public class TextEditorUI extends JFrame {
         fontAction.setForeground(foreground);
         dayModeAction.setForeground(foreground);
         nightModeAction.setForeground(foreground);
+    }
+
+    private void changeTextArea(Color background, Color foreground) {
+        tabbedPane.setForeground(foreground);
+        tabbedPane.setBackground(background);
+        int totalTabs = tabbedPane.getTabCount();
+        for(int i = 0; i <totalTabs; i++){
+            Component tab = tabbedPane.getComponentAt(i);
+            JScrollPane scrollPane = (JScrollPane) ((JPanel) tab).getComponent(0);
+            JViewport viewport = (JViewport) scrollPane.getComponent(0);
+            JTextPane pane = (JTextPane) viewport.getComponent(0);
+            TextLineNumber tln = new TextLineNumber(pane);
+            tln.setBackground(background);
+            if(background == Color.white){
+                tln.setForeground(Color.gray);
+            }
+            else{ tln.setForeground(foreground);}
+
+            scrollPane.setRowHeaderView(tln);
+            pane.setForeground(foreground);
+            pane.setBackground(background);
+        }
     }
 
     private String getSelectedTextFromTextPane() {
