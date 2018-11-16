@@ -5,6 +5,7 @@ import io.IOAgent;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Container;
 import java.awt.datatransfer.*;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ import javax.swing.text.*;
 /**
  * Main class for launching the application
  *
- * @author Major: Hongfei Ju, Paulo Jaime, Zitong Wei, Zelin Bao
+ * @author Major: Hongfei Ju, Paulo Jaime, Zitong Wei, Zelin Bao, Binbin Yan
  * @version 2.2
  */
 
@@ -45,6 +46,8 @@ public class TextEditorUI extends JFrame {
     private JMenuItem plainTextAction;
 
     private JMenu windowMenu;
+    private JMenuItem minimizeAction;
+    private JMenuItem zoomAction;
 
     private JMenu langMenu;
     private JMenuItem engLangAction;
@@ -54,18 +57,21 @@ public class TextEditorUI extends JFrame {
     private JMenuItem chnLangAction;
 
     private JMenu settingsMenu;
-    private JMenu helpMenu;
-    private JTabbedPane tabbedPane;
-    private IOAgent ioAgent;
-    private JMenuItem openIntroductionAction;
-    private JMenuItem openCooperationAction;
-    private JMenuItem minimizeAction;
-    private JMenuItem zoomAction;
     private JMenuItem fontAction;
 
     private JMenu modeMenu;
-    private JMenuItem nightModeAction;
-    private JMenuItem dayModeAction;
+    private ButtonGroup modeGroup;
+
+    public JRadioButtonMenuItem dayModeAction;
+    public JRadioButtonMenuItem nightModeAction;
+
+
+    private JMenu helpMenu;
+    private JMenuItem openIntroductionAction;
+    private JMenuItem openCooperationAction;
+
+    private JTabbedPane tabbedPane;
+    private IOAgent ioAgent;
 
     private static final Logger log = Logger.getLogger("Log");
 
@@ -163,14 +169,20 @@ public class TextEditorUI extends JFrame {
         langMenu.add(porLangAction);
         langMenu.add(chnLangAction);
 
+        dayModeAction.setSelected(true);
+        modeGroup.add(dayModeAction);
+        modeGroup.add(nightModeAction);
+        modeMenu.add(dayModeAction);
+        modeMenu.add(nightModeAction);
+
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(syntaxMenu);
         menuBar.add(windowMenu);
         menuBar.add(langMenu);
         menuBar.add(settingsMenu);
-        menuBar.add(helpMenu);
         menuBar.add(modeMenu);
+        menuBar.add(helpMenu);
     }
 
     /**
@@ -221,14 +233,10 @@ public class TextEditorUI extends JFrame {
         settingsMenu.add(fontAction);
 
         modeMenu = new JMenu("Mode");
-        ButtonGroup myGroup = new ButtonGroup();
-        JRadioButtonMenuItem myItem = new JRadioButtonMenuItem("Night");
-        myItem.setSelected(true);
-        myGroup.add(myItem);
-        modeMenu.add(myItem);
-        myItem = new JRadioButtonMenuItem("Day");
-        myGroup.add(myItem);
-        modeMenu.add(myItem);
+        modeGroup = new ButtonGroup();
+        dayModeAction = new JRadioButtonMenuItem("Day");
+        nightModeAction = new JRadioButtonMenuItem("Night");
+
     }
 
     /**
@@ -266,10 +274,26 @@ public class TextEditorUI extends JFrame {
             tabbedPane.addTab("new", jPanel);
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Java"));
             setTabs(textPane);
+
+            if(dayModeAction.isSelected() == true){
+                textPane.setBackground(Color.white);
+            }
+            else {textPane.setBackground(Color.darkGray);}
+
             EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
             textPane.setBorder(eb);
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             TextLineNumber tln = new TextLineNumber(textPane);
+
+            if(dayModeAction.isSelected() == true){
+                tln.setBackground(Color.white);
+                tln.setForeground(Color.gray);
+            }
+            else {
+                tln.setBackground(Color.darkGray);
+                tln.setForeground(Color.white);
+            }
+
             scrollPane.setRowHeaderView( tln );
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
@@ -291,12 +315,28 @@ public class TextEditorUI extends JFrame {
                 String syntax = pos == -1 ? "Plain text" : name.substring(pos + 1);
                 textPane = new JTextPane(new SyntaxAwareDocument(syntax));
                 setTabs(textPane);
+
+                if(dayModeAction.isSelected() == true){
+                    textPane.setBackground(Color.white);
+                }
+                else {textPane.setBackground(Color.darkGray);}
+
                 EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
                 textPane.setBorder(eb);
                 textPane.setText(titleAndContent.get("content"));
 
                 JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
                 TextLineNumber tln = new TextLineNumber(textPane);
+
+                if(dayModeAction.isSelected() == true){
+                    tln.setBackground(Color.white);
+                    tln.setForeground(Color.gray);
+                }
+                else {
+                    tln.setBackground(Color.darkGray);
+                    tln.setForeground(Color.white);
+                }
+
                 scrollPane.setRowHeaderView( tln );
                 jPanel.add(scrollPane, BorderLayout.CENTER);
             }
@@ -383,6 +423,17 @@ public class TextEditorUI extends JFrame {
                 fontFrame.setVisible(true);
         });
 
+        dayModeAction.addActionListener(e -> {
+
+            changeMenuAndBottonMode(Color.white, Color.black);
+            changeTextArea(Color.white, Color.black);
+        });
+
+        nightModeAction.addActionListener(e -> {
+
+            changeMenuAndBottonMode(Color.darkGray, Color.white);
+            changeTextArea(Color.darkGray, Color.white);
+        });
     }
 
     /**
@@ -451,6 +502,96 @@ public class TextEditorUI extends JFrame {
             return null;
         }
 
+    }
+
+    private void changeMenuAndBottonMode(Color background, Color foreground){
+        menuBar.setBackground(background);
+        fileMenu.setBackground(background);
+        editMenu.setBackground(background);
+        syntaxMenu.setBackground(background);
+        windowMenu.setBackground(background);
+        langMenu.setBackground(background);
+        settingsMenu.setBackground(background);
+        modeMenu.setBackground(background);
+        helpMenu.setBackground(background);
+        menuBar.setForeground(foreground);
+        fileMenu.setForeground(foreground);
+        editMenu.setForeground(foreground);
+        syntaxMenu.setForeground(foreground);
+        windowMenu.setForeground(foreground);
+        langMenu.setForeground(foreground);
+        settingsMenu.setForeground(foreground);
+        modeMenu.setForeground(foreground);
+        helpMenu.setForeground(foreground);
+
+        newFileAction.setBackground(background);
+        openFileAction.setBackground(background);
+        saveFileAction.setBackground(background);;
+        closeCurTabAction.setBackground(background);;
+        exitAction.setBackground(background);
+        copyAction.setBackground(background);
+        pasteAction.setBackground(background);
+        javaAction.setBackground(background);
+        plainTextAction.setBackground(background);
+        engLangAction.setBackground(background);
+        frnLangAction.setBackground(background);
+        spaLangAction.setBackground(background);
+        porLangAction.setBackground(background);
+        chnLangAction.setBackground(background);
+        openIntroductionAction.setBackground(background);
+        openCooperationAction.setBackground(background);
+        minimizeAction.setBackground(background);
+        zoomAction.setBackground(background);
+        fontAction.setBackground(background);
+        dayModeAction.setBackground(background);
+        nightModeAction.setBackground(background);
+        newFileAction.setForeground(foreground);
+        openFileAction.setForeground(foreground);
+        saveFileAction.setForeground(foreground);;
+        closeCurTabAction.setForeground(foreground);
+        exitAction.setForeground(foreground);
+        copyAction.setForeground(foreground);
+        pasteAction.setForeground(foreground);
+        javaAction.setForeground(foreground);
+        plainTextAction.setForeground(foreground);
+        engLangAction.setForeground(foreground);
+        frnLangAction.setForeground(foreground);
+        spaLangAction.setForeground(foreground);
+        porLangAction.setForeground(foreground);
+        chnLangAction.setForeground(foreground);
+        tabbedPane.setForeground(foreground);
+        openIntroductionAction.setForeground(foreground);
+        openCooperationAction.setForeground(foreground);
+        minimizeAction.setForeground(foreground);
+        zoomAction.setForeground(foreground);
+        fontAction.setForeground(foreground);
+        dayModeAction.setForeground(foreground);
+        nightModeAction.setForeground(foreground);
+    }
+
+    private void changeTextArea(Color background, Color foreground) {
+        tabbedPane.setForeground(foreground);
+        tabbedPane.setBackground(background);
+        int totalTabs = tabbedPane.getTabCount();
+        for(int i = 0; i <totalTabs; i++){
+            Component tab = tabbedPane.getComponentAt(i);
+            JScrollPane scrollPane = (JScrollPane) ((JPanel) tab).getComponent(0);
+            JViewport viewport = (JViewport) scrollPane.getComponent(0);
+            JTextPane pane = (JTextPane) viewport.getComponent(0);
+            TextLineNumber tln = new TextLineNumber(pane);
+            tln.setBackground(background);
+            if(background == Color.white){
+                tln.setForeground(Color.gray);
+            }
+            else{ tln.setForeground(foreground);}
+
+            scrollPane.setRowHeaderView(tln);
+            pane.setForeground(foreground);
+            pane.setBackground(background);
+            assert pane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+            doc.switchMode();
+        }
     }
 
     private String getSelectedTextFromTextPane() {
