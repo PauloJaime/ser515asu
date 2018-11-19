@@ -26,7 +26,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     private static final Color STRING_COLOR = Color.orange;
 
     private final StyleContext context;
-    private MODE mode;
+    public MODE mode;
     private Map<Color, AttributeSet> attrMap;
     private KeywordDB keywordDB;
     private String commentTag;
@@ -36,7 +36,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     /**
      * MODE is inner enum that define current mode.
      */
-    private enum MODE {
+    public enum MODE {
         bright, dark
     }
 
