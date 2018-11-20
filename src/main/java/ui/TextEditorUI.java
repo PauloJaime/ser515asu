@@ -289,7 +289,7 @@ public class TextEditorUI extends JFrame {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             tabbedPane.addTab("new", jPanel);
-            JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Java"));
+            JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Plain Text"));
             setTabs(textPane);
 
             if(dayModeAction.isSelected() == true){
