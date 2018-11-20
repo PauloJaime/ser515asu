@@ -1,6 +1,7 @@
 package search;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Matcher;
@@ -9,12 +10,54 @@ import java.util.regex.Pattern;
 public class FindDialog extends JDialog {
     private JTextPane textPane;
     private JFrame owner;
+    private JTextField textField;
+    private JLabel textLabel;
+    private JButton findNextBtn;
+    private JLabel status;
 
-    public FindDialog(JFrame frame, JTextPane tp) {
+    public FindDialog(JFrame frame, JTextPane tp, int mode) {
         super(frame, "Find");
         textPane = tp;
         owner = frame;
         initUI();
+        render(mode);
+    }
+
+    private void render(int mode) {
+        if (mode == 0) {
+            getContentPane().setBackground(UIManager.getColor("Panel.background"));
+            getContentPane().setForeground(Color.black);
+
+            textField.setBackground(UIManager.getColor("Panel.background"));
+            textField.setForeground(Color.black);
+
+            textLabel.setBackground(UIManager.getColor("Panel.background"));
+            textLabel.setForeground(Color.black);
+
+            findNextBtn.setOpaque(true);
+            findNextBtn.setBackground(UIManager.getColor("Panel.background"));
+            findNextBtn.setForeground(Color.black);
+
+            status.setBackground(UIManager.getColor("Panel.background"));
+            status.setForeground(Color.black);
+        } else {
+            getContentPane().setBackground(Color.darkGray);
+            getContentPane().setForeground(Color.white);
+
+            textField.setBackground(Color.darkGray);
+            textField.setForeground(Color.white);
+
+            textLabel.setBackground(Color.darkGray);
+            textLabel.setForeground(Color.white);
+
+            findNextBtn.setOpaque(true);
+            findNextBtn.setBackground(Color.darkGray);
+            findNextBtn.setForeground(Color.white);
+
+            status.setBackground(Color.darkGray);
+            status.setForeground(Color.white);
+        }
+
     }
 
     private void initUI() {
@@ -23,18 +66,18 @@ public class FindDialog extends JDialog {
         setSize(owner.getWidth() / 2, owner.getWidth() / 4);
         setLayout(null);
 
-        JTextField textField = new JTextField();
-        JLabel textLabel = new JLabel("Find: ");
+        textField = new JTextField();
+        textLabel = new JLabel("Find: ");
         textLabel.setBounds(10, 10, 100, 20);
         textField.setBounds(textLabel.getX() + 100, textLabel.getY(), 150, textLabel.getHeight());
         add(textLabel);
         add(textField);
 
-        JLabel status = new JLabel();
+        status = new JLabel();
         status.setBounds(10, 50, 150, 20);
         add(status);
 
-        JButton findNextBtn = new JButton("Find Next");
+        findNextBtn = new JButton("Find Next");
         findNextBtn.setBounds(10, 100, 120, 20);
         findNextBtn.addActionListener(new ActionListener() {
             private String prevText = null;

@@ -66,13 +66,19 @@ public class TextEditorUI extends JFrame {
     public JRadioButtonMenuItem dayModeAction;
     public JRadioButtonMenuItem nightModeAction;
 
-
     private JMenu helpMenu;
     private JMenuItem openIntroductionAction;
     private JMenuItem openCooperationAction;
 
     private JTabbedPane tabbedPane;
     private IOAgent ioAgent;
+
+    /**
+     * mode is the theme code:
+     * 0 - bright
+     * 1 - dark
+     */
+    private int mode;
 
     private static final Logger log = Logger.getLogger("Log");
 
@@ -198,6 +204,7 @@ public class TextEditorUI extends JFrame {
         }
 
         setSize(new Dimension(600, 400));
+        mode = 0;
 
         Map<String, ImageIcon> iconMap = readIconRes();
         menuBar = new JMenuBar();
@@ -383,7 +390,7 @@ public class TextEditorUI extends JFrame {
 
         });
 
-        findAction.addActionListener(e -> new FindDialog(this, getCurrentTextPane()));
+        findAction.addActionListener(e -> new FindDialog(this, getCurrentTextPane(), mode));
 
         javaAction.addActionListener(e -> {
             JTextPane pane = getCurrentTextPane();
@@ -436,13 +443,13 @@ public class TextEditorUI extends JFrame {
         });
 
         dayModeAction.addActionListener(e -> {
-
-            changeMenuAndButtonMode(Color.white, Color.black);
+            mode = 0;
+            changeMenuAndButtonMode(UIManager.getColor("Panel.background"), Color.black);
             changeTextArea(Color.white, Color.black);
         });
 
         nightModeAction.addActionListener(e -> {
-
+            mode = 1;
             changeMenuAndButtonMode(Color.darkGray, Color.white);
             changeTextArea(Color.darkGray, Color.white);
         });
