@@ -2,6 +2,7 @@ package ui;
 
 import highlight.SyntaxAwareDocument;
 import io.IOAgent;
+import search.FindDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +40,7 @@ public class TextEditorUI extends JFrame {
     private JMenu editMenu;
     private JMenuItem copyAction;
     private JMenuItem pasteAction;
+    private JMenuItem findAction;
 
     private JMenu syntaxMenu;
     private JMenuItem javaAction;
@@ -158,6 +160,7 @@ public class TextEditorUI extends JFrame {
 
         editMenu.add(copyAction);
         editMenu.add(pasteAction);
+        editMenu.add(findAction);
 
         syntaxMenu.add(javaAction);
         syntaxMenu.add(plainTextAction);
@@ -208,6 +211,7 @@ public class TextEditorUI extends JFrame {
         editMenu = new JMenu("Edit");
         copyAction = new JMenuItem("Copy    Ctrl+C", iconMap.get("copy"));
         pasteAction = new JMenuItem("Paste    Ctrl+V", iconMap.get("paste"));
+        findAction = new JMenuItem("Find    Ctrl+F");
 
         syntaxMenu = new JMenu("Syntax");
         javaAction = new JMenuItem("Java                    Ctrl+J");
@@ -378,6 +382,8 @@ public class TextEditorUI extends JFrame {
             }
 
         });
+
+        findAction.addActionListener(e -> new FindDialog(this, getCurrentTextPane()));
 
         javaAction.addActionListener(e -> {
             JTextPane pane = getCurrentTextPane();
