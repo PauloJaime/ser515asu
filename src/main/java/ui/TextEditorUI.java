@@ -5,7 +5,6 @@ import io.IOAgent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Container;
 import java.awt.datatransfer.*;
 
 import java.io.IOException;
@@ -189,6 +188,12 @@ public class TextEditorUI extends JFrame {
      * Init all UI components
      */
     private void initUI() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            log.severe("Failed to set UIManager LAF");
+        }
+
         setSize(new Dimension(600, 400));
 
         Map<String, ImageIcon> iconMap = readIconRes();
@@ -220,7 +225,9 @@ public class TextEditorUI extends JFrame {
 
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
+
         tabbedPane = new JTabbedPane();
+
         openIntroductionAction = new JMenuItem("Introduction        Ctrl+I");
         openCooperationAction = new JMenuItem("Cooperators        Ctrl+R");
         minimizeAction = new JMenuItem("Minimize          Ctrl+M");
@@ -236,7 +243,6 @@ public class TextEditorUI extends JFrame {
         modeGroup = new ButtonGroup();
         dayModeAction = new JRadioButtonMenuItem("Day");
         nightModeAction = new JRadioButtonMenuItem("Night");
-
     }
 
     /**
@@ -425,13 +431,13 @@ public class TextEditorUI extends JFrame {
 
         dayModeAction.addActionListener(e -> {
 
-            changeMenuAndBottonMode(Color.white, Color.black);
+            changeMenuAndButtonMode(Color.white, Color.black);
             changeTextArea(Color.white, Color.black);
         });
 
         nightModeAction.addActionListener(e -> {
 
-            changeMenuAndBottonMode(Color.darkGray, Color.white);
+            changeMenuAndButtonMode(Color.darkGray, Color.white);
             changeTextArea(Color.darkGray, Color.white);
         });
     }
@@ -504,8 +510,17 @@ public class TextEditorUI extends JFrame {
 
     }
 
-    private void changeMenuAndBottonMode(Color background, Color foreground){
+    private void changeMenuAndButtonMode(Color background, Color foreground) {
+        getContentPane().setBackground(background);
+        getContentPane().setForeground(foreground);
+        ((JPanel) getContentPane()).setOpaque(true);
+
+        getGlassPane().setBackground(background);
+        getGlassPane().setForeground(foreground);
+        ((JPanel) getGlassPane()).setOpaque(true);
+
         menuBar.setBackground(background);
+        menuBar.setForeground(foreground);
         fileMenu.setBackground(background);
         editMenu.setBackground(background);
         syntaxMenu.setBackground(background);
@@ -514,7 +529,6 @@ public class TextEditorUI extends JFrame {
         settingsMenu.setBackground(background);
         modeMenu.setBackground(background);
         helpMenu.setBackground(background);
-        menuBar.setForeground(foreground);
         fileMenu.setForeground(foreground);
         editMenu.setForeground(foreground);
         syntaxMenu.setForeground(foreground);
