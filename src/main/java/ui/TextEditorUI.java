@@ -608,7 +608,9 @@ public class TextEditorUI extends JFrame {
             if(background == Color.darkGray && doc.mode == SyntaxAwareDocument.MODE.dark || background == Color.white && doc.mode == SyntaxAwareDocument.MODE.bright ) {
 
             }
-            else{doc.switchMode();}
+            else{
+                doc.switchMode();
+            }
         }
     }
 

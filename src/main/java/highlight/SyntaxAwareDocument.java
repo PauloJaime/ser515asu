@@ -92,9 +92,12 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     @Override
     public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
-        String fullText = getText(0, getLength());
-        keywordsHighlight(fullText);
-        processCommentAndString(fullText);
+        if (!keywordDB.isPlainText()) {
+            String fullText = getText(0, getLength());
+            keywordsHighlight(fullText);
+            processCommentAndString(fullText);
+        }
+
     }
 
     /**
@@ -106,14 +109,18 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     @Override
     public void remove(int offs, int len) throws BadLocationException {
         super.remove(offs, len);
-        String fullText = getText(0, getLength());
 
-        if (fullText.isEmpty()) {
-            return;
+        if (!keywordDB.isPlainText()) {
+            String fullText = getText(0, getLength());
+
+            if (fullText.isEmpty()) {
+                return;
+            }
+
+            keywordsHighlight(fullText);
+            processCommentAndString(fullText);
         }
 
-        keywordsHighlight(fullText);
-        processCommentAndString(fullText);
     }
 
     public void switchMode() {

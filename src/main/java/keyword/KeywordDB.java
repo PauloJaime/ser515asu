@@ -21,17 +21,23 @@ public class KeywordDB {
 	private String commentTag;
 	private String[] mCommentPair;
 	private String[] stringTag;
+	private boolean isPlainText;
 
 	public KeywordDB() {
 	    this("Plain text");
         commentTag = null;
         mCommentPair = null;
         stringTag = null;
+        isPlainText = true;
     }
 
 	public KeywordDB(String syntax) {
         map = new HashMap<>();
         switchSyntax(syntax);
+    }
+
+    public boolean isPlainText() {
+	    return isPlainText;
     }
 
     /**
@@ -105,9 +111,14 @@ public class KeywordDB {
         String content;
         try {
             content = readFile(syntax + "Keyword.json");
-        } catch (IOException e) {
-            log.warning("Cannot find file: " + e.getMessage());
-            throw new RuntimeException(e.getCause());
+        } catch (Exception e) {
+            log.info("No syntax support for + " + syntax);
+            map.clear();
+            stringTag = new String[0];
+            mCommentPair = new String[0];
+            commentTag = "";
+            isPlainText = true;
+            return;
         }
 
         JSONObject jsonObject = new JSONObject(content);
@@ -129,9 +140,11 @@ public class KeywordDB {
 
         }
 
+        isPlainText = false;
+
 	}
 
-	private String readFile(String name) throws IOException {
+	private String readFile(String name) throws Exception {
         InputStream bis = (InputStream) Thread.currentThread().getContextClassLoader().getResource(name).getContent();
         DataInputStream dis = new DataInputStream(bis);
         StringBuilder sb = new StringBuilder();
