@@ -628,7 +628,7 @@ public class TextEditorUI extends JFrame {
     }
 
     private String getSelectedTextFromTextPane() {
-        return getCurrentTextPane().getSelectedText();
+        return getCurrentTextPane() == null ? null : getCurrentTextPane().getSelectedText();
     }
 
 }
