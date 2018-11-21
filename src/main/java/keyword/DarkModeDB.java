@@ -1,11 +1,13 @@
 package keyword;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.awt.*;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -14,7 +16,7 @@ import java.util.logging.Logger;
  * @author Yiru Hu
  * @version 1.3
  */
-public class KeywordDB {
+public class DarkModeDB {
 	private Map<String, String> map;
 	private static final Logger log = Logger.getLogger("Log");
 
@@ -23,7 +25,7 @@ public class KeywordDB {
 	private String[] stringTag;
 	private boolean isPlainText;
 
-	public KeywordDB() {
+	public DarkModeDB() {
 	    this("Plain text");
         commentTag = null;
         mCommentPair = null;
@@ -31,7 +33,7 @@ public class KeywordDB {
         isPlainText = true;
     }
 
-	public KeywordDB(String syntax) {
+	public DarkModeDB(String syntax) {
         map = new HashMap<>();
         switchSyntax(syntax);
     }
@@ -57,25 +59,24 @@ public class KeywordDB {
      * @return commentTag
      */
     public String[] getStringTag(){ return stringTag;}
-
     /**
-     * Get the Color of the current keyword
+     * Get the Color of the current keyword in dark mode
      * @param keyword the word
      * @return java.awt.Color
      */
-    public Color matchColor(String keyword) {
-	    String colorName = map.getOrDefault(keyword, "Black");
+    public Color matchDarkMode(String keyword){
+        String colorName = map.getOrDefault(keyword, "Black");
         switch (colorName) {
             case "Red":
-                return Color.red;
+                return Color.CYAN;
             case "Blue":
-                return Color.blue;
+                return Color.yellow;
             case "Purple":
-                return Color.magenta;
+                return Color.green;
             case "Grey":
-                return Color.gray;
+                return Color.lightGray;
             default:
-                return Color.black;
+                return Color.white;
         }
 
     }
