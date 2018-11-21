@@ -122,6 +122,9 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
 
     public void switchMode() {
         mode = mode == MODE.bright ? MODE.dark : MODE.bright;
+        if (keywordDB.isPlainText()) {
+            return;
+        }
 
         try {
             String fullText = getText(0, getLength());
