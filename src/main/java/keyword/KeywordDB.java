@@ -81,6 +81,28 @@ public class KeywordDB {
     }
 
     /**
+     * Get the Color of the current keyword in dark mode
+     * @param keyword the word
+     * @return java.awt.Color
+     */
+    public Color matchDarkMode(String keyword){
+        String colorName = map.getOrDefault(keyword, "Black");
+        switch (colorName) {
+            case "Red":
+                return Color.CYAN;
+            case "Blue":
+                return Color.yellow;
+            case "Purple":
+                return Color.green;
+            case "Grey":
+                return Color.lightGray;
+            default:
+                return Color.white;
+        }
+
+    }
+
+    /**
      * Switch the syntax
      * @param syntax the syntax want to change
      */
