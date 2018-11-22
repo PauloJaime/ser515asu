@@ -302,6 +302,9 @@ public class TextEditorUI extends JFrame {
             JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             TextLineNumber tln = new TextLineNumber(textPane);
 
+            assert textPane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
+
             if(dayModeAction.isSelected() == true){
                 tln.setBackground(Color.white);
                 tln.setForeground(Color.gray);
@@ -309,9 +312,13 @@ public class TextEditorUI extends JFrame {
             else {
                 tln.setBackground(Color.darkGray);
                 tln.setForeground(Color.white);
+                doc.switchMode();
             }
 
             scrollPane.setRowHeaderView( tln );
+
+
+
             jPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
@@ -345,6 +352,8 @@ public class TextEditorUI extends JFrame {
                 JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
                 TextLineNumber tln = new TextLineNumber(textPane);
 
+                assert textPane.getDocument() instanceof SyntaxAwareDocument;
+                SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
                 if(dayModeAction.isSelected() == true){
                     tln.setBackground(Color.white);
                     tln.setForeground(Color.gray);
@@ -352,6 +361,7 @@ public class TextEditorUI extends JFrame {
                 else {
                     tln.setBackground(Color.darkGray);
                     tln.setForeground(Color.white);
+                    doc.switchMode();
                 }
 
                 scrollPane.setRowHeaderView( tln );
