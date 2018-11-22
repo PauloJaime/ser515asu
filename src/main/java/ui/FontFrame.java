@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -14,7 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import java.awt.Font;
 import java.util.logging.Logger;
 
 public class FontFrame extends JFrame {
@@ -23,6 +23,7 @@ public class FontFrame extends JFrame {
 	private JComboBox familyChooseBox;
 	private JComboBox styleChooseBox;
 	private JComboBox sizeChooseBox;
+	private JComboBox colorChooseBox;
 
 	private static final Logger log = Logger.getLogger("Log");
 
@@ -42,25 +43,37 @@ public class FontFrame extends JFrame {
 		JLabel sizeLable = new JLabel("Size");
 		JLabel styleLable = new JLabel("Style");
 		JLabel familylabel = new JLabel("Family");
+		JLabel colorLabel = new JLabel("Color");
 
 		sizeChooseBox = new JComboBox();
 		styleChooseBox = new JComboBox();
 		familyChooseBox = new JComboBox();
+		colorChooseBox = new JComboBox();
 
 		yesButton.setBounds(34, 241, 75, 29);
 		cancelButton.setBounds(185, 241, 75, 29);
-		sizeLable.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		sizeLable.setBounds(34, 66, 58, 23);
+		sizeLable.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		sizeLable.setBounds(34, 67, 58, 23);
 
 		contentPane.add(yesButton);
 		contentPane.add(cancelButton);
 		contentPane.add(sizeLable);
+		contentPane.add(colorLabel);
+
 
 		sizeChooseBox.setModel(new DefaultComboBoxModel(new String[] {"5", "6", "7", "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30"}));
 		sizeChooseBox.setBounds(104, 67, 111, 27);
 		contentPane.add(sizeChooseBox);
 
-		styleLable.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		colorChooseBox.setModel(new DefaultComboBoxModel(new String[] {"Black", "Green", "Blue", "Magenta", "Cyan", "Yellow", "Red", "White", "Grey", "Dark Grey", "Light Grey", "Orange", "Pink"}));
+		colorChooseBox.setBounds(104, 12, 111, 27);
+		contentPane.add(colorChooseBox);
+
+		colorLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		colorLabel.setBounds(33, 12, 58, 23);
+		contentPane.add(colorLabel);
+
+		styleLable.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		styleLable.setBounds(33, 121, 58, 23);
 		contentPane.add(styleLable);
 
@@ -68,11 +81,12 @@ public class FontFrame extends JFrame {
 		styleChooseBox.setBounds(104, 122, 111, 27);
 		contentPane.add(styleChooseBox);
 
-		familylabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		familylabel.setBounds(34, 176, 58, 23);
+		familylabel.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		familylabel.setBounds(33, 176, 58, 23);
 		contentPane.add(familylabel);
+
 		familyChooseBox.setModel(new DefaultComboBoxModel(new String[] {"Times New Roman", "Microsoft Yahei", "SimHei", "SimSun", "Lucida Grande"}));
-		familyChooseBox.setBounds(104, 177, 111, 27);
+		familyChooseBox.setBounds(104, 176, 111, 27);
 		contentPane.add(familyChooseBox);
 
 		yesButton.addActionListener(e -> {
@@ -80,6 +94,8 @@ public class FontFrame extends JFrame {
 					String family = familyChooseBox.getSelectedItem().toString();
 					int size = Integer.parseInt(sizeChooseBox.getSelectedItem().toString());
 					String style = styleChooseBox.getSelectedItem().toString();
+					String selectedColor = colorChooseBox.getSelectedItem().toString();
+
 					switch (style) {
 						case "Plain":
 							Font f1 = new Font(family, Font.BOLD, size);
@@ -94,6 +110,49 @@ public class FontFrame extends JFrame {
 							currentPane.setFont(f3);
 							break;
 					}
+
+					switch (selectedColor){
+						case "Black":
+							currentPane.setForeground(Color.BLACK);
+							break;
+						case "Green":
+							currentPane.setForeground(Color.GREEN);
+							break;
+						case "Blue":
+							currentPane.setForeground(Color.BLUE);
+							break;
+						case "Magenta":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "Cyan":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "Yellow":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "Red":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "White":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "Dark Grey":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "Grey":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "Light Grey":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "Orange":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+						case "Pink":
+							currentPane.setForeground(Color.MAGENTA);
+							break;
+					}
+
 					FontFrame.this.dispose();
 				} catch (NullPointerException npe) {
 					log.info("No textpane");

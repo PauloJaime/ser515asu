@@ -2,12 +2,14 @@ package ui;
 
 import highlight.SyntaxAwareDocument;
 import io.IOAgent;
+import javax.print.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Container;
 import java.awt.datatransfer.*;
 
+import java.awt.print.PrinterException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,6 +22,7 @@ import javax.swing.JTextPane;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.*;
+import javax.tools.Tool;
 
 /**
  * Main class for launching the application
@@ -465,15 +468,27 @@ public class TextEditorUI extends JFrame {
         });
 
         dayModeAction.addActionListener(e -> {
-
             changeMenuAndBottonMode(Color.white, Color.black);
             changeTextArea(Color.white, Color.black);
         });
 
         nightModeAction.addActionListener(e -> {
-
             changeMenuAndBottonMode(Color.darkGray, Color.white);
             changeTextArea(Color.darkGray, Color.white);
+        });
+
+        printAction.addActionListener(e -> {
+            System.out.println("Text to Be Printed:");
+            String tobePrinted  = getCurrentTextPane().getText();
+            System.out.println(tobePrinted);
+            JTextArea YourTextArea = new JTextArea();
+            YourTextArea.setLineWrap(true);
+            Toolkit tkp = getCurrentTextPane().getToolkit();
+            PrintJob pjp = tkp.getPrintJob(this, null, null);
+            Graphics g = pjp.getGraphics();
+            getContentPane().print(g);
+            g.dispose();
+            pjp.end();
         });
     }
 
@@ -525,6 +540,7 @@ public class TextEditorUI extends JFrame {
         windowMenu.setText(prop.getProperty("Window" + language));
         langMenu.setText(prop.getProperty("Language" + language));
         settingsMenu.setText(prop.getProperty("Settings" + language));
+        printAction.setText(prop.getProperty("Settings"+ language));
         helpMenu.setText(prop.getProperty("Help" + language));
     }
 
@@ -564,7 +580,6 @@ public class TextEditorUI extends JFrame {
         settingsMenu.setForeground(foreground);
         modeMenu.setForeground(foreground);
         helpMenu.setForeground(foreground);
-
         newFileAction.setBackground(background);
         openFileAction.setBackground(background);
         saveFileAction.setBackground(background);;
@@ -584,9 +599,6 @@ public class TextEditorUI extends JFrame {
         minimizeAction.setBackground(background);
         zoomAction.setBackground(background);
         fontAction.setBackground(background);
-        dayModeAction.setBackground(background);
-        nightModeAction.setBackground(background);
-        newFileAction.setForeground(foreground);
         openFileAction.setForeground(foreground);
         saveFileAction.setForeground(foreground);;
         closeCurTabAction.setForeground(foreground);
@@ -605,9 +617,9 @@ public class TextEditorUI extends JFrame {
         openCooperationAction.setForeground(foreground);
         minimizeAction.setForeground(foreground);
         zoomAction.setForeground(foreground);
-        fontAction.setForeground(foreground);
         dayModeAction.setForeground(foreground);
         nightModeAction.setForeground(foreground);
+        printAction.setForeground(foreground);
     }
 
     private void changeTextArea(Color background, Color foreground) {
