@@ -36,6 +36,7 @@ public class TextEditorUI extends JFrame {
     private JMenuItem saveFileAction;
     private JMenuItem closeCurTabAction;
     private JMenuItem exitAction;
+    private JMenuItem printAction;
 
     private JMenu editMenu;
     private JMenuItem copyAction;
@@ -156,6 +157,8 @@ public class TextEditorUI extends JFrame {
         fileMenu.add(saveFileAction);
         fileMenu.add(closeCurTabAction);
         fileMenu.add(exitAction);
+        fileMenu.addSeparator();
+        fileMenu.add(printAction);
 
         editMenu.add(copyAction);
         editMenu.add(pasteAction);
@@ -194,37 +197,75 @@ public class TextEditorUI extends JFrame {
         Map<String, ImageIcon> iconMap = readIconRes();
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
-        newFileAction = new JMenuItem("New                            Ctrl+N", iconMap.get("new"));
-        openFileAction = new JMenuItem("Open                          Ctrl+O", iconMap.get("open"));
-        saveFileAction = new JMenuItem("Save                           Ctrl+S", iconMap.get("save"));
-        closeCurTabAction = new JMenuItem("Close Current Tab    Ctrl+T", iconMap.get("closeTab"));
-        exitAction = new JMenuItem("Exit                           Ctrl+E", iconMap.get("exit"));
+        newFileAction = new JMenuItem("New", iconMap.get("new"));
+        newFileAction.setAccelerator(KeyStroke.getKeyStroke('N',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        openFileAction = new JMenuItem("Open", iconMap.get("open"));
+        openFileAction.setAccelerator(KeyStroke.getKeyStroke('O',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        saveFileAction = new JMenuItem("Save", iconMap.get("save"));
+        saveFileAction.setAccelerator(KeyStroke.getKeyStroke('S',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        closeCurTabAction = new JMenuItem("Close Current Tab", iconMap.get("closeTab"));
+        closeCurTabAction.setAccelerator(KeyStroke.getKeyStroke('T',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        exitAction = new JMenuItem("Exit", iconMap.get("exit"));
+        exitAction.setAccelerator(KeyStroke.getKeyStroke('E',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         editMenu = new JMenu("Edit");
-        copyAction = new JMenuItem("Copy    Ctrl+C", iconMap.get("copy"));
-        pasteAction = new JMenuItem("Paste    Ctrl+V", iconMap.get("paste"));
+        copyAction = new JMenuItem("Copy", iconMap.get("copy"));
+        copyAction.setAccelerator(KeyStroke.getKeyStroke('C',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        pasteAction = new JMenuItem("Paste", iconMap.get("paste"));
+        pasteAction.setAccelerator(KeyStroke.getKeyStroke('V',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         syntaxMenu = new JMenu("Syntax");
-        javaAction = new JMenuItem("Java                    Ctrl+J");
-        plainTextAction = new JMenuItem("Plain text           Ctrl+P");
+        javaAction = new JMenuItem("Java");
+        javaAction.setAccelerator(KeyStroke.getKeyStroke('J',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        plainTextAction = new JMenuItem("Plain text");
+        plainTextAction.setAccelerator(KeyStroke.getKeyStroke('W',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         windowMenu = new JMenu("Window");
 
         langMenu = new JMenu("Language");
         engLangAction = new JMenuItem("English", iconMap.get("langEng"));
+        engLangAction.setAccelerator(KeyStroke.getKeyStroke('1',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
         frnLangAction = new JMenuItem("Français", iconMap.get("langFrn"));
+        frnLangAction.setAccelerator(KeyStroke.getKeyStroke('2',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
         spaLangAction = new JMenuItem("Español", iconMap.get("langSpa"));
+        spaLangAction.setAccelerator(KeyStroke.getKeyStroke('3',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
         porLangAction = new JMenuItem("Português", iconMap.get("langPor"));
+        porLangAction.setAccelerator(KeyStroke.getKeyStroke('4',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
         chnLangAction = new JMenuItem("中文", iconMap.get("langChn"));
-        fontAction = new JMenuItem("Font        Ctrl+F");
+        chnLangAction.setAccelerator(KeyStroke.getKeyStroke('5',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        fontAction = new JMenuItem("Font And Color");
+        fontAction.setAccelerator(KeyStroke.getKeyStroke('F',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
+
         tabbedPane = new JTabbedPane();
-        openIntroductionAction = new JMenuItem("Introduction        Ctrl+I");
-        openCooperationAction = new JMenuItem("Cooperators        Ctrl+R");
-        minimizeAction = new JMenuItem("Minimize          Ctrl+M");
-        zoomAction = new JMenuItem("Zoom                Ctrl+M");
+        openIntroductionAction = new JMenuItem("Introduction");
+        openIntroductionAction.setAccelerator(KeyStroke.getKeyStroke('I',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        openCooperationAction = new JMenuItem("Cooperators");
+        openCooperationAction.setAccelerator(KeyStroke.getKeyStroke('R',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        minimizeAction = new JMenuItem("Minimize");
+        minimizeAction.setAccelerator(KeyStroke.getKeyStroke('M',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        zoomAction = new JMenuItem("Zoom");
+        zoomAction.setAccelerator(KeyStroke.getKeyStroke('Z',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+        printAction = new JMenuItem("Print");
+        printAction.setAccelerator(KeyStroke.getKeyStroke('P',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
 
         helpMenu.add(openIntroductionAction);
         helpMenu.add(openCooperationAction);
