@@ -561,6 +561,28 @@ public class TextEditorUI extends JFrame {
         modeMenu.setForeground(foreground);
         helpMenu.setForeground(foreground);
 
+        newFileAction.setBackground(background);
+        openFileAction.setBackground(background);
+        saveFileAction.setBackground(background);;
+        closeCurTabAction.setBackground(background);;
+        exitAction.setBackground(background);
+        copyAction.setBackground(background);
+        pasteAction.setBackground(background);
+        javaAction.setBackground(background);
+        plainTextAction.setBackground(background);
+        engLangAction.setBackground(background);
+        frnLangAction.setBackground(background);
+        spaLangAction.setBackground(background);
+        porLangAction.setBackground(background);
+        chnLangAction.setBackground(background);
+        openIntroductionAction.setBackground(background);
+        openCooperationAction.setBackground(background);
+        minimizeAction.setBackground(background);
+        zoomAction.setBackground(background);
+        fontAction.setBackground(background);
+        dayModeAction.setBackground(background);
+        nightModeAction.setBackground(background);
+
     }
 
     private void changeTextArea(Color background, Color foreground) {
