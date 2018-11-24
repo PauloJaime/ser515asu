@@ -1,20 +1,11 @@
 package ui;
-
-
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JTextPane;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import java.util.logging.Logger;
 
 public class FontFrame extends JFrame {
@@ -32,7 +23,7 @@ public class FontFrame extends JFrame {
 	 */
 	public FontFrame(JTextPane currentPane) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 296, 350);
+		setBounds(100, 100, 330, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -40,9 +31,9 @@ public class FontFrame extends JFrame {
 		
 		JButton yesButton = new JButton("Yes");
 		JButton cancelButton = new JButton("Cancel");
-        JButton leffButton = new JButton();
-        JButton rightButton = new JButton();
-        JButton centerButton = new JButton();
+        JRadioButton leffButton = new JRadioButton("Left");
+        JRadioButton centerButton = new JRadioButton("Center");
+        JRadioButton rightButton  = new JRadioButton("Right");
 
 		JLabel sizeLable = new JLabel("Size");
 		JLabel styleLable = new JLabel("Style");
@@ -50,8 +41,12 @@ public class FontFrame extends JFrame {
 		JLabel colorLabel = new JLabel("Color");
 		JLabel alignmentLabel = new JLabel("Align");
 
+        ButtonGroup btngroup=new ButtonGroup();
+        btngroup.add(leffButton);
+        btngroup.add(rightButton);
+        btngroup.add(centerButton);
 
-		sizeChooseBox = new JComboBox();
+        sizeChooseBox = new JComboBox();
 		styleChooseBox = new JComboBox();
 		familyChooseBox = new JComboBox();
 		colorChooseBox = new JComboBox();
@@ -59,9 +54,9 @@ public class FontFrame extends JFrame {
 		yesButton.setBounds(34, 290, 75, 29);
 		cancelButton.setBounds(185, 290, 75, 29);
 
-        leffButton.setBounds(104, 218, 35, 35);
-        rightButton.setBounds(145, 218, 35, 35);
-        centerButton.setBounds(186, 218, 35, 35);
+        leffButton.setBounds(90, 225, 60, 35);
+        centerButton.setBounds(150, 225, 75, 35);
+        rightButton.setBounds(225, 225, 65, 35);
 
 		sizeLable.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		sizeLable.setBounds(34, 67, 58, 23);
@@ -107,75 +102,93 @@ public class FontFrame extends JFrame {
 		alignmentLabel.setBounds(33, 231, 58, 23);
 		contentPane.add(alignmentLabel);
 
-		yesButton.addActionListener(e -> {
-				try {
-					String family = familyChooseBox.getSelectedItem().toString();
-					int size = Integer.parseInt(sizeChooseBox.getSelectedItem().toString());
-					String style = styleChooseBox.getSelectedItem().toString();
-					String selectedColor = colorChooseBox.getSelectedItem().toString();
+                yesButton.addActionListener(e -> {
+                    try {
+                        String family = familyChooseBox.getSelectedItem().toString();
+                        int size = Integer.parseInt(sizeChooseBox.getSelectedItem().toString());
+                        String style = styleChooseBox.getSelectedItem().toString();
+                        String selectedColor = colorChooseBox.getSelectedItem().toString();
+                        if (leffButton.isSelected()) {
+                            currentPane.setAlignmentX(LEFT_ALIGNMENT);
+                            currentPane.setLayout(new BoxLayout(currentPane, BoxLayout.Y_AXIS));
+                            currentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+                        }
+                        if (rightButton.isSelected()) {
+                            currentPane.setAlignmentX(RIGHT_ALIGNMENT);
+                            currentPane.setLayout(new BoxLayout(currentPane, BoxLayout.Y_AXIS));
+                            currentPane.setAlignmentX(Component.RIGHT_ALIGNMENT);
+                        }
+                        if (centerButton.isSelected()) {
+                            currentPane.setAlignmentX(CENTER_ALIGNMENT);
+                            currentPane.setLayout(new BoxLayout(currentPane, BoxLayout.Y_AXIS));
+                            currentPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        }
 
-					switch (style) {
-						case "Plain":
-							Font f1 = new Font(family, Font.BOLD, size);
-							currentPane.setFont(f1);
-							break;
-						case "Bold":
-							Font f2 = new Font(family, Font.BOLD, size);
-							currentPane.setFont(f2);
-							break;
-						case "Italic":
-							Font f3 = new Font(family, Font.BOLD, size);
-							currentPane.setFont(f3);
-							break;
-					}
 
-					switch (selectedColor){
-						case "Black":
-							currentPane.setForeground(Color.BLACK);
-							break;
-						case "Green":
-							currentPane.setForeground(Color.GREEN);
-							break;
-						case "Blue":
-							currentPane.setForeground(Color.BLUE);
-							break;
-						case "Magenta":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "Cyan":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "Yellow":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "Red":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "White":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "Dark Grey":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "Grey":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "Light Grey":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "Orange":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-						case "Pink":
-							currentPane.setForeground(Color.MAGENTA);
-							break;
-					}
+                        switch (style) {
+                            case "Plain":
+                                Font f1 = new Font(family, Font.BOLD, size);
+                                currentPane.setFont(f1);
+                                break;
+                            case "Bold":
+                                Font f2 = new Font(family, Font.BOLD, size);
+                                currentPane.setFont(f2);
+                                break;
+                            case "Italic":
+                                Font f3 = new Font(family, Font.BOLD, size);
+                                currentPane.setFont(f3);
+                                break;
+                        }
 
-					FontFrame.this.dispose();
-				} catch (NullPointerException npe) {
-					log.info("No textpane");
-				}
-		});
+                        switch (selectedColor) {
+                            case "Black":
+                                currentPane.setForeground(Color.BLACK);
+                                break;
+                            case "Green":
+                                currentPane.setForeground(Color.GREEN);
+                                break;
+                            case "Blue":
+                                currentPane.setForeground(Color.BLUE);
+                                break;
+                            case "Magenta":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "Cyan":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "Yellow":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "Red":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "White":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "Dark Grey":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "Grey":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "Light Grey":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "Orange":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                            case "Pink":
+                                currentPane.setForeground(Color.MAGENTA);
+                                break;
+                        }
+
+                        FontFrame.this.dispose();
+                    } catch (NullPointerException npe) {
+                        log.info("No textpane");
+                    }
+
+
+                });
 
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
