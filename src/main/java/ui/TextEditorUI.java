@@ -572,6 +572,7 @@ public class TextEditorUI extends JFrame {
         exitAction.setBackground(background);
         copyAction.setBackground(background);
         pasteAction.setBackground(background);
+        findAction.setBackground(background);
         javaAction.setBackground(background);
         plainTextAction.setBackground(background);
         engLangAction.setBackground(background);
@@ -594,6 +595,7 @@ public class TextEditorUI extends JFrame {
         exitAction.setForeground(foreground);
         copyAction.setForeground(foreground);
         pasteAction.setForeground(foreground);
+        findAction.setForeground(foreground);
         javaAction.setForeground(foreground);
         plainTextAction.setForeground(foreground);
         engLangAction.setForeground(foreground);
@@ -622,6 +624,33 @@ public class TextEditorUI extends JFrame {
         settingsMenu.setBorder(BorderFactory.createRaisedBevelBorder());
         modeMenu.setBorder(BorderFactory.createRaisedBevelBorder());
         helpMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+
+        newFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        openFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        saveFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        closeCurTabAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        exitAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        copyAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        pasteAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        findAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        javaAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        plainTextAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        engLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        frnLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        spaLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        porLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        chnLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        openIntroductionAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        openCooperationAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        minimizeAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        zoomAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        fontAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        dayModeAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        nightModeAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        newFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        openFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        saveFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        closeCurTabAction.setBorder(BorderFactory.createRaisedBevelBorder());
     }
 
     private void changeTextArea(Color background, Color foreground) {
