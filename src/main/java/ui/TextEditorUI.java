@@ -542,6 +542,25 @@ public class TextEditorUI extends JFrame {
         getGlassPane().setForeground(foreground);
         ((JPanel) getGlassPane()).setOpaque(true);
 
+        menuBar.setBackground(background);
+        menuBar.setForeground(foreground);
+        fileMenu.setBackground(background);
+        editMenu.setBackground(background);
+        syntaxMenu.setBackground(background);
+        windowMenu.setBackground(background);
+        langMenu.setBackground(background);
+        settingsMenu.setBackground(background);
+        modeMenu.setBackground(background);
+        helpMenu.setBackground(background);
+        fileMenu.setForeground(foreground);
+        editMenu.setForeground(foreground);
+        syntaxMenu.setForeground(foreground);
+        windowMenu.setForeground(foreground);
+        langMenu.setForeground(foreground);
+        settingsMenu.setForeground(foreground);
+        modeMenu.setForeground(foreground);
+        helpMenu.setForeground(foreground);
+
     }
 
     private void changeTextArea(Color background, Color foreground) {
