@@ -1,5 +1,6 @@
 package ui;
 
+
 import highlight.SyntaxAwareDocument;
 import io.IOAgent;
 
@@ -71,6 +72,8 @@ public class TextEditorUI extends JFrame {
 
     private JTabbedPane tabbedPane;
     private IOAgent ioAgent;
+
+    private TerminalUI terminal;
 
     private static final Logger log = Logger.getLogger("Log");
 
@@ -148,6 +151,8 @@ public class TextEditorUI extends JFrame {
      */
     private void assembleUIComponents() {
         add(tabbedPane);
+
+
         setJMenuBar(menuBar);
 
         fileMenu.add(newFileAction);
@@ -243,6 +248,8 @@ public class TextEditorUI extends JFrame {
         modeGroup = new ButtonGroup();
         dayModeAction = new JRadioButtonMenuItem("Day");
         nightModeAction = new JRadioButtonMenuItem("Night");
+
+        //terminal = new TerminalUI();
     }
 
     /**
@@ -281,6 +288,11 @@ public class TextEditorUI extends JFrame {
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Java"));
             setTabs(textPane);
 
+
+            terminal =  new TerminalUI();
+            jPanel.add(terminal,BorderLayout.SOUTH);
+
+
             if(dayModeAction.isSelected() == true){
                 textPane.setBackground(Color.white);
             }
@@ -302,6 +314,8 @@ public class TextEditorUI extends JFrame {
 
             scrollPane.setRowHeaderView( tln );
             jPanel.add(scrollPane, BorderLayout.CENTER);
+
+
         });
 
         openFileAction.addActionListener(e -> {
@@ -309,6 +323,9 @@ public class TextEditorUI extends JFrame {
             jPanel.setLayout(new BorderLayout());
             Map<String, String> titleAndContent = ioAgent.read();
             JTextPane textPane;
+
+            terminal =  new TerminalUI();
+            jPanel.add(terminal,BorderLayout.SOUTH);
 
             if (titleAndContent == null) {
                 jPanel = null;

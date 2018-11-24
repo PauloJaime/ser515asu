@@ -1,6 +1,6 @@
-
+package ui;
 import java.io.*;  
- 
+
 public class Terminal {  
       
     public static String executeCmd(String strCmd)throws Exception{
