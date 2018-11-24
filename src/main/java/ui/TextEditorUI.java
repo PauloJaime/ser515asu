@@ -98,6 +98,7 @@ public class TextEditorUI extends JFrame {
         initAgent();
         initActions();
         assembleUIComponents();
+        decorateUI();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -193,6 +194,11 @@ public class TextEditorUI extends JFrame {
         menuBar.add(helpMenu);
     }
 
+    private void decorateUI(){
+        changeMenuAndButtonBorder();
+        setMenuAndButtonSize();
+    }
+
     /**
      * Init all UI components
      */
@@ -203,7 +209,7 @@ public class TextEditorUI extends JFrame {
             log.severe("Failed to set UIManager LAF");
         }
 
-        setSize(new Dimension(600, 400));
+        setSize(new Dimension(800, 400));
         mode = 0;
 
         Map<String, ImageIcon> iconMap = readIconRes();
@@ -461,7 +467,6 @@ public class TextEditorUI extends JFrame {
         nightModeAction.addActionListener(e -> {
             mode = 1;
             changeMenuAndButtonMode(Color.darkGray, Color.white);
-            changeMenuAndButtonBorder();
             changeTextArea(Color.darkGray, Color.white);
         });
     }
@@ -614,6 +619,9 @@ public class TextEditorUI extends JFrame {
 
     }
 
+    /**
+     * add effect on the borders of menubar and buttons
+     */
     private void changeMenuAndButtonBorder(){
         menuBar.setBorder(BorderFactory.createRaisedBevelBorder());
         fileMenu.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -651,6 +659,21 @@ public class TextEditorUI extends JFrame {
         openFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
         saveFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
         closeCurTabAction.setBorder(BorderFactory.createRaisedBevelBorder());
+    }
+
+    /**
+     * adjust the size of buttons
+     */
+    private void setMenuAndButtonSize(){
+        fileMenu.setPreferredSize(new Dimension(70,30));
+        langMenu.setPreferredSize(new Dimension(70,30));
+        editMenu.setPreferredSize(new Dimension(70,30));
+        syntaxMenu.setPreferredSize(new Dimension(70,30));
+        windowMenu.setPreferredSize(new Dimension(70,30));
+        langMenu.setPreferredSize(new Dimension(70,30));
+        settingsMenu.setPreferredSize(new Dimension(70,30));
+        modeMenu.setPreferredSize(new Dimension(70,30));
+        helpMenu.setPreferredSize(new Dimension(70,30));
     }
 
     private void changeTextArea(Color background, Color foreground) {
