@@ -542,68 +542,6 @@ public class TextEditorUI extends JFrame {
         getGlassPane().setForeground(foreground);
         ((JPanel) getGlassPane()).setOpaque(true);
 
-        menuBar.setBackground(background);
-        menuBar.setForeground(foreground);
-        fileMenu.setBackground(background);
-        editMenu.setBackground(background);
-        syntaxMenu.setBackground(background);
-        windowMenu.setBackground(background);
-        langMenu.setBackground(background);
-        settingsMenu.setBackground(background);
-        modeMenu.setBackground(background);
-        helpMenu.setBackground(background);
-        fileMenu.setForeground(foreground);
-        editMenu.setForeground(foreground);
-        syntaxMenu.setForeground(foreground);
-        windowMenu.setForeground(foreground);
-        langMenu.setForeground(foreground);
-        settingsMenu.setForeground(foreground);
-        modeMenu.setForeground(foreground);
-        helpMenu.setForeground(foreground);
-
-        newFileAction.setBackground(background);
-        openFileAction.setBackground(background);
-        saveFileAction.setBackground(background);;
-        closeCurTabAction.setBackground(background);;
-        exitAction.setBackground(background);
-        copyAction.setBackground(background);
-        pasteAction.setBackground(background);
-        javaAction.setBackground(background);
-        plainTextAction.setBackground(background);
-        engLangAction.setBackground(background);
-        frnLangAction.setBackground(background);
-        spaLangAction.setBackground(background);
-        porLangAction.setBackground(background);
-        chnLangAction.setBackground(background);
-        openIntroductionAction.setBackground(background);
-        openCooperationAction.setBackground(background);
-        minimizeAction.setBackground(background);
-        zoomAction.setBackground(background);
-        fontAction.setBackground(background);
-        dayModeAction.setBackground(background);
-        nightModeAction.setBackground(background);
-        newFileAction.setForeground(foreground);
-        openFileAction.setForeground(foreground);
-        saveFileAction.setForeground(foreground);;
-        closeCurTabAction.setForeground(foreground);
-        exitAction.setForeground(foreground);
-        copyAction.setForeground(foreground);
-        pasteAction.setForeground(foreground);
-        javaAction.setForeground(foreground);
-        plainTextAction.setForeground(foreground);
-        engLangAction.setForeground(foreground);
-        frnLangAction.setForeground(foreground);
-        spaLangAction.setForeground(foreground);
-        porLangAction.setForeground(foreground);
-        chnLangAction.setForeground(foreground);
-        tabbedPane.setForeground(foreground);
-        openIntroductionAction.setForeground(foreground);
-        openCooperationAction.setForeground(foreground);
-        minimizeAction.setForeground(foreground);
-        zoomAction.setForeground(foreground);
-        fontAction.setForeground(foreground);
-        dayModeAction.setForeground(foreground);
-        nightModeAction.setForeground(foreground);
     }
 
     private void changeTextArea(Color background, Color foreground) {
