@@ -461,6 +461,7 @@ public class TextEditorUI extends JFrame {
         nightModeAction.addActionListener(e -> {
             mode = 1;
             changeMenuAndButtonMode(Color.darkGray, Color.white);
+            changeMenuAndButtonBorder();
             changeTextArea(Color.darkGray, Color.white);
         });
     }
@@ -533,6 +534,9 @@ public class TextEditorUI extends JFrame {
 
     }
 
+    /**
+     * change foreground and background color
+     */
     private void changeMenuAndButtonMode(Color background, Color foreground) {
         getContentPane().setBackground(background);
         getContentPane().setForeground(foreground);
@@ -606,6 +610,18 @@ public class TextEditorUI extends JFrame {
         dayModeAction.setForeground(foreground);
         nightModeAction.setForeground(foreground);
 
+    }
+
+    private void changeMenuAndButtonBorder(){
+        menuBar.setBorder(BorderFactory.createRaisedBevelBorder());
+        fileMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        editMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        syntaxMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        windowMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        langMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        settingsMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        modeMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        helpMenu.setBorder(BorderFactory.createRaisedBevelBorder());
     }
 
     private void changeTextArea(Color background, Color foreground) {
