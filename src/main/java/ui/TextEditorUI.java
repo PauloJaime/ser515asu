@@ -126,6 +126,7 @@ public class TextEditorUI extends JFrame {
         resource.put("cut", new ImageIcon(getIconPath(prop.getProperty("CutIcon"))));
         resource.put("copy", new ImageIcon(getIconPath(prop.getProperty("CopyIcon"))));
         resource.put("exit", new ImageIcon(getIconPath(prop.getProperty("ExitIcon"))));
+        //resource.put("print", new ImageIcon(getIconPath(prop.getProperty("PrintIcon"))));
 
         resource.put("langEng", new ImageIcon(getIconPath(prop.getProperty("LangEngIcon"))));
         resource.put("langFrn", new ImageIcon(getIconPath(prop.getProperty("LangFrnIcon"))));
@@ -146,7 +147,6 @@ public class TextEditorUI extends JFrame {
         log.info("" + url);
         return url;
     }
-
 
     /**
      * Assemble UI components into containers
@@ -266,7 +266,7 @@ public class TextEditorUI extends JFrame {
         zoomAction = new JMenuItem("Zoom");
         zoomAction.setAccelerator(KeyStroke.getKeyStroke('Z',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
-        printAction = new JMenuItem("Print");
+        printAction = new JMenuItem("Print"/*, iconMap.get("print")*/);
         printAction.setAccelerator(KeyStroke.getKeyStroke('P',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
 

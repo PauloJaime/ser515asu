@@ -32,7 +32,7 @@ public class FontFrame extends JFrame {
 	 */
 	public FontFrame(JTextPane currentPane) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 296, 312);
+		setBounds(100, 100, 296, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -40,18 +40,29 @@ public class FontFrame extends JFrame {
 		
 		JButton yesButton = new JButton("Yes");
 		JButton cancelButton = new JButton("Cancel");
+        JButton leffButton = new JButton();
+        JButton rightButton = new JButton();
+        JButton centerButton = new JButton();
+
 		JLabel sizeLable = new JLabel("Size");
 		JLabel styleLable = new JLabel("Style");
 		JLabel familylabel = new JLabel("Family");
 		JLabel colorLabel = new JLabel("Color");
+		JLabel alignmentLabel = new JLabel("Align");
+
 
 		sizeChooseBox = new JComboBox();
 		styleChooseBox = new JComboBox();
 		familyChooseBox = new JComboBox();
 		colorChooseBox = new JComboBox();
 
-		yesButton.setBounds(34, 241, 75, 29);
-		cancelButton.setBounds(185, 241, 75, 29);
+		yesButton.setBounds(34, 290, 75, 29);
+		cancelButton.setBounds(185, 290, 75, 29);
+
+        leffButton.setBounds(104, 218, 35, 35);
+        rightButton.setBounds(145, 218, 35, 35);
+        centerButton.setBounds(186, 218, 35, 35);
+
 		sizeLable.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		sizeLable.setBounds(34, 67, 58, 23);
 
@@ -59,6 +70,9 @@ public class FontFrame extends JFrame {
 		contentPane.add(cancelButton);
 		contentPane.add(sizeLable);
 		contentPane.add(colorLabel);
+		contentPane.add(leffButton);
+		contentPane.add(rightButton);
+		contentPane.add(centerButton);
 
 
 		sizeChooseBox.setModel(new DefaultComboBoxModel(new String[] {"5", "6", "7", "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30"}));
@@ -88,6 +102,10 @@ public class FontFrame extends JFrame {
 		familyChooseBox.setModel(new DefaultComboBoxModel(new String[] {"Times New Roman", "Microsoft Yahei", "SimHei", "SimSun", "Lucida Grande"}));
 		familyChooseBox.setBounds(104, 176, 111, 27);
 		contentPane.add(familyChooseBox);
+
+		alignmentLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		alignmentLabel.setBounds(33, 231, 58, 23);
+		contentPane.add(alignmentLabel);
 
 		yesButton.addActionListener(e -> {
 				try {
