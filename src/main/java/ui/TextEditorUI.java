@@ -455,8 +455,8 @@ public class TextEditorUI extends JFrame {
 
 
         fontAction.addActionListener(e -> {
-                FontFrame fontFrame = new FontFrame(getCurrentTextPane());
-                fontFrame.setVisible(true);
+            FontFrame fontFrame = new FontFrame(getCurrentTextPane());
+            fontFrame.setVisible(true);
         });
 
         dayModeAction.addActionListener(e -> {
@@ -666,45 +666,41 @@ public class TextEditorUI extends JFrame {
      * adjust the size of buttons
      */
     private void setMenuAndButtonSizeAndAlignment(){
-        int fileActionButtonWidth=250;
-
-        if(System.getProperty("os.name").contains("Windows")){
-            fileActionButtonWidth=200;
-        };
-
+        int fileActionButtonWidth = System.getProperty("os.name").contains("Windows") ? 200 : 250;
+        FontMetrics fontMetrics = fileMenu.getFontMetrics(fileMenu.getFont());
         fileMenu.setHorizontalAlignment(0);
-        fileMenu.setPreferredSize(new Dimension(70,30));
-        langMenu.setPreferredSize(new Dimension(70,30));
-        editMenu.setPreferredSize(new Dimension(70,30));
-        syntaxMenu.setPreferredSize(new Dimension(70,30));
-        windowMenu.setPreferredSize(new Dimension(70,30));
-        langMenu.setPreferredSize(new Dimension(70,30));
-        settingsMenu.setPreferredSize(new Dimension(70,30));
-        modeMenu.setPreferredSize(new Dimension(70,30));
-        helpMenu.setPreferredSize(new Dimension(70,30));
+        fileMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(fileMenu.getText()) + 20,30));
+        langMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(langMenu.getText()) + 20,30));
+        editMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(editMenu.getText()) + 20,30));
+        syntaxMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(syntaxMenu.getText()) + 20,30));
+        windowMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(windowMenu.getText()) + 20,30));
+        langMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(langMenu.getText()) + 20,30));
+        settingsMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(settingsMenu.getText()) + 20,30));
+        modeMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(modeMenu.getText()) + 20,30));
+        helpMenu.setPreferredSize(new Dimension(fontMetrics.stringWidth(helpMenu.getText()) + 20,30));
 
-        newFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
-        openFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
-        saveFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
-        closeCurTabAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
-        exitAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
-        copyAction.setPreferredSize(new Dimension(150,35));
-        pasteAction.setPreferredSize(new Dimension(150,35));
-        findAction.setPreferredSize(new Dimension(150,35));
-        javaAction.setPreferredSize(new Dimension(150,35));
-        plainTextAction.setPreferredSize(new Dimension(150,35));
-        engLangAction.setPreferredSize(new Dimension(100,35));
-        frnLangAction.setPreferredSize(new Dimension(100,35));
-        spaLangAction.setPreferredSize(new Dimension(100,35));
-        porLangAction.setPreferredSize(new Dimension(100,35));
-        chnLangAction.setPreferredSize(new Dimension(100,35));
-        openIntroductionAction.setPreferredSize(new Dimension(150,35));
-        openCooperationAction.setPreferredSize(new Dimension(150,35));
-        minimizeAction.setPreferredSize(new Dimension(150,35));
-        zoomAction.setPreferredSize(new Dimension(150,35));
-        fontAction.setPreferredSize(new Dimension(100,35));
-        dayModeAction.setPreferredSize(new Dimension(75,35));
-        nightModeAction.setPreferredSize(new Dimension(75,35));
+        newFileAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(newFileAction.getText()) + 50,35));
+        openFileAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(openFileAction.getText()) + 50,35));
+        saveFileAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(saveFileAction.getText()) + 50,35));
+        closeCurTabAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(closeCurTabAction.getText()) + 50,35));
+        exitAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(exitAction.getText()) + 50,35));
+        copyAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(copyAction.getText()) + 50,35));
+        pasteAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(pasteAction.getText()) + 50,35));
+        findAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(findAction.getText()) + 50,35));
+        javaAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(javaAction.getText()) + 20,35));
+        plainTextAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(plainTextAction.getText()) + 20,35));
+        engLangAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(engLangAction.getText()) + 50,35));
+        frnLangAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(frnLangAction.getText()) + 50,35));
+        spaLangAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(spaLangAction.getText()) + 50,35));
+        porLangAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(porLangAction.getText()) + 50,35));
+        chnLangAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(chnLangAction.getText()) + 50,35));
+        openIntroductionAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(openIntroductionAction.getText()) + 20,35));
+        openCooperationAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(openCooperationAction.getText()) + 20,35));
+        minimizeAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(minimizeAction.getText()) + 20,35));
+        zoomAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(zoomAction.getText()) + 20,35));
+        fontAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(fontAction.getText()) + 20,35));
+        dayModeAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(dayModeAction.getText()) + 50,35));
+        nightModeAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(nightModeAction.getText()) + 50,35));
 
     }
 
