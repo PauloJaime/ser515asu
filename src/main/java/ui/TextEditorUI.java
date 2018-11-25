@@ -98,6 +98,7 @@ public class TextEditorUI extends JFrame {
         initAgent();
         initActions();
         assembleUIComponents();
+        decorateUI();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -193,6 +194,11 @@ public class TextEditorUI extends JFrame {
         menuBar.add(helpMenu);
     }
 
+    private void decorateUI(){
+        changeMenuAndButtonBorder();
+        setMenuAndButtonSizeAndAlignment();
+    }
+
     /**
      * Init all UI components
      */
@@ -203,7 +209,7 @@ public class TextEditorUI extends JFrame {
             log.severe("Failed to set UIManager LAF");
         }
 
-        setSize(new Dimension(600, 400));
+        setSize(new Dimension(800, 400));
         mode = 0;
 
         Map<String, ImageIcon> iconMap = readIconRes();
@@ -533,6 +539,9 @@ public class TextEditorUI extends JFrame {
 
     }
 
+    /**
+     * change foreground and background color
+     */
     private void changeMenuAndButtonMode(Color background, Color foreground) {
         getContentPane().setBackground(background);
         getContentPane().setForeground(foreground);
@@ -568,6 +577,7 @@ public class TextEditorUI extends JFrame {
         exitAction.setBackground(background);
         copyAction.setBackground(background);
         pasteAction.setBackground(background);
+        findAction.setBackground(background);
         javaAction.setBackground(background);
         plainTextAction.setBackground(background);
         engLangAction.setBackground(background);
@@ -582,6 +592,7 @@ public class TextEditorUI extends JFrame {
         fontAction.setBackground(background);
         dayModeAction.setBackground(background);
         nightModeAction.setBackground(background);
+
         newFileAction.setForeground(foreground);
         openFileAction.setForeground(foreground);
         saveFileAction.setForeground(foreground);;
@@ -589,6 +600,7 @@ public class TextEditorUI extends JFrame {
         exitAction.setForeground(foreground);
         copyAction.setForeground(foreground);
         pasteAction.setForeground(foreground);
+        findAction.setForeground(foreground);
         javaAction.setForeground(foreground);
         plainTextAction.setForeground(foreground);
         engLangAction.setForeground(foreground);
@@ -604,6 +616,89 @@ public class TextEditorUI extends JFrame {
         fontAction.setForeground(foreground);
         dayModeAction.setForeground(foreground);
         nightModeAction.setForeground(foreground);
+
+    }
+
+    /**
+     * add effect on the borders of menubar and buttons
+     */
+    private void changeMenuAndButtonBorder(){
+        menuBar.setBorder(BorderFactory.createRaisedBevelBorder());
+        fileMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        editMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        syntaxMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        windowMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        langMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        settingsMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        modeMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        helpMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+
+        newFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        openFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        saveFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        closeCurTabAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        exitAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        copyAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        pasteAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        findAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        javaAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        plainTextAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        engLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        frnLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        spaLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        porLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        chnLangAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        openIntroductionAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        openCooperationAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        minimizeAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        zoomAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        fontAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        dayModeAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        nightModeAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        newFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        openFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        saveFileAction.setBorder(BorderFactory.createRaisedBevelBorder());
+        closeCurTabAction.setBorder(BorderFactory.createRaisedBevelBorder());
+    }
+
+    /**
+     * adjust the size of buttons
+     */
+    private void setMenuAndButtonSizeAndAlignment(){
+        fileMenu.setHorizontalAlignment(0);
+        fileMenu.setPreferredSize(new Dimension(70,30));
+        langMenu.setPreferredSize(new Dimension(70,30));
+        editMenu.setPreferredSize(new Dimension(70,30));
+        syntaxMenu.setPreferredSize(new Dimension(70,30));
+        windowMenu.setPreferredSize(new Dimension(70,30));
+        langMenu.setPreferredSize(new Dimension(70,30));
+        settingsMenu.setPreferredSize(new Dimension(70,30));
+        modeMenu.setPreferredSize(new Dimension(70,30));
+        helpMenu.setPreferredSize(new Dimension(70,30));
+
+        newFileAction.setPreferredSize(new Dimension(200,35));
+        openFileAction.setPreferredSize(new Dimension(200,35));
+        saveFileAction.setPreferredSize(new Dimension(200,35));
+        closeCurTabAction.setPreferredSize(new Dimension(200,35));
+        exitAction.setPreferredSize(new Dimension(200,35));
+        copyAction.setPreferredSize(new Dimension(150,35));
+        pasteAction.setPreferredSize(new Dimension(150,35));
+        findAction.setPreferredSize(new Dimension(150,35));
+        javaAction.setPreferredSize(new Dimension(150,35));
+        plainTextAction.setPreferredSize(new Dimension(150,35));
+        engLangAction.setPreferredSize(new Dimension(100,35));
+        frnLangAction.setPreferredSize(new Dimension(100,35));
+        spaLangAction.setPreferredSize(new Dimension(100,35));
+        porLangAction.setPreferredSize(new Dimension(100,35));
+        chnLangAction.setPreferredSize(new Dimension(100,35));
+        openIntroductionAction.setPreferredSize(new Dimension(150,35));
+        openCooperationAction.setPreferredSize(new Dimension(150,35));
+        minimizeAction.setPreferredSize(new Dimension(150,35));
+        zoomAction.setPreferredSize(new Dimension(150,35));
+        fontAction.setPreferredSize(new Dimension(100,35));
+        dayModeAction.setPreferredSize(new Dimension(75,35));
+        nightModeAction.setPreferredSize(new Dimension(75,35));
+
     }
 
     private void changeTextArea(Color background, Color foreground) {
