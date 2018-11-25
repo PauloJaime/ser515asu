@@ -131,6 +131,7 @@ public class TextEditorUI extends JFrame {
         resource.put("cut", new ImageIcon(getIconPath(prop.getProperty("CutIcon"))));
         resource.put("copy", new ImageIcon(getIconPath(prop.getProperty("CopyIcon"))));
         resource.put("exit", new ImageIcon(getIconPath(prop.getProperty("ExitIcon"))));
+        resource.put("find", new ImageIcon(getIconPath(prop.getProperty("FindIcon"))));
 
         resource.put("langEng", new ImageIcon(getIconPath(prop.getProperty("LangEngIcon"))));
         resource.put("langFrn", new ImageIcon(getIconPath(prop.getProperty("LangFrnIcon"))));
@@ -225,7 +226,7 @@ public class TextEditorUI extends JFrame {
         editMenu = new JMenu("Edit");
         copyAction = new JMenuItem("Copy    Ctrl+C", iconMap.get("copy"));
         pasteAction = new JMenuItem("Paste    Ctrl+V", iconMap.get("paste"));
-        findAction = new JMenuItem("Find    Ctrl+F");
+        findAction = new JMenuItem("Find    Ctrl+F", iconMap.get("find"));
 
         syntaxMenu = new JMenu("Syntax");
         javaAction = new JMenuItem("Java                    Ctrl+J");
