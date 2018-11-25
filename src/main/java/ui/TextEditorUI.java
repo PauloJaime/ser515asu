@@ -666,6 +666,12 @@ public class TextEditorUI extends JFrame {
      * adjust the size of buttons
      */
     private void setMenuAndButtonSizeAndAlignment(){
+        int fileActionButtonWidth=250;
+
+        if(System.getProperty("os.name").contains("Windows")){
+            fileActionButtonWidth=200;
+        };
+
         fileMenu.setHorizontalAlignment(0);
         fileMenu.setPreferredSize(new Dimension(70,30));
         langMenu.setPreferredSize(new Dimension(70,30));
@@ -677,11 +683,11 @@ public class TextEditorUI extends JFrame {
         modeMenu.setPreferredSize(new Dimension(70,30));
         helpMenu.setPreferredSize(new Dimension(70,30));
 
-        newFileAction.setPreferredSize(new Dimension(200,35));
-        openFileAction.setPreferredSize(new Dimension(200,35));
-        saveFileAction.setPreferredSize(new Dimension(200,35));
-        closeCurTabAction.setPreferredSize(new Dimension(200,35));
-        exitAction.setPreferredSize(new Dimension(200,35));
+        newFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
+        openFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
+        saveFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
+        closeCurTabAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
+        exitAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
         copyAction.setPreferredSize(new Dimension(150,35));
         pasteAction.setPreferredSize(new Dimension(150,35));
         findAction.setPreferredSize(new Dimension(150,35));
