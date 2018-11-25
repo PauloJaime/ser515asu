@@ -455,8 +455,12 @@ public class TextEditorUI extends JFrame {
 
 
         fontAction.addActionListener(e -> {
-            FontFrame fontFrame = new FontFrame(getCurrentTextPane());
-            fontFrame.setVisible(true);
+            JTextPane pane = getCurrentTextPane();
+            if (pane != null) {
+                FontFrame fontFrame = new FontFrame(pane);
+                fontFrame.setVisible(true);
+            }
+
         });
 
         dayModeAction.addActionListener(e -> {
