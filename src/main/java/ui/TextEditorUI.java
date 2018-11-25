@@ -196,7 +196,7 @@ public class TextEditorUI extends JFrame {
 
     private void decorateUI(){
         changeMenuAndButtonBorder();
-        setMenuAndButtonSize();
+        setMenuAndButtonSizeAndAlignment();
     }
 
     /**
@@ -664,7 +664,8 @@ public class TextEditorUI extends JFrame {
     /**
      * adjust the size of buttons
      */
-    private void setMenuAndButtonSize(){
+    private void setMenuAndButtonSizeAndAlignment(){
+        fileMenu.setHorizontalAlignment(0);
         fileMenu.setPreferredSize(new Dimension(70,30));
         langMenu.setPreferredSize(new Dimension(70,30));
         editMenu.setPreferredSize(new Dimension(70,30));
@@ -674,6 +675,30 @@ public class TextEditorUI extends JFrame {
         settingsMenu.setPreferredSize(new Dimension(70,30));
         modeMenu.setPreferredSize(new Dimension(70,30));
         helpMenu.setPreferredSize(new Dimension(70,30));
+
+        newFileAction.setPreferredSize(new Dimension(200,35));
+        openFileAction.setPreferredSize(new Dimension(200,35));
+        saveFileAction.setPreferredSize(new Dimension(200,35));
+        closeCurTabAction.setPreferredSize(new Dimension(200,35));
+        exitAction.setPreferredSize(new Dimension(200,35));
+        copyAction.setPreferredSize(new Dimension(150,35));
+        pasteAction.setPreferredSize(new Dimension(150,35));
+        findAction.setPreferredSize(new Dimension(150,35));
+        javaAction.setPreferredSize(new Dimension(150,35));
+        plainTextAction.setPreferredSize(new Dimension(150,35));
+        engLangAction.setPreferredSize(new Dimension(100,35));
+        frnLangAction.setPreferredSize(new Dimension(100,35));
+        spaLangAction.setPreferredSize(new Dimension(100,35));
+        porLangAction.setPreferredSize(new Dimension(100,35));
+        chnLangAction.setPreferredSize(new Dimension(100,35));
+        openIntroductionAction.setPreferredSize(new Dimension(150,35));
+        openCooperationAction.setPreferredSize(new Dimension(150,35));
+        minimizeAction.setPreferredSize(new Dimension(150,35));
+        zoomAction.setPreferredSize(new Dimension(150,35));
+        fontAction.setPreferredSize(new Dimension(100,35));
+        dayModeAction.setPreferredSize(new Dimension(75,35));
+        nightModeAction.setPreferredSize(new Dimension(75,35));
+
     }
 
     private void changeTextArea(Color background, Color foreground) {
