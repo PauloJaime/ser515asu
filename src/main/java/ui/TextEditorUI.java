@@ -2,7 +2,6 @@ package ui;
 
 import highlight.SyntaxAwareDocument;
 import io.IOAgent;
-import jdk.nashorn.internal.runtime.regexp.joni.Syntax;
 import search.FindDialog;
 
 import javax.swing.*;
