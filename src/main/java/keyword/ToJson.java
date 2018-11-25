@@ -69,7 +69,7 @@ public class ToJson {
                 }
             }
             String keyword = "{" + "\"Red\":" + color1 + "," + "\"Blue\":" + color2 + "," + "\"Purple\":" + color3 + "}";
-            File jsonfile = new File(".\\src\\main\\resource\\CKeyword.json");
+            File jsonfile = new File(".\\src\\main\\resource\\cKeyword.json");
             jsonfile.createNewFile();
             BufferedWriter output = new BufferedWriter(new FileWriter(jsonfile));
             output.write(keyword);

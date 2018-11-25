@@ -2,6 +2,7 @@ package ui;
 
 import highlight.SyntaxAwareDocument;
 import io.IOAgent;
+import jdk.nashorn.internal.runtime.regexp.joni.Syntax;
 import search.FindDialog;
 
 import javax.swing.*;
@@ -311,11 +312,10 @@ public class TextEditorUI extends JFrame {
             assert textPane.getDocument() instanceof SyntaxAwareDocument;
             SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
 
-            if(dayModeAction.isSelected() == true){
+            if (dayModeAction.isSelected() == true){
                 tln.setBackground(Color.white);
                 tln.setForeground(Color.gray);
-            }
-            else {
+            } else {
                 tln.setBackground(Color.darkGray);
                 tln.setForeground(Color.white);
                 doc.switchMode();
@@ -348,8 +348,7 @@ public class TextEditorUI extends JFrame {
 
                 if(dayModeAction.isSelected() == true){
                     textPane.setBackground(Color.white);
-                }
-                else {textPane.setBackground(Color.darkGray);}
+                } else {textPane.setBackground(Color.darkGray);}
 
                 EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
                 textPane.setBorder(eb);
@@ -360,11 +359,10 @@ public class TextEditorUI extends JFrame {
 
                 assert textPane.getDocument() instanceof SyntaxAwareDocument;
                 SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
-                if(dayModeAction.isSelected() == true){
+                if (dayModeAction.isSelected() == true){
                     tln.setBackground(Color.white);
                     tln.setForeground(Color.gray);
-                }
-                else {
+                } else {
                     tln.setBackground(Color.darkGray);
                     tln.setForeground(Color.white);
                     doc.switchMode();
@@ -376,7 +374,10 @@ public class TextEditorUI extends JFrame {
 
         });
 
-        saveFileAction.addActionListener(e -> ioAgent.save());
+        saveFileAction.addActionListener(e -> {
+            String extensionName = ioAgent.save();
+            ((SyntaxAwareDocument) getCurrentTextPane().getDocument()).switchSyntax(extensionName);
+        });
 
         closeCurTabAction.addActionListener(e -> {
             Component selected = tabbedPane.getSelectedComponent();
