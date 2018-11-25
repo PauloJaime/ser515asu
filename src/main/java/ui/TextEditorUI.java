@@ -130,6 +130,7 @@ public class TextEditorUI extends JFrame {
         resource.put("cut", new ImageIcon(getIconPath(prop.getProperty("CutIcon"))));
         resource.put("copy", new ImageIcon(getIconPath(prop.getProperty("CopyIcon"))));
         resource.put("exit", new ImageIcon(getIconPath(prop.getProperty("ExitIcon"))));
+        resource.put("find", new ImageIcon(getIconPath(prop.getProperty("FindIcon"))));
 
         resource.put("langEng", new ImageIcon(getIconPath(prop.getProperty("LangEngIcon"))));
         resource.put("langFrn", new ImageIcon(getIconPath(prop.getProperty("LangFrnIcon"))));
@@ -224,7 +225,7 @@ public class TextEditorUI extends JFrame {
         editMenu = new JMenu("Edit");
         copyAction = new JMenuItem("Copy    Ctrl+C", iconMap.get("copy"));
         pasteAction = new JMenuItem("Paste    Ctrl+V", iconMap.get("paste"));
-        findAction = new JMenuItem("Find    Ctrl+F");
+        findAction = new JMenuItem("Find    Ctrl+F", iconMap.get("find"));
 
         syntaxMenu = new JMenu("Syntax");
         javaAction = new JMenuItem("Java                    Ctrl+J");
@@ -311,11 +312,10 @@ public class TextEditorUI extends JFrame {
             assert textPane.getDocument() instanceof SyntaxAwareDocument;
             SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
 
-            if(dayModeAction.isSelected() == true){
+            if (dayModeAction.isSelected() == true){
                 tln.setBackground(Color.white);
                 tln.setForeground(Color.gray);
-            }
-            else {
+            } else {
                 tln.setBackground(Color.darkGray);
                 tln.setForeground(Color.white);
                 doc.switchMode();
@@ -348,8 +348,7 @@ public class TextEditorUI extends JFrame {
 
                 if(dayModeAction.isSelected() == true){
                     textPane.setBackground(Color.white);
-                }
-                else {textPane.setBackground(Color.darkGray);}
+                } else {textPane.setBackground(Color.darkGray);}
 
                 EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
                 textPane.setBorder(eb);
@@ -360,11 +359,10 @@ public class TextEditorUI extends JFrame {
 
                 assert textPane.getDocument() instanceof SyntaxAwareDocument;
                 SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
-                if(dayModeAction.isSelected() == true){
+                if (dayModeAction.isSelected() == true){
                     tln.setBackground(Color.white);
                     tln.setForeground(Color.gray);
-                }
-                else {
+                } else {
                     tln.setBackground(Color.darkGray);
                     tln.setForeground(Color.white);
                     doc.switchMode();
@@ -376,7 +374,10 @@ public class TextEditorUI extends JFrame {
 
         });
 
-        saveFileAction.addActionListener(e -> ioAgent.save());
+        saveFileAction.addActionListener(e -> {
+            String extensionName = ioAgent.save();
+            ((SyntaxAwareDocument) getCurrentTextPane().getDocument()).switchSyntax(extensionName);
+        });
 
         closeCurTabAction.addActionListener(e -> {
             Component selected = tabbedPane.getSelectedComponent();
@@ -665,6 +666,12 @@ public class TextEditorUI extends JFrame {
      * adjust the size of buttons
      */
     private void setMenuAndButtonSizeAndAlignment(){
+        int fileActionButtonWidth=250;
+
+        if(System.getProperty("os.name").contains("Windows")){
+            fileActionButtonWidth=200;
+        };
+
         fileMenu.setHorizontalAlignment(0);
         fileMenu.setPreferredSize(new Dimension(70,30));
         langMenu.setPreferredSize(new Dimension(70,30));
@@ -676,11 +683,11 @@ public class TextEditorUI extends JFrame {
         modeMenu.setPreferredSize(new Dimension(70,30));
         helpMenu.setPreferredSize(new Dimension(70,30));
 
-        newFileAction.setPreferredSize(new Dimension(200,35));
-        openFileAction.setPreferredSize(new Dimension(200,35));
-        saveFileAction.setPreferredSize(new Dimension(200,35));
-        closeCurTabAction.setPreferredSize(new Dimension(200,35));
-        exitAction.setPreferredSize(new Dimension(200,35));
+        newFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
+        openFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
+        saveFileAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
+        closeCurTabAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
+        exitAction.setPreferredSize(new Dimension(fileActionButtonWidth,35));
         copyAction.setPreferredSize(new Dimension(150,35));
         pasteAction.setPreferredSize(new Dimension(150,35));
         findAction.setPreferredSize(new Dimension(150,35));

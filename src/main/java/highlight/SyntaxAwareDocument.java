@@ -66,6 +66,7 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
      * @param syntax the syntax you want to change
      */
     public void switchSyntax(String syntax) {
+        syntax = syntax.toLowerCase();
         keywordDB.switchSyntax(syntax);
         mCommentPair = keywordDB.getMCommentTags();
         stringPair = keywordDB.getStringTag();
