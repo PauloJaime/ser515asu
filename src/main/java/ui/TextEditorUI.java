@@ -98,7 +98,7 @@ public class TextEditorUI extends JFrame {
         initAgent();
         initActions();
         assembleUIComponents();
-        decorateUI();
+//        decorateUI();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -249,7 +249,7 @@ public class TextEditorUI extends JFrame {
         openIntroductionAction = new JMenuItem("Introduction        Ctrl+I");
         openCooperationAction = new JMenuItem("Cooperators        Ctrl+R");
         minimizeAction = new JMenuItem("Minimize          Ctrl+M");
-        zoomAction = new JMenuItem("Zoom                Ctrl+M");
+        zoomAction = new JMenuItem("Zoom                Ctrl+Z");
 
         helpMenu.add(openIntroductionAction);
         helpMenu.add(openCooperationAction);
@@ -525,6 +525,7 @@ public class TextEditorUI extends JFrame {
         langMenu.setText(prop.getProperty("Language" + language));
         settingsMenu.setText(prop.getProperty("Settings" + language));
         helpMenu.setText(prop.getProperty("Help" + language));
+        modeMenu.setText(prop.getProperty("Mode" + language));
     }
 
     /**
