@@ -98,7 +98,7 @@ public class TextEditorUI extends JFrame {
         initAgent();
         initActions();
         assembleUIComponents();
-//        decorateUI();
+        decorateUI();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -424,15 +424,30 @@ public class TextEditorUI extends JFrame {
 
         });
 
-        engLangAction.addActionListener(e -> changeUIText(LANG.ENG));
+        engLangAction.addActionListener(e -> {
+            changeUIText(LANG.ENG);
+            setMenuAndButtonSizeAndAlignment();
+        });
 
-        frnLangAction.addActionListener(e -> changeUIText(LANG.FRA));
+        frnLangAction.addActionListener(e -> {
+            changeUIText(LANG.FRA);
+            setMenuAndButtonSizeAndAlignment();
+        });
 
-        spaLangAction.addActionListener(e -> changeUIText(LANG.SPA));
+        spaLangAction.addActionListener(e -> {
+            changeUIText(LANG.SPA);
+            setMenuAndButtonSizeAndAlignment();
+        });
 
-        porLangAction.addActionListener(e -> changeUIText(LANG.POR));
+        porLangAction.addActionListener(e -> {
+            changeUIText(LANG.POR);
+            setMenuAndButtonSizeAndAlignment();
+        });
 
-        chnLangAction.addActionListener(e -> changeUIText(LANG.CHN));
+        chnLangAction.addActionListener(e -> {
+            changeUIText(LANG.CHN);
+            setMenuAndButtonSizeAndAlignment();
+        });
 
         zoomAction.addActionListener(e -> setExtendedState(JFrame.MAXIMIZED_BOTH));
 
