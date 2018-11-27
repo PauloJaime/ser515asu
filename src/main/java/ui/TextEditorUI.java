@@ -73,6 +73,15 @@ public class TextEditorUI extends JFrame {
     private JTabbedPane tabbedPane;
     private IOAgent ioAgent;
 
+    private JToolBar quickMenu;
+    private JButton quickNew;
+    private JButton quickOpen;
+    private JButton quickSave;
+    private JButton quickClose;
+    private JButton quickCopy;
+    private JButton quickPaste;
+    private JButton quickTheme;
+
     /**
      * mode is the theme code:
      * 0 - bright
@@ -98,6 +107,7 @@ public class TextEditorUI extends JFrame {
         initAgent();
         initActions();
         assembleUIComponents();
+        setupQuickMenu();
         decorateUI();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -142,6 +152,7 @@ public class TextEditorUI extends JFrame {
         resource.put("open", new ImageIcon(getIconPath(prop.getProperty("OpenIcon"))));
         resource.put("save", new ImageIcon(getIconPath(prop.getProperty("SaveIcon"))));
         resource.put("closeTab", new ImageIcon(getIconPath(prop.getProperty("CloseTab"))));
+        resource.put("theme", new ImageIcon(getIconPath(prop.getProperty("ThemeIcon"))));
 
         return resource;
     }
@@ -198,6 +209,7 @@ public class TextEditorUI extends JFrame {
     private void decorateUI(){
         changeMenuAndButtonBorder();
         setMenuAndButtonSizeAndAlignment();
+        changeQuickMenuAndButtonBorder();
     }
 
     /**
@@ -268,6 +280,28 @@ public class TextEditorUI extends JFrame {
      */
     private void initAgent() {
         ioAgent = new IOAgent(tabbedPane);
+    }
+
+    private void setupQuickMenu(){
+        quickMenu = new JToolBar();
+        Map<String, ImageIcon> iconMap = readIconRes();
+        quickNew = new JButton(iconMap.get("new"));
+        quickOpen = new JButton(iconMap.get("open"));
+        quickSave = new JButton(iconMap.get("save"));
+        quickClose = new JButton(iconMap.get("closeTab"));
+        quickCopy = new JButton(iconMap.get("copy"));
+        quickPaste = new JButton(iconMap.get("paste"));
+        quickTheme = new JButton(iconMap.get("theme"));
+        quickMenu.add(quickNew);
+        quickMenu.add(quickOpen);
+        quickMenu.add(quickSave);
+        quickMenu.add(quickClose);
+        quickMenu.add(quickCopy);
+        quickMenu.add(quickPaste);
+        quickMenu.add(quickTheme);
+
+        add(quickMenu, BorderLayout.NORTH);
+
     }
 
     private void setTabs(JTextPane textPane) {
@@ -722,6 +756,17 @@ public class TextEditorUI extends JFrame {
         dayModeAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(dayModeAction.getText()) + 50,35));
         nightModeAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(nightModeAction.getText()) + 50,35));
 
+    }
+
+    private void changeQuickMenuAndButtonBorder(){
+        quickMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickNew.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickOpen.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickSave.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickClose.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickCopy.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickPaste.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickTheme.setBorder(BorderFactory.createRaisedBevelBorder());
     }
 
     private void changeTextArea(Color background, Color foreground) {
