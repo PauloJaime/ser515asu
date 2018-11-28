@@ -288,10 +288,8 @@ public class TextEditorUI extends JFrame {
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Java"));
             setTabs(textPane);
 
-
             terminal =  new TerminalUI();
             jPanel.add(terminal,BorderLayout.SOUTH);
-
 
             if(dayModeAction.isSelected() == true){
                 textPane.setBackground(Color.white);

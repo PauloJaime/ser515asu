@@ -3,29 +3,30 @@ package ui;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+/**
+ * Main class for terminal interface
+ *
+ * @author Major:Zelin Bao, yiru Hu
+ * @version 1.2
+ */
 public class TerminalUI extends JPanel {
 	private JTextPane terminalPane;
 	int lastIndex;
 	String executedContent;
 	JScrollPane scrollPane;
+
 	/**
 	 * Create the panel.
 	 */
@@ -34,15 +35,14 @@ public class TerminalUI extends JPanel {
 		lastIndex = 0;
 
 		terminalPane = new JTextPane();
-
-		//enter listener
+        setPreferredSize(new Dimension(600, 100));
 		terminalPane.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				Document docs = terminalPane.getDocument();
 				SimpleAttributeSet attrset = new SimpleAttributeSet();
-				StyleConstants.setFontSize(attrset,12);
+				StyleConstants.setFontSize(attrset,10);
 				StyleConstants.setForeground(attrset,Color.BLACK);
 
 				if(e.getKeyChar()==KeyEvent.VK_ENTER ){
@@ -51,49 +51,32 @@ public class TerminalUI extends JPanel {
 					try {
 
 						String cmd = terminalPane.getText().substring(lastIndex, terminalPane.getText().length());
-
 						executedContent = executeCmd(cmd);
-
 						docs.insertString(docs.getLength(), "\n" + executedContent, attrset);
+                        docs.insertString(docs.getLength(), "\n", attrset);
+                        docs.insertString(docs.getLength(), "$ ", attrset);
 						lastIndex = terminalPane.getText().length();
 
-
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
+                        try {
 
-						try {
-							SimpleAttributeSet attrError = new SimpleAttributeSet();
-							StyleConstants.setFontSize(attrError,12);
-							StyleConstants.setForeground(attrError, Color.RED);
+                            docs.insertString(docs.getLength(), "\n" + e1.getMessage(), attrset);
+                            lastIndex = terminalPane.getText().length();
+                            StyleConstants.setForeground(attrset, Color.BLACK);
 
-							docs.insertString(docs.getLength(), "\n" + e1.getMessage(), attrError);
-
-							lastIndex = terminalPane.getText().length();
-							StyleConstants.setForeground(attrset,Color.BLACK);
-
-							docs.insertString(docs.getLength(), "\n", attrset);
-
-						} catch (BadLocationException e2) {
-
-							e2.printStackTrace();
-						}
-						e1.printStackTrace();
-					}
-					//StyleConstants.setForeground(attrset,Color.BLACK);
+                            docs.insertString(docs.getLength(), "\n", attrset);
+                            docs.insertString(docs.getLength(), "$ ", attrset);
+                        } catch (BadLocationException e2) {
+                            e2.printStackTrace();
+                        }
+                        e1.printStackTrace();
+                    }
 				}
 			}
 		});
 
-		//terminalPane.setBounds(65, 30, 458, 224);
-		//terminalPane.s
-		//add(terminalPane);
-
-		//EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
-		//setBorder(eb);
 		setLayout(new BorderLayout());
-		JScrollPane scrollPane = new JScrollPane(terminalPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		//scrollPane = new JScrollPane(terminalPane);
-		//scrollPane.setBounds(45, 20, 508, 253);
+		scrollPane = new JScrollPane(terminalPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		add(scrollPane, BorderLayout.CENTER);
 	}
 
@@ -112,16 +95,4 @@ public class TerminalUI extends JPanel {
 		return "";
 	}
 
-
-	public static void main(String[] args) {
-		JFrame j = new JFrame();
-		j.setSize(new Dimension(600, 400));
-		TerminalUI t = new TerminalUI();
-		//JPanel p = new JPanel();
-		//p.add(t);
-		//p.setVisible(true);
-		j.setVisible(true);
-		j.getContentPane().add(t);
-
-	}
 }
