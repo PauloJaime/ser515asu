@@ -46,7 +46,6 @@ public class TerminalUI extends JPanel {
 				StyleConstants.setForeground(attrset,Color.BLACK);
 
 				if(e.getKeyChar()==KeyEvent.VK_ENTER ){
-					System.out.println(terminalPane.getText());
 
 					try {
 
