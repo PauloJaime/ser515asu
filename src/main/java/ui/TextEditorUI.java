@@ -108,6 +108,7 @@ public class TextEditorUI extends JFrame {
         initActions();
         assembleUIComponents();
         setupQuickMenu();
+        quickMenuAction();
         decorateUI();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -333,7 +334,7 @@ public class TextEditorUI extends JFrame {
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Plain Text"));
             setTabs(textPane);
 
-            if(dayModeAction.isSelected() == true){
+            if(mode == 0){
                 textPane.setBackground(Color.white);
             }
             else {textPane.setBackground(Color.darkGray);}
@@ -346,7 +347,7 @@ public class TextEditorUI extends JFrame {
             assert textPane.getDocument() instanceof SyntaxAwareDocument;
             SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
 
-            if (dayModeAction.isSelected() == true){
+            if (mode == 0){
                 tln.setBackground(Color.white);
                 tln.setForeground(Color.gray);
             } else {
@@ -380,7 +381,7 @@ public class TextEditorUI extends JFrame {
                 textPane = new JTextPane(new SyntaxAwareDocument(syntax));
                 setTabs(textPane);
 
-                if(dayModeAction.isSelected() == true){
+                if(mode == 0){
                     textPane.setBackground(Color.white);
                 } else {textPane.setBackground(Color.darkGray);}
 
@@ -393,7 +394,7 @@ public class TextEditorUI extends JFrame {
 
                 assert textPane.getDocument() instanceof SyntaxAwareDocument;
                 SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
-                if (dayModeAction.isSelected() == true){
+                if (mode == 0){
                     tln.setBackground(Color.white);
                     tln.setForeground(Color.gray);
                 } else {
@@ -523,6 +524,138 @@ public class TextEditorUI extends JFrame {
             changeMenuAndButtonMode(Color.darkGray, Color.white);
             changeTextArea(Color.darkGray, Color.white);
         });
+    }
+
+    private  void quickMenuAction(){
+
+        quickNew. addActionListener(e -> {
+            JPanel jPanel = new JPanel();
+            jPanel.setLayout(new BorderLayout());
+            tabbedPane.addTab("new", jPanel);
+            JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Plain Text"));
+            setTabs(textPane);
+
+            if(mode == 0){
+                textPane.setBackground(Color.white);
+            }
+            else {textPane.setBackground(Color.darkGray);}
+
+            EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
+            textPane.setBorder(eb);
+            JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            TextLineNumber tln = new TextLineNumber(textPane);
+
+            assert textPane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
+
+            if (mode == 0){
+                tln.setBackground(Color.white);
+                tln.setForeground(Color.gray);
+            } else {
+                tln.setBackground(Color.darkGray);
+                tln.setForeground(Color.white);
+                doc.switchMode();
+            }
+
+            scrollPane.setRowHeaderView( tln );
+            jPanel.add(scrollPane, BorderLayout.CENTER);
+        });
+
+        quickOpen. addActionListener(e -> {
+            JPanel jPanel = new JPanel();
+            jPanel.setLayout(new BorderLayout());
+            Map<String, String> titleAndContent = ioAgent.read();
+            JTextPane textPane;
+
+            if (titleAndContent == null) {
+                jPanel = null;
+                textPane = null;
+                titleAndContent = null;
+            } else {
+                String name = titleAndContent.get("name");
+                tabbedPane.addTab(name, jPanel);
+                int pos = name.lastIndexOf('.');
+                String syntax = pos == -1 ? "Plain text" : name.substring(pos + 1);
+                textPane = new JTextPane(new SyntaxAwareDocument(syntax));
+                setTabs(textPane);
+
+                if(mode == 0){
+                    textPane.setBackground(Color.white);
+                } else {textPane.setBackground(Color.darkGray);}
+
+                EmptyBorder eb = new EmptyBorder((new Insets(10,10,10,10)));
+                textPane.setBorder(eb);
+                textPane.setText(titleAndContent.get("content"));
+
+                JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                TextLineNumber tln = new TextLineNumber(textPane);
+
+                assert textPane.getDocument() instanceof SyntaxAwareDocument;
+                SyntaxAwareDocument doc = (SyntaxAwareDocument) textPane.getDocument();
+                if (mode == 0){
+                    tln.setBackground(Color.white);
+                    tln.setForeground(Color.gray);
+                } else {
+                    tln.setBackground(Color.darkGray);
+                    tln.setForeground(Color.white);
+                    doc.switchMode();
+                }
+
+                scrollPane.setRowHeaderView( tln );
+                jPanel.add(scrollPane, BorderLayout.CENTER);
+            }
+
+        });
+
+        quickSave.addActionListener(e -> {
+            String extensionName = ioAgent.save();
+            ((SyntaxAwareDocument) getCurrentTextPane().getDocument()).switchSyntax(extensionName);
+        });
+
+        quickClose.addActionListener(e -> {
+            Component selected = tabbedPane.getSelectedComponent();
+            if (selected != null) {
+                ioAgent.delete();
+                tabbedPane.remove(selected);
+            }
+        });
+
+        quickCopy.addActionListener(e -> {
+            String str = getSelectedTextFromTextPane();
+            StringSelection stringSelection = new StringSelection (str);
+            Clipboard clipboard = Toolkit.getDefaultToolkit ().getSystemClipboard ();
+            clipboard.setContents (stringSelection, null);
+        });
+
+
+        quickPaste.addActionListener(e -> {
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            DataFlavor flavor = DataFlavor.stringFlavor;
+            if (clipboard.isDataFlavorAvailable(flavor)) {
+                JTextPane textPane = getCurrentTextPane();
+                textPane.paste();
+            }
+
+        });
+
+        quickTheme.addActionListener(e -> {
+            if(mode==0){
+                mode = 1;
+                nightModeAction.isSelected();
+                changeMenuAndButtonMode(Color.darkGray, Color.white);
+                changeTextArea(Color.darkGray, Color.white);
+            }
+            else {
+                mode = 0;
+                dayModeAction.isSelected();
+                changeMenuAndButtonMode(UIManager.getColor("Panel.background"), Color.black);
+                changeTextArea(Color.white, Color.black);
+            }
+
+        });
+
+
+
     }
 
     /**
