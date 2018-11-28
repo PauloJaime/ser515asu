@@ -154,6 +154,7 @@ public class TextEditorUI extends JFrame {
         resource.put("save", new ImageIcon(getIconPath(prop.getProperty("SaveIcon"))));
         resource.put("closeTab", new ImageIcon(getIconPath(prop.getProperty("CloseTab"))));
         resource.put("theme", new ImageIcon(getIconPath(prop.getProperty("ThemeIcon"))));
+        resource.put("theme2", new ImageIcon(getIconPath(prop.getProperty("ThemeIcon2"))));
 
         return resource;
     }
@@ -639,15 +640,18 @@ public class TextEditorUI extends JFrame {
         });
 
         quickTheme.addActionListener(e -> {
+            Map<String, ImageIcon> iconMap = readIconRes();
             if(mode==0){
                 mode = 1;
                 nightModeAction.isSelected();
+                quickTheme.setIcon(iconMap.get("theme2"));
                 changeMenuAndButtonMode(Color.darkGray, Color.white);
                 changeTextArea(Color.darkGray, Color.white);
             }
             else {
                 mode = 0;
                 dayModeAction.isSelected();
+                quickTheme.setIcon(iconMap.get("theme"));
                 changeMenuAndButtonMode(UIManager.getColor("Panel.background"), Color.black);
                 changeTextArea(Color.white, Color.black);
             }
@@ -905,6 +909,22 @@ public class TextEditorUI extends JFrame {
     private void changeTextArea(Color background, Color foreground) {
         tabbedPane.setForeground(foreground);
         tabbedPane.setBackground(background);
+        quickMenu.setForeground(foreground);
+        quickMenu.setBackground(background);
+        quickNew.setForeground(foreground);
+        quickNew.setBackground(background);
+        quickOpen.setForeground(foreground);
+        quickOpen.setBackground(background);
+        quickSave.setForeground(foreground);
+        quickSave.setBackground(background);
+        quickClose.setForeground(foreground);
+        quickClose.setBackground(background);
+        quickCopy.setForeground(foreground);
+        quickCopy.setBackground(background);
+        quickPaste.setForeground(foreground);
+        quickPaste.setBackground(background);
+        quickTheme.setForeground(foreground);
+        quickTheme.setBackground(background);
         int totalTabs = tabbedPane.getTabCount();
         for(int i = 0; i <totalTabs; i++){
             Component tab = tabbedPane.getComponentAt(i);
