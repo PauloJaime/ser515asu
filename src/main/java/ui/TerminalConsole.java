@@ -1,7 +1,13 @@
-package a;
+package ui;
 
-import java.io.*;  
- 
+import java.io.*;
+
+
+/**
+ * The class provide cmd operations
+ * @author yiru hu
+ * @version 1.0
+ */
 public class TerminalConsole {  
 	static StringBuilder s1  = new StringBuilder();
 
@@ -31,8 +37,7 @@ public class TerminalConsole {
         }  
     }  
       
- 
-      
+
     public String execute() throws Exception{  
         String[] cmds = {"cmd"};  
         String r;
@@ -44,18 +49,5 @@ public class TerminalConsole {
         t1.interrupt();
         r = s1.toString();
         return r; 
-    }  
-    /*  
-    public static void main(String[] args) throws Exception {  
-        TerminalConsole t = new TerminalConsole();  
-        try{  
-            String s = t.execute();  
-            System.out.print(s);
-        }catch(Exception e){  
-            e.printStackTrace();  
-        } 
-
     }
-    */	
-    
 } 

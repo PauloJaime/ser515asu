@@ -248,8 +248,6 @@ public class TextEditorUI extends JFrame {
         modeGroup = new ButtonGroup();
         dayModeAction = new JRadioButtonMenuItem("Day");
         nightModeAction = new JRadioButtonMenuItem("Night");
-
-        //terminal = new TerminalUI();
     }
 
     /**
