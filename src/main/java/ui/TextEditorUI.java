@@ -47,6 +47,7 @@ public class TextEditorUI extends JFrame {
 
     private JMenu syntaxMenu;
     private JMenuItem javaAction;
+    private JMenuItem pythonAction;
     private JMenuItem plainTextAction;
 
     private JMenu windowMenu;
@@ -167,6 +168,7 @@ public class TextEditorUI extends JFrame {
         editMenu.add(pasteAction);
 
         syntaxMenu.add(javaAction);
+        syntaxMenu.add(pythonAction);
         syntaxMenu.add(plainTextAction);
 
         langMenu.add(engLangAction);
@@ -223,11 +225,14 @@ public class TextEditorUI extends JFrame {
         pasteAction.setAccelerator(KeyStroke.getKeyStroke('V',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         syntaxMenu = new JMenu("Syntax");
+        plainTextAction = new JMenuItem("Plain text");
+        plainTextAction.setAccelerator(KeyStroke.getKeyStroke('W',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
         javaAction = new JMenuItem("Java");
         javaAction.setAccelerator(KeyStroke.getKeyStroke('J',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
-        plainTextAction = new JMenuItem("Plain text");
-        plainTextAction.setAccelerator(KeyStroke.getKeyStroke('W',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        pythonAction = new JMenuItem("Python");
+        pythonAction.setAccelerator(KeyStroke.getKeyStroke('Y',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         windowMenu = new JMenu("Window");
 
@@ -424,6 +429,13 @@ public class TextEditorUI extends JFrame {
             doc.switchSyntax("Java");
         });
 
+//        javaAction.addActionListener(e -> {
+//            JTextPane pane = getCurrentTextPane();
+//            assert pane.getDocument() instanceof SyntaxAwareDocument;
+//            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+//            doc.switchSyntax("Python");
+//        });
+
         plainTextAction.addActionListener(e -> {
             JTextPane pane = getCurrentTextPane();
             assert pane.getDocument() instanceof SyntaxAwareDocument;
@@ -588,6 +600,7 @@ public class TextEditorUI extends JFrame {
         copyAction.setBackground(background);
         pasteAction.setBackground(background);
         javaAction.setBackground(background);
+        pythonAction.setBackground(background);
         plainTextAction.setBackground(background);
         engLangAction.setBackground(background);
         frnLangAction.setBackground(background);

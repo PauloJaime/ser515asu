@@ -26,7 +26,7 @@ public class IntroFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JTextPane textPane = new JTextPane();
-		textPane.setText("This is a Java text editor. There are some functionailities:\nopen a new file\nsava a file\nsave a file as a new path\njava key words highlights\n");
+		textPane.setText("This is a Java text editor. There are some functionailities:\nOpen a new file\nSava a File\nSave a file as a new path\nPrinting an open file\nJava key words highlights\n");
 		textPane.setBounds(5, 36, 440, 237);
 		textPane.setEditable(false);
 		contentPane.add(textPane);

@@ -21,8 +21,7 @@ import javax.swing.text.*;
  * @author Hongfei Ju
  * @version 1.0
  */
-public class TextLineNumber extends JPanel
-        implements CaretListener, DocumentListener, PropertyChangeListener {
+public class TextLineNumber extends JPanel implements CaretListener, DocumentListener, PropertyChangeListener {
     public final static float LEFT = 0.0f;
     public final static float CENTER = 0.5f;
     public final static float RIGHT = 1.0f;
@@ -103,7 +102,6 @@ public class TextLineNumber extends JPanel
             int width = fontMetrics.charWidth( '0' ) * digits;
             Insets insets = getInsets();
             int preferredWidth = insets.left + insets.right + width;
-
             Dimension d = getPreferredSize();
             d.setSize(preferredWidth, HEIGHT);
             setPreferredSize( d );
