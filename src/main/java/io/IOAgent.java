@@ -26,7 +26,12 @@ public class IOAgent {
      * Save file method
      */
     public String save() {
-        Map<String, String> nameAndContent = acquireTabContent(tabManager.getSelectedIndex());
+        int idx = tabManager.getSelectedIndex();
+        if (idx == -1) {
+            return "";
+        }
+
+        Map<String, String> nameAndContent = acquireTabContent(idx);
         String fileName = doSave(nameAndContent.get("name"), nameAndContent.get("content"));
         return fileName.substring(fileName.lastIndexOf('.') + 1);
     }
@@ -81,7 +86,12 @@ public class IOAgent {
      * Close current tab file
      */
     public void delete() {
-        PathDB.delete(tabManager.getTitleAt(tabManager.getSelectedIndex()));
+        int idx = tabManager.getSelectedIndex();
+        if (idx == -1) {
+            return;
+        }
+
+        PathDB.delete(tabManager.getTitleAt(idx));
     }
 
     private String doSave(String title, String content){
