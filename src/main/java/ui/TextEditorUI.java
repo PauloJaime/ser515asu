@@ -425,7 +425,11 @@ public class TextEditorUI extends JFrame {
 
         saveFileAction.addActionListener(e -> {
             String extensionName = ioAgent.save();
-            ((SyntaxAwareDocument) getCurrentTextPane().getDocument()).switchSyntax(extensionName);
+            JTextPane textPane = getCurrentTextPane();
+            if (textPane != null) {
+                ((SyntaxAwareDocument) textPane.getDocument()).switchSyntax(extensionName);
+            }
+
         });
 
         closeCurTabAction.addActionListener(e -> {
@@ -638,7 +642,11 @@ public class TextEditorUI extends JFrame {
 
         quickSave.addActionListener(e -> {
             String extensionName = ioAgent.save();
-            ((SyntaxAwareDocument) getCurrentTextPane().getDocument()).switchSyntax(extensionName);
+            JTextPane textPane = getCurrentTextPane();
+            if (textPane != null) {
+                ((SyntaxAwareDocument) textPane.getDocument()).switchSyntax(extensionName);
+            }
+
         });
 
         quickClose.addActionListener(e -> {
