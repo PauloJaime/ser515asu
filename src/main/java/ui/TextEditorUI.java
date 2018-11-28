@@ -80,7 +80,10 @@ public class TextEditorUI extends JFrame {
     private JButton quickClose;
     private JButton quickCopy;
     private JButton quickPaste;
+    private JButton quickFont;
+    private JButton quickLanguage;
     private JButton quickTheme;
+    private String lang;
 
     /**
      * mode is the theme code:
@@ -105,6 +108,7 @@ public class TextEditorUI extends JFrame {
     private TextEditorUI() {
         initUI();
         initAgent();
+        setupQuickMenu();
         initActions();
         assembleUIComponents();
         setupQuickMenu();
@@ -155,6 +159,8 @@ public class TextEditorUI extends JFrame {
         resource.put("closeTab", new ImageIcon(getIconPath(prop.getProperty("CloseTab"))));
         resource.put("theme", new ImageIcon(getIconPath(prop.getProperty("ThemeIcon"))));
         resource.put("theme2", new ImageIcon(getIconPath(prop.getProperty("ThemeIcon2"))));
+        resource.put("font", new ImageIcon(getIconPath(prop.getProperty("FontIcon"))));
+        resource.put("font2", new ImageIcon(getIconPath(prop.getProperty("FontIcon2"))));
 
         return resource;
     }
@@ -226,6 +232,7 @@ public class TextEditorUI extends JFrame {
 
         setSize(new Dimension(800, 400));
         mode = 0;
+        lang = "ENG";
 
         Map<String, ImageIcon> iconMap = readIconRes();
         menuBar = new JMenuBar();
@@ -293,6 +300,8 @@ public class TextEditorUI extends JFrame {
         quickClose = new JButton(iconMap.get("closeTab"));
         quickCopy = new JButton(iconMap.get("copy"));
         quickPaste = new JButton(iconMap.get("paste"));
+        quickFont = new JButton(iconMap.get("font"));
+        quickLanguage = new JButton(iconMap.get("langEng"));
         quickTheme = new JButton(iconMap.get("theme"));
         quickMenu.add(quickNew);
         quickMenu.add(quickOpen);
@@ -300,6 +309,8 @@ public class TextEditorUI extends JFrame {
         quickMenu.add(quickClose);
         quickMenu.add(quickCopy);
         quickMenu.add(quickPaste);
+        quickMenu.add(quickFont);
+        quickMenu.add(quickLanguage);
         quickMenu.add(quickTheme);
 
         add(quickMenu, BorderLayout.NORTH);
@@ -328,6 +339,8 @@ public class TextEditorUI extends JFrame {
      * Init ActionListeners
      */
     private void initActions() {
+        Map<String, ImageIcon> iconMap = readIconRes();
+
         newFileAction.addActionListener(e -> {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
@@ -462,26 +475,36 @@ public class TextEditorUI extends JFrame {
 
         engLangAction.addActionListener(e -> {
             changeUIText(LANG.ENG);
+            lang = "ENG";
+            quickLanguage.setIcon(iconMap.get("langEng"));
             setMenuAndButtonSizeAndAlignment();
         });
 
         frnLangAction.addActionListener(e -> {
             changeUIText(LANG.FRA);
+            lang = "FRA";
+            quickLanguage.setIcon(iconMap.get("langFrn"));
             setMenuAndButtonSizeAndAlignment();
         });
 
         spaLangAction.addActionListener(e -> {
             changeUIText(LANG.SPA);
+            lang = "SPA";
+            quickLanguage.setIcon(iconMap.get("langSpa"));
             setMenuAndButtonSizeAndAlignment();
         });
 
         porLangAction.addActionListener(e -> {
             changeUIText(LANG.POR);
+            lang = "POR";
+            quickLanguage.setIcon(iconMap.get("langPor"));
             setMenuAndButtonSizeAndAlignment();
         });
 
         chnLangAction.addActionListener(e -> {
             changeUIText(LANG.CHN);
+            lang = "CHN";
+            quickLanguage.setIcon(iconMap.get("langChn"));
             setMenuAndButtonSizeAndAlignment();
         });
 
@@ -516,18 +539,23 @@ public class TextEditorUI extends JFrame {
 
         dayModeAction.addActionListener(e -> {
             mode = 0;
+            quickFont.setIcon(iconMap.get("font"));
+            quickTheme.setIcon(iconMap.get("theme"));
             changeMenuAndButtonMode(UIManager.getColor("Panel.background"), Color.black);
             changeTextArea(Color.white, Color.black);
         });
 
         nightModeAction.addActionListener(e -> {
             mode = 1;
+            quickFont.setIcon(iconMap.get("font2"));
+            quickTheme.setIcon(iconMap.get("theme2"));
             changeMenuAndButtonMode(Color.darkGray, Color.white);
             changeTextArea(Color.darkGray, Color.white);
         });
     }
 
     private  void quickMenuAction(){
+        Map<String, ImageIcon> iconMap = readIconRes();
 
         quickNew. addActionListener(e -> {
             JPanel jPanel = new JPanel();
@@ -639,26 +667,67 @@ public class TextEditorUI extends JFrame {
 
         });
 
+        quickFont.addActionListener(e -> {
+            JTextPane pane = getCurrentTextPane();
+            if (pane != null) {
+                FontFrame fontFrame = new FontFrame(pane);
+                fontFrame.setVisible(true);
+            }
+
+        });
+
+        quickLanguage.addActionListener(e -> {
+            if(lang == "ENG") {
+                changeUIText(LANG.FRA);
+                lang = "FRA";
+                quickLanguage.setIcon(iconMap.get("langFrn"));
+                setMenuAndButtonSizeAndAlignment();
+            }
+            else if(lang == "FRA") {
+                changeUIText(LANG.SPA);
+                lang = "SPA";
+                quickLanguage.setIcon(iconMap.get("langSpa"));
+                setMenuAndButtonSizeAndAlignment();
+            }
+            else if(lang == "SPA") {
+                changeUIText(LANG.POR);
+                lang = "POR";
+                quickLanguage.setIcon(iconMap.get("langPor"));
+                setMenuAndButtonSizeAndAlignment();
+            }
+            else if(lang == "POR") {
+                changeUIText(LANG.CHN);
+                lang = "CHN";
+                quickLanguage.setIcon(iconMap.get("langChn"));
+                setMenuAndButtonSizeAndAlignment();
+            }
+            else{
+                changeUIText(LANG.ENG);
+                lang = "ENG";
+                quickLanguage.setIcon(iconMap.get("langEng"));
+                setMenuAndButtonSizeAndAlignment();
+            }
+        });
+
         quickTheme.addActionListener(e -> {
-            Map<String, ImageIcon> iconMap = readIconRes();
             if(mode==0){
                 mode = 1;
-                nightModeAction.isSelected();
+                nightModeAction.setSelected(true);
+                quickFont.setIcon(iconMap.get("font2"));
                 quickTheme.setIcon(iconMap.get("theme2"));
                 changeMenuAndButtonMode(Color.darkGray, Color.white);
                 changeTextArea(Color.darkGray, Color.white);
             }
             else {
                 mode = 0;
-                dayModeAction.isSelected();
+                dayModeAction.setSelected(true);
+                quickFont.setIcon(iconMap.get("font"));
                 quickTheme.setIcon(iconMap.get("theme"));
                 changeMenuAndButtonMode(UIManager.getColor("Panel.background"), Color.black);
                 changeTextArea(Color.white, Color.black);
             }
 
         });
-
-
 
     }
 
@@ -903,6 +972,8 @@ public class TextEditorUI extends JFrame {
         quickClose.setBorder(BorderFactory.createRaisedBevelBorder());
         quickCopy.setBorder(BorderFactory.createRaisedBevelBorder());
         quickPaste.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickFont.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickLanguage.setBorder(BorderFactory.createRaisedBevelBorder());
         quickTheme.setBorder(BorderFactory.createRaisedBevelBorder());
     }
 
@@ -923,6 +994,10 @@ public class TextEditorUI extends JFrame {
         quickCopy.setBackground(background);
         quickPaste.setForeground(foreground);
         quickPaste.setBackground(background);
+        quickFont.setForeground(foreground);
+        quickFont.setBackground(background);
+        quickLanguage.setForeground(foreground);
+        quickLanguage.setBackground(background);
         quickTheme.setForeground(foreground);
         quickTheme.setBackground(background);
         int totalTabs = tabbedPane.getTabCount();
