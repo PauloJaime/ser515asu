@@ -53,8 +53,6 @@ public class TerminalUI extends JPanel {
 						String cmd = terminalPane.getText().substring(lastIndex, terminalPane.getText().length());
 						executedContent = executeCmd(cmd);
 						docs.insertString(docs.getLength(), "\n" + executedContent, attrset);
-                        docs.insertString(docs.getLength(), "\n", attrset);
-                        docs.insertString(docs.getLength(), "$ ", attrset);
 						lastIndex = terminalPane.getText().length();
 
 					} catch (Exception e1) {
@@ -62,10 +60,8 @@ public class TerminalUI extends JPanel {
 
                             docs.insertString(docs.getLength(), "\n" + e1.getMessage(), attrset);
                             lastIndex = terminalPane.getText().length();
-                            StyleConstants.setForeground(attrset, Color.BLACK);
-
                             docs.insertString(docs.getLength(), "\n", attrset);
-                            docs.insertString(docs.getLength(), "$ ", attrset);
+
                         } catch (BadLocationException e2) {
                             e2.printStackTrace();
                         }
