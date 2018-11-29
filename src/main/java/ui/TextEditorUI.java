@@ -70,7 +70,6 @@ public class TextEditorUI extends JFrame {
     public JRadioButtonMenuItem dayModeAction;
     public JRadioButtonMenuItem nightModeAction;
 
-
     private JMenu helpMenu;
     private JMenuItem openIntroductionAction;
     private JMenuItem openCooperationAction;
@@ -168,7 +167,9 @@ public class TextEditorUI extends JFrame {
         editMenu.add(pasteAction);
 
         syntaxMenu.add(javaAction);
+        syntaxMenu.addSeparator();
         syntaxMenu.add(pythonAction);
+        syntaxMenu.addSeparator();
         syntaxMenu.add(plainTextAction);
 
         langMenu.add(engLangAction);
@@ -429,12 +430,12 @@ public class TextEditorUI extends JFrame {
             doc.switchSyntax("Java");
         });
 
-//        javaAction.addActionListener(e -> {
-//            JTextPane pane = getCurrentTextPane();
-//            assert pane.getDocument() instanceof SyntaxAwareDocument;
-//            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
-//            doc.switchSyntax("Python");
-//        });
+        pythonAction.addActionListener(e -> {
+            JTextPane pane = getCurrentTextPane();
+            assert pane.getDocument() instanceof SyntaxAwareDocument;
+            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+            doc.switchSyntax("Python");
+        });
 
         plainTextAction.addActionListener(e -> {
             JTextPane pane = getCurrentTextPane();

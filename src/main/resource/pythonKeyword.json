@@ -1,0 +1,51 @@
+{
+  "Red": [
+    "package",
+    "import"
+  ],
+  "Blue": [
+    "default",
+    "extend",
+    "append",
+    "def",
+    "print",
+    "self"
+  ],
+  "Purple": [
+    "False",
+    "class",
+    "finally",
+    "is",
+    "return",
+    "None",
+    "continue",
+    "for",
+    "lambda",
+    "try",
+    "True",
+    "from",
+    "nonlocal",
+    "while",
+    "and",
+    "del",
+    "global",
+    "not",
+    "with",
+    "as",
+    "elif",
+    "if",
+    "or",
+    "yield",
+    "assert",
+    "else",
+    "pass",
+    "break",
+    "except",
+    "in",
+    "raise"
+
+  ],
+  "comment":["//"],
+  "multi-comment":["/*", "*/"],
+  "string":["\"", "'"]
+}
