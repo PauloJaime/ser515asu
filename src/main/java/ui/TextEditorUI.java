@@ -369,8 +369,6 @@ public class TextEditorUI extends JFrame {
             terminal =  new TerminalUI();
             jPanel.add(terminal,BorderLayout.SOUTH);
 
-            if(dayModeAction.isSelected() == true){
-
             if(mode == 0){
 
                 textPane.setBackground(Color.white);
