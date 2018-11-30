@@ -324,7 +324,6 @@ public class TextEditorUI extends JFrame {
         quickMenu.add(quickTheme);
 
         add(quickMenu, BorderLayout.NORTH);
-
     }
 
     private void setTabs(JTextPane textPane) {
