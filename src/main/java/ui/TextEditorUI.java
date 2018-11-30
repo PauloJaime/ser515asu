@@ -78,12 +78,15 @@ public class TextEditorUI extends JFrame {
     private JButton quickOpen;
     private JButton quickSave;
     private JButton quickClose;
+    private JButton quickSyntax;
     private JButton quickCopy;
     private JButton quickPaste;
     private JButton quickFont;
+    private JButton quickFind;
     private JButton quickLanguage;
     private JButton quickTheme;
     private String lang;
+    private String syntax;
 
     /**
      * mode is the theme code:
@@ -160,7 +163,8 @@ public class TextEditorUI extends JFrame {
         resource.put("theme", new ImageIcon(getIconPath(prop.getProperty("ThemeIcon"))));
         resource.put("theme2", new ImageIcon(getIconPath(prop.getProperty("ThemeIcon2"))));
         resource.put("font", new ImageIcon(getIconPath(prop.getProperty("FontIcon"))));
-        resource.put("font2", new ImageIcon(getIconPath(prop.getProperty("FontIcon2"))));
+        resource.put("java", new ImageIcon(getIconPath(prop.getProperty("JavaIcon"))));
+        resource.put("txt", new ImageIcon(getIconPath(prop.getProperty("TxtIcon"))));
 
         return resource;
     }
@@ -233,6 +237,7 @@ public class TextEditorUI extends JFrame {
         setSize(new Dimension(800, 400));
         mode = 0;
         lang = "ENG";
+        syntax = "txt";
 
         Map<String, ImageIcon> iconMap = readIconRes();
         menuBar = new JMenuBar();
@@ -249,8 +254,8 @@ public class TextEditorUI extends JFrame {
         findAction = new JMenuItem("Find    Ctrl+F", iconMap.get("find"));
 
         syntaxMenu = new JMenu("Syntax");
-        javaAction = new JMenuItem("Java                    Ctrl+J");
-        plainTextAction = new JMenuItem("Plain text           Ctrl+P");
+        javaAction = new JMenuItem("Java                    Ctrl+J", iconMap.get("java"));
+        plainTextAction = new JMenuItem("Plain text           Ctrl+P", iconMap.get("txt"));
 
         windowMenu = new JMenu("Window");
 
@@ -260,7 +265,7 @@ public class TextEditorUI extends JFrame {
         spaLangAction = new JMenuItem("Español", iconMap.get("langSpa"));
         porLangAction = new JMenuItem("Português", iconMap.get("langPor"));
         chnLangAction = new JMenuItem("中文", iconMap.get("langChn"));
-        fontAction = new JMenuItem("Font        Ctrl+F");
+        fontAction = new JMenuItem("Font        Ctrl+F", iconMap.get("font"));
 
         settingsMenu = new JMenu("Settings");
         helpMenu = new JMenu("Help");
@@ -298,17 +303,22 @@ public class TextEditorUI extends JFrame {
         quickOpen = new JButton(iconMap.get("open"));
         quickSave = new JButton(iconMap.get("save"));
         quickClose = new JButton(iconMap.get("closeTab"));
+        quickSyntax = new JButton(iconMap.get("txt"));
         quickCopy = new JButton(iconMap.get("copy"));
         quickPaste = new JButton(iconMap.get("paste"));
+        quickFind = new JButton(iconMap.get("find"));
         quickFont = new JButton(iconMap.get("font"));
         quickLanguage = new JButton(iconMap.get("langEng"));
         quickTheme = new JButton(iconMap.get("theme"));
+
         quickMenu.add(quickNew);
         quickMenu.add(quickOpen);
         quickMenu.add(quickSave);
         quickMenu.add(quickClose);
+        quickMenu.add(quickSyntax);
         quickMenu.add(quickCopy);
         quickMenu.add(quickPaste);
+        quickMenu.add(quickFind);
         quickMenu.add(quickFont);
         quickMenu.add(quickLanguage);
         quickMenu.add(quickTheme);
@@ -463,6 +473,8 @@ public class TextEditorUI extends JFrame {
         findAction.addActionListener(e -> new FindDialog(this, getCurrentTextPane(), mode));
 
         javaAction.addActionListener(e -> {
+            syntax = "java";
+            quickSyntax.setIcon(iconMap.get("java"));
             JTextPane pane = getCurrentTextPane();
             assert pane.getDocument() instanceof SyntaxAwareDocument;
             SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
@@ -470,6 +482,8 @@ public class TextEditorUI extends JFrame {
         });
 
         plainTextAction.addActionListener(e -> {
+            syntax = "txt";
+            quickSyntax.setIcon(iconMap.get("txt"));
             JTextPane pane = getCurrentTextPane();
             assert pane.getDocument() instanceof SyntaxAwareDocument;
             SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
@@ -551,7 +565,7 @@ public class TextEditorUI extends JFrame {
 
         nightModeAction.addActionListener(e -> {
             mode = 1;
-            quickFont.setIcon(iconMap.get("font2"));
+            quickFont.setIcon(iconMap.get("font"));
             quickTheme.setIcon(iconMap.get("theme2"));
             changeMenuAndButtonMode(Color.darkGray, Color.white);
             changeTextArea(Color.darkGray, Color.white);
@@ -657,6 +671,26 @@ public class TextEditorUI extends JFrame {
             }
         });
 
+        quickSyntax.addActionListener(e -> {
+            JTextPane pane = getCurrentTextPane();
+            if(syntax == "txt") {
+                syntax = "java";
+                quickSyntax.setIcon(iconMap.get("java"));
+                assert pane.getDocument() instanceof SyntaxAwareDocument;
+                SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+                doc.switchSyntax("Java");
+            }
+            else {
+                syntax = "txt";
+                quickSyntax.setIcon(iconMap.get("txt"));
+                assert pane.getDocument() instanceof SyntaxAwareDocument;
+                SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+                doc.switchSyntax("Plain text");
+            }
+
+        });
+
+
         quickCopy.addActionListener(e -> {
             String str = getSelectedTextFromTextPane();
             StringSelection stringSelection = new StringSelection (str);
@@ -683,6 +717,8 @@ public class TextEditorUI extends JFrame {
             }
 
         });
+
+        quickFind.addActionListener(e -> new FindDialog(this, getCurrentTextPane(), mode));
 
         quickLanguage.addActionListener(e -> {
             if(lang == "ENG") {
@@ -721,7 +757,7 @@ public class TextEditorUI extends JFrame {
             if(mode==0){
                 mode = 1;
                 nightModeAction.setSelected(true);
-                quickFont.setIcon(iconMap.get("font2"));
+                quickFont.setIcon(iconMap.get("font"));
                 quickTheme.setIcon(iconMap.get("theme2"));
                 changeMenuAndButtonMode(Color.darkGray, Color.white);
                 changeTextArea(Color.darkGray, Color.white);
@@ -955,8 +991,8 @@ public class TextEditorUI extends JFrame {
         copyAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(copyAction.getText()) + 50,35));
         pasteAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(pasteAction.getText()) + 50,35));
         findAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(findAction.getText()) + 50,35));
-        javaAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(javaAction.getText()) + 20,35));
-        plainTextAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(plainTextAction.getText()) + 20,35));
+        javaAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(javaAction.getText()) + 50,35));
+        plainTextAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(plainTextAction.getText()) + 50,35));
         engLangAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(engLangAction.getText()) + 50,35));
         frnLangAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(frnLangAction.getText()) + 50,35));
         spaLangAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(spaLangAction.getText()) + 50,35));
@@ -966,7 +1002,7 @@ public class TextEditorUI extends JFrame {
         openCooperationAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(openCooperationAction.getText()) + 20,35));
         minimizeAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(minimizeAction.getText()) + 20,35));
         zoomAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(zoomAction.getText()) + 20,35));
-        fontAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(fontAction.getText()) + 20,35));
+        fontAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(fontAction.getText()) + 50,35));
         dayModeAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(dayModeAction.getText()) + 50,35));
         nightModeAction.setPreferredSize(new Dimension(fontMetrics.stringWidth(nightModeAction.getText()) + 50,35));
 
@@ -978,14 +1014,17 @@ public class TextEditorUI extends JFrame {
         quickOpen.setBorder(BorderFactory.createRaisedBevelBorder());
         quickSave.setBorder(BorderFactory.createRaisedBevelBorder());
         quickClose.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickSyntax.setBorder(BorderFactory.createRaisedBevelBorder());
         quickCopy.setBorder(BorderFactory.createRaisedBevelBorder());
         quickPaste.setBorder(BorderFactory.createRaisedBevelBorder());
+        quickFind.setBorder(BorderFactory.createRaisedBevelBorder());
         quickFont.setBorder(BorderFactory.createRaisedBevelBorder());
         quickLanguage.setBorder(BorderFactory.createRaisedBevelBorder());
         quickTheme.setBorder(BorderFactory.createRaisedBevelBorder());
     }
 
     private void changeTextArea(Color background, Color foreground) {
+
         tabbedPane.setForeground(foreground);
         tabbedPane.setBackground(background);
         quickMenu.setForeground(foreground);
@@ -998,16 +1037,21 @@ public class TextEditorUI extends JFrame {
         quickSave.setBackground(background);
         quickClose.setForeground(foreground);
         quickClose.setBackground(background);
+        quickSyntax.setForeground(foreground);
+        quickSyntax.setBackground(background);
         quickCopy.setForeground(foreground);
         quickCopy.setBackground(background);
         quickPaste.setForeground(foreground);
         quickPaste.setBackground(background);
+        quickFind.setForeground(foreground);
+        quickFind.setBackground(background);
         quickFont.setForeground(foreground);
         quickFont.setBackground(background);
         quickLanguage.setForeground(foreground);
         quickLanguage.setBackground(background);
         quickTheme.setForeground(foreground);
         quickTheme.setBackground(background);
+
         int totalTabs = tabbedPane.getTabCount();
         for(int i = 0; i <totalTabs; i++){
             Component tab = tabbedPane.getComponentAt(i);
