@@ -88,6 +88,8 @@ public class TextEditorUI extends JFrame {
     private String lang;
     private String syntax;
 
+    private TerminalUI terminal;
+
     /**
      * mode is the theme code:
      * 0 - bright
@@ -357,6 +359,10 @@ public class TextEditorUI extends JFrame {
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Plain Text"));
             setTabs(textPane);
 
+
+            terminal =  new TerminalUI();
+            jPanel.add(terminal,BorderLayout.SOUTH);
+
             if(mode == 0){
                 textPane.setBackground(Color.white);
             }
@@ -403,6 +409,10 @@ public class TextEditorUI extends JFrame {
                 String syntax = pos == -1 ? "Plain text" : name.substring(pos + 1);
                 textPane = new JTextPane(new SyntaxAwareDocument(syntax));
                 setTabs(textPane);
+
+
+                terminal =  new TerminalUI();
+                jPanel.add(terminal,BorderLayout.SOUTH);
 
                 if(mode == 0){
                     textPane.setBackground(Color.white);
@@ -586,6 +596,9 @@ public class TextEditorUI extends JFrame {
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Plain Text"));
             setTabs(textPane);
 
+            terminal =  new TerminalUI();
+            jPanel.add(terminal,BorderLayout.SOUTH);
+
             if(mode == 0){
                 textPane.setBackground(Color.white);
             }
@@ -617,6 +630,9 @@ public class TextEditorUI extends JFrame {
             jPanel.setLayout(new BorderLayout());
             Map<String, String> titleAndContent = ioAgent.read();
             JTextPane textPane;
+
+            terminal =  new TerminalUI();
+            jPanel.add(terminal,BorderLayout.SOUTH);
 
             if (titleAndContent == null) {
                 jPanel = null;
