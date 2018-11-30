@@ -473,21 +473,26 @@ public class TextEditorUI extends JFrame {
         findAction.addActionListener(e -> new FindDialog(this, getCurrentTextPane(), mode));
 
         javaAction.addActionListener(e -> {
-            syntax = "java";
-            quickSyntax.setIcon(iconMap.get("java"));
-            JTextPane pane = getCurrentTextPane();
-            assert pane.getDocument() instanceof SyntaxAwareDocument;
-            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
-            doc.switchSyntax("Java");
+            if(getCurrentTextPane()!=null)
+            {
+                syntax = "java";
+                quickSyntax.setIcon(iconMap.get("java"));
+                JTextPane pane = getCurrentTextPane();
+                assert pane.getDocument() instanceof SyntaxAwareDocument;
+                SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+                doc.switchSyntax("Java");
+            }
         });
 
         plainTextAction.addActionListener(e -> {
-            syntax = "txt";
-            quickSyntax.setIcon(iconMap.get("txt"));
-            JTextPane pane = getCurrentTextPane();
-            assert pane.getDocument() instanceof SyntaxAwareDocument;
-            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
-            doc.switchSyntax("Plain text");
+            if(getCurrentTextPane()!=null) {
+                syntax = "txt";
+                quickSyntax.setIcon(iconMap.get("txt"));
+                JTextPane pane = getCurrentTextPane();
+                assert pane.getDocument() instanceof SyntaxAwareDocument;
+                SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+                doc.switchSyntax("Plain text");
+            }
 
         });
 
@@ -672,20 +677,22 @@ public class TextEditorUI extends JFrame {
         });
 
         quickSyntax.addActionListener(e -> {
-            JTextPane pane = getCurrentTextPane();
-            if(syntax == "txt") {
-                syntax = "java";
-                quickSyntax.setIcon(iconMap.get("java"));
-                assert pane.getDocument() instanceof SyntaxAwareDocument;
-                SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
-                doc.switchSyntax("Java");
-            }
-            else {
-                syntax = "txt";
-                quickSyntax.setIcon(iconMap.get("txt"));
-                assert pane.getDocument() instanceof SyntaxAwareDocument;
-                SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
-                doc.switchSyntax("Plain text");
+            if(getCurrentTextPane()!=null)
+            {
+                JTextPane pane = getCurrentTextPane();
+                if (syntax == "txt") {
+                    syntax = "java";
+                    quickSyntax.setIcon(iconMap.get("java"));
+                    assert pane.getDocument() instanceof SyntaxAwareDocument;
+                    SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+                    doc.switchSyntax("Java");
+                } else {
+                    syntax = "txt";
+                    quickSyntax.setIcon(iconMap.get("txt"));
+                    assert pane.getDocument() instanceof SyntaxAwareDocument;
+                    SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+                    doc.switchSyntax("Plain text");
+                }
             }
 
         });
