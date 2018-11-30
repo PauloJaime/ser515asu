@@ -25,9 +25,15 @@ public class IOAgent {
     /**
      * Save file method
      */
-    public void save() {
-        Map<String, String> nameAndContent = acquireTabContent(tabManager.getSelectedIndex());
-        doSave(nameAndContent.get("name"), nameAndContent.get("content"));
+    public String save() {
+        int idx = tabManager.getSelectedIndex();
+        if (idx == -1) {
+            return "";
+        }
+
+        Map<String, String> nameAndContent = acquireTabContent(idx);
+        String fileName = doSave(nameAndContent.get("name"), nameAndContent.get("content"));
+        return fileName.substring(fileName.lastIndexOf('.') + 1);
     }
 
     /**
@@ -80,32 +86,40 @@ public class IOAgent {
      * Close current tab file
      */
     public void delete() {
-        PathDB.delete(tabManager.getTitleAt(tabManager.getSelectedIndex()));
+        int idx = tabManager.getSelectedIndex();
+        if (idx == -1) {
+            return;
+        }
+
+        PathDB.delete(tabManager.getTitleAt(idx));
     }
 
-    private void doSave(String title, String content){
+    private String doSave(String title, String content){
         String path = PathDB.getPath(title);
+        String fileName;
 
         if (path == null) {
-            saveAs(content);
+            fileName = saveAs(content);
         } else {
             try {
                 FileWriter fw = new FileWriter(path);
                 fw.write(content);
                 fw.flush();
                 fw.close();
-
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
+            fileName = path.substring(path.lastIndexOf('/'));
         }
 
+        return fileName;
     }
 
-    private void saveAs(String content) {
+    private String saveAs(String content) {
         JFileChooser chooser = new JFileChooser();
         JFrame saveAsFrame = new JFrame();
+        String fileName = "";
         int res = chooser.showSaveDialog(saveAsFrame);
         if (res == JFileChooser.APPROVE_OPTION) {
             try {
@@ -116,12 +130,14 @@ public class IOAgent {
                 fw.write(content);
                 fw.flush();
                 fw.close();
+                fileName = file.getName().substring(file.getName().lastIndexOf('.') + 1);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
         }
 
+        return fileName;
     }
 
     private Map<String, String> acquireTabContent(int idx) {

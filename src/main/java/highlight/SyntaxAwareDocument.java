@@ -3,11 +3,8 @@ package highlight;
 import keyword.KeywordDB;
 import javax.swing.text.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
-import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,11 +66,16 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
      * @param syntax the syntax you want to change
      */
     public void switchSyntax(String syntax) {
+        syntax = syntax.toLowerCase();
         keywordDB.switchSyntax(syntax);
+        mCommentPair = keywordDB.getMCommentTags();
+        stringPair = keywordDB.getStringTag();
+        commentTag = keywordDB.getCommentTag();
+
         try {
-            String previousText = getText(0, getLength());
-            remove(0, getLength());
-            insertString(0, previousText, null);
+            String fulltext = getText(0, getLength());
+            keywordsHighlight(fulltext);
+            processCommentAndString(fulltext);
         } catch (BadLocationException e) {
             log.warning("Something wrong here...");
             log.warning("SyntaxAwareDocument.java switch syntax failed");
@@ -92,11 +94,9 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     @Override
     public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
-        if (!keywordDB.isPlainText()) {
-            String fullText = getText(0, getLength());
-            keywordsHighlight(fullText);
-            processCommentAndString(fullText);
-        }
+        String fullText = getText(0, getLength());
+        keywordsHighlight(fullText);
+        processCommentAndString(fullText);
 
     }
 
@@ -110,17 +110,14 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     public void remove(int offs, int len) throws BadLocationException {
         super.remove(offs, len);
 
-        if (!keywordDB.isPlainText()) {
-            String fullText = getText(0, getLength());
+        String fullText = getText(0, getLength());
 
-            if (fullText.isEmpty()) {
-                return;
-            }
-
-            keywordsHighlight(fullText);
-            processCommentAndString(fullText);
+        if (fullText.isEmpty()) {
+            return;
         }
 
+        keywordsHighlight(fullText);
+        processCommentAndString(fullText);
     }
 
     public void switchMode() {
@@ -155,7 +152,22 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
         setCharacterAttributes(begin, end - begin, getAttributeSet(color), false);
     }
 
+    private void goPlainText() {
+        try {
+            String fullText = getText(0, getLength());
+            doHighlight(0, getLength(), fullText, mode.equals(MODE.bright) ? Color.black : Color.white);
+        } catch (BadLocationException e) {
+            log.severe(e.getMessage());
+        }
+
+    }
+
+
     private void processCommentAndString(String fullText) {
+        if (keywordDB.isPlainText()) {
+            return;
+        }
+
         int startIdx = 0;
         int stringflag = -1;
         int charflag = 0;
@@ -254,6 +266,11 @@ public class SyntaxAwareDocument extends DefaultStyledDocument {
     }
 
     private void keywordsHighlight(String fullText) {
+        if (keywordDB.isPlainText()) {
+            goPlainText();
+            return;
+        }
+
         Pattern pattern = Pattern.compile("(\\w)");
         Matcher matcher = pattern.matcher(fullText);
         int ptr = 0;
