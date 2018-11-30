@@ -1,5 +1,6 @@
 package ui;
 
+
 import highlight.SyntaxAwareDocument;
 import io.IOAgent;
 import search.FindDialog;
@@ -73,6 +74,9 @@ public class TextEditorUI extends JFrame {
     private JTabbedPane tabbedPane;
     private IOAgent ioAgent;
 
+
+    private TerminalUI terminal;
+
     private JToolBar quickMenu;
     private JButton quickNew;
     private JButton quickOpen;
@@ -94,6 +98,7 @@ public class TextEditorUI extends JFrame {
      * 1 - dark
      */
     private int mode;
+
 
     private static final Logger log = Logger.getLogger("Log");
 
@@ -181,6 +186,8 @@ public class TextEditorUI extends JFrame {
      */
     private void assembleUIComponents() {
         add(tabbedPane);
+
+
         setJMenuBar(menuBar);
 
         fileMenu.add(newFileAction);
@@ -358,7 +365,14 @@ public class TextEditorUI extends JFrame {
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Plain Text"));
             setTabs(textPane);
 
+
+            terminal =  new TerminalUI();
+            jPanel.add(terminal,BorderLayout.SOUTH);
+
+            if(dayModeAction.isSelected() == true){
+
             if(mode == 0){
+
                 textPane.setBackground(Color.white);
             }
             else {textPane.setBackground(Color.darkGray);}
@@ -385,6 +399,8 @@ public class TextEditorUI extends JFrame {
 
 
             jPanel.add(scrollPane, BorderLayout.CENTER);
+
+
         });
 
         openFileAction.addActionListener(e -> {
@@ -392,6 +408,9 @@ public class TextEditorUI extends JFrame {
             jPanel.setLayout(new BorderLayout());
             Map<String, String> titleAndContent = ioAgent.read();
             JTextPane textPane;
+
+            terminal =  new TerminalUI();
+            jPanel.add(terminal,BorderLayout.SOUTH);
 
             if (titleAndContent == null) {
                 jPanel = null;
