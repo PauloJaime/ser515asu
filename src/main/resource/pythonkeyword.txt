@@ -33,9 +33,5 @@ in
 raise
 
 
-//string and comment color
+#string and comment color
 gray
-//
-/*..*/
-""
-''

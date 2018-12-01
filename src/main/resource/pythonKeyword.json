@@ -45,7 +45,5 @@
     "raise"
 
   ],
-  "comment":["//"],
-  "multi-comment":["/*", "*/"],
-  "string":["\"", "'"]
+  "comment":["#"]
 }
