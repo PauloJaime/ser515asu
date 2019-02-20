@@ -398,10 +398,6 @@ public class TextEditorUI extends JFrame {
             Map<String, String> titleAndContent = ioAgent.read();
             JTextPane textPane;
 
-
-            terminal =  new TerminalUI();
-            jPanel.add(terminal,BorderLayout.SOUTH);
-
             if (titleAndContent == null) {
                 jPanel = null;
                 textPane = null;
@@ -413,6 +409,10 @@ public class TextEditorUI extends JFrame {
                 String syntax = pos == -1 ? "Plain text" : name.substring(pos + 1);
                 textPane = new JTextPane(new SyntaxAwareDocument(syntax));
                 setTabs(textPane);
+
+
+                terminal =  new TerminalUI();
+                jPanel.add(terminal,BorderLayout.SOUTH);
 
                 if(mode == 0){
                     textPane.setBackground(Color.white);
@@ -590,11 +590,20 @@ public class TextEditorUI extends JFrame {
         Map<String, ImageIcon> iconMap = readIconRes();
 
         quickNew. addActionListener(e -> {
-            JPanel jPanel = new JPanel();
-            jPanel.setLayout(new BorderLayout());
-            tabbedPane.addTab("new", jPanel);
+            JPanel jpanel = new JPanel();
+
+            JPanel jPanel1 = new JPanel();
+            jpanel.setLayout(new BorderLayout());
+            tabbedPane.addTab("new", jpanel);
             JTextPane textPane = new JTextPane(new SyntaxAwareDocument("Plain Text"));
             setTabs(textPane);
+
+
+            JPanel jPanel2 = new JPanel();
+            terminal =  new TerminalUI();
+            jPanel2.add(terminal,BorderLayout.SOUTH);
+
+
 
             if(mode == 0){
                 textPane.setBackground(Color.white);
@@ -619,7 +628,10 @@ public class TextEditorUI extends JFrame {
             }
 
             scrollPane.setRowHeaderView( tln );
-            jPanel.add(scrollPane, BorderLayout.CENTER);
+            jPanel1.add(scrollPane, BorderLayout.CENTER);
+            jpanel.setSize(jpanel.getParent().getSize());
+            jpanel.add(jPanel1,BorderLayout.NORTH);
+            jpanel.add(jPanel2,BorderLayout.SOUTH);
         });
 
         quickOpen. addActionListener(e -> {
@@ -627,6 +639,10 @@ public class TextEditorUI extends JFrame {
             jPanel.setLayout(new BorderLayout());
             Map<String, String> titleAndContent = ioAgent.read();
             JTextPane textPane;
+
+            //JPanel jpanel2 = new JPanel();
+            //terminal =  new TerminalUI();
+            //jpanel2.add(terminal,BorderLayout.SOUTH);
 
             if (titleAndContent == null) {
                 jPanel = null;
@@ -1071,27 +1087,36 @@ public class TextEditorUI extends JFrame {
         int totalTabs = tabbedPane.getTabCount();
         for(int i = 0; i <totalTabs; i++){
             Component tab = tabbedPane.getComponentAt(i);
-            JScrollPane scrollPane = (JScrollPane) ((JPanel) tab).getComponent(0);
-            JViewport viewport = (JViewport) scrollPane.getComponent(0);
-            JTextPane pane = (JTextPane) viewport.getComponent(0);
-            TextLineNumber tln = new TextLineNumber(pane);
-            tln.setBackground(background);
-            if(background == Color.white){
-                tln.setForeground(Color.gray);
-            }
-            else{ tln.setForeground(foreground);}
 
-            scrollPane.setRowHeaderView(tln);
-            pane.setForeground(foreground);
-            pane.setBackground(background);
+            if(((JPanel) tab).getComponent(0) instanceof JScrollPane){
 
-            assert pane.getDocument() instanceof SyntaxAwareDocument;
-            SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
-            if(background == Color.darkGray && doc.mode == SyntaxAwareDocument.MODE.dark || background == Color.white && doc.mode == SyntaxAwareDocument.MODE.bright ) {
 
-            }
-            else{
-                doc.switchMode();
+
+                JScrollPane scrollPane = (JScrollPane) ((JPanel) tab).getComponent(0);
+                JViewport viewport = (JViewport) scrollPane.getComponent(0);
+                JTextPane pane = (JTextPane) viewport.getComponent(0);
+                TextLineNumber tln = new TextLineNumber(pane);
+                tln.setBackground(background);
+                if(background == Color.white){
+                    tln.setForeground(Color.gray);
+                }
+                else{ tln.setForeground(foreground);}
+
+                scrollPane.setRowHeaderView(tln);
+                pane.setForeground(foreground);
+                pane.setBackground(background);
+
+                assert pane.getDocument() instanceof SyntaxAwareDocument;
+                SyntaxAwareDocument doc = (SyntaxAwareDocument) pane.getDocument();
+                if(background == Color.darkGray && doc.mode == SyntaxAwareDocument.MODE.dark || background == Color.white && doc.mode == SyntaxAwareDocument.MODE.bright ) {
+
+                }
+                else{
+                    doc.switchMode();
+                }
+
+            }else{
+
             }
         }
     }
